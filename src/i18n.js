@@ -1,0 +1,453 @@
+export const ui = {
+  en: {
+    nav: { about: "About", services: "Services", skills: "Skills", work: "Work", approach: "Approach", contact: "Contact me", navigation: "Navigation", close: "Close navigation", open: "Open navigation", home: "Home" },
+    hero: {
+      eyebrow: "Frontend developer · Web Designer · Computer Engineer",
+      title: "Hi, my name is",
+      name: "Yasin.",
+      nameSuffix: "",
+      lead: "I build modern interfaces where clean engineering meets thoughtful visual detail.",
+      body: "React-focused frontend development with responsive layouts, refined motion, and an obsession with the details people feel even when they cannot name them.",
+      start: "Start a conversation",
+      work: "Explore selected work",
+      scroll: "Scroll to explore",
+      frontend: "Front-End Developer",
+      degree: "B.Sc.student in Computer Engineering",
+      location: "Qom, Iran",
+    },
+    facts: { stack: "Primary stack", focus: "Core focus", craft: "Visual craft", degree: "B.Sc.student" },
+    about: {
+      eyebrow: "About me",
+      title: "A developer who cares about",
+      highlight: "the details.",
+      description: "Hi I’m Yasin SoleymanPanah and I enjoy the space where engineering and visual design meet — building responsive interfaces with React and giving them the small details that make them feel intentional.",
+      currentLabel: "Currently",
+      current: "Studying Computer Engineering while sharpening my frontend craft through projects and experimentation.",
+    },
+    services: {
+      eyebrow: "What I do?",
+      title: "Digital work with",
+      highlight: "intent.",
+      description: "A focused set of capabilities for building modern interfaces that feel considered, responsive, and alive.",
+    },
+    skills: {
+      eyebrow: "Skills",
+      title: "The stack behind the",
+      highlight: "surface.",
+      description: "A practical toolkit centered around frontend development, interface craft, and thoughtful interaction.",
+      exploring: "Currently exploring",
+      exploringTitle: "Still learning. Still building.",
+    },
+    projects: {
+      eyebrow: "Selected work",
+      title: "Things I’ve",
+      highlight: "built.",
+      description: "A selection of projects that reflect how I think, design, and build. Open a project to explore the details.",
+      projectInMind: "Have a project in mind",
+      projectBrief: "Project brief",
+      builtWith: "Built with",
+      features: "Key features",
+      notes: "Build notes",
+      code: "Code",
+      demo: "Live Demo",
+      open: "Open project details",
+      showMore: "Show More",
+      showLess: "Show Less",
+    },
+    approach: {
+      eyebrow: "My approach",
+      title: "A quiet process behind",
+      highlight: "loud details.",
+      description: "The visual layer gets the attention, but the process underneath keeps the experience clear, usable, and fast.",
+    },
+    closing: {
+      eyebrow: "Have an idea worth building?",
+      title: "Let’s turn it into",
+      highlight: "something memorable.",
+      description: "If you have a product, portfolio, or interface in mind, I’d love to hear what you’re trying to make.",
+      cta: "Let’s talk",
+    },
+    footer: {
+      statement: "Building thoughtful digital experiences, one detail at a time.",
+      body: "Frontend development, interface craft, and purposeful motion — shaped into experiences that feel as good as they work.",
+      explore: "Explore",
+      connect: "Connect",
+      privacy: "Privacy",
+      rights: "All rights reserved.",
+      built: "Designed & built with care.",
+    },
+    contact: {
+      "homeLabel": "Back to home",
+      "open": "Open for new conversations",
+      "title": "Let’s make something",
+      "highlight": "worth remembering.",
+      "body": "Tell me what brings you here. The form adapts to your request, so you only share the details that matter.",
+      "response": "Typically replies within 12–24h",
+      "connectDirect": "Or reach me directly",
+      "step": "Step",
+      "intentTitle": "How can I help?",
+      "detailsTitle": "A few useful details",
+      "contactTitle": "Where should I reply?",
+      "intentLegend": "Choose the reason for your message",
+      "categories": {
+        "website": {
+          "label": "Website design",
+          "description": "A new site, redesign, or frontend build"
+        },
+        "collaboration": {
+          "label": "Project collaboration",
+          "description": "Build something together as partners"
+        },
+        "employment": {
+          "label": "Work opportunity",
+          "description": "A role, contract, or team opportunity"
+        },
+        "consultation": {
+          "label": "Consultation",
+          "description": "Review an idea, product, or technical direction"
+        },
+        "other": {
+          "label": "Something else",
+          "description": "Anything that does not fit the options above"
+        }
+      },
+      "projectType": "Project type",
+      "projectTypes": {
+        "portfolio": "Portfolio",
+        "landing": "Landing page",
+        "corporate": "Company website",
+        "ecommerce": "E-commerce",
+        "webapp": "Web application",
+        "redesign": "Redesign / frontend improvement",
+        "other": "Other"
+      },
+      "budget": "Estimated budget",
+      "budgets": {
+        "discuss": "Let’s discuss",
+        "starter": "Under $500",
+        "standard": "$500–$1,500",
+        "advanced": "$1,500–$4,000",
+        "custom": "$4,000+"
+      },
+      "timeline": "Preferred timeline",
+      "timelines": {
+        "asap": "As soon as possible",
+        "month": "Within one month",
+        "quarter": "1–3 months",
+        "flexible": "Flexible / not decided"
+      },
+      "website": "Relevant website or link",
+      "websitePlaceholder": "https://example.com",
+      "companyWebsitePlaceholder": "https://company.com",
+      "websiteError": "Enter a complete http:// or https:// link.",
+      "company": "Company or team",
+      "companyPlaceholder": "Company name",
+      "companyError": "Enter the company or team name.",
+      "role": "Collaboration model",
+      "collaborationModels": {
+        "build": "Build together",
+        "frontend": "Frontend development",
+        "design": "UI/UX collaboration",
+        "subcontract": "Subcontract work",
+        "other": "Other"
+      },
+      "employmentModels": {
+        "fulltime": "Full-time role",
+        "parttime": "Part-time role",
+        "contract": "Contract",
+        "internship": "Internship",
+        "freelance": "Freelance engagement"
+      },
+      "consultationTopic": "Consultation topic",
+      "consultationTopics": {
+        "product": "Product and idea",
+        "uiux": "UI/UX review",
+        "frontend": "Frontend architecture",
+        "performance": "Performance and accessibility",
+        "other": "Other"
+      },
+      "selectPlaceholder": "Select an option",
+      "optional": "Optional",
+      "name": "Your name",
+      "namePlaceholder": "For example, Alex Morgan",
+      "contactMethod": "How should I contact you?",
+      "contactMethods": {
+        "email": { "label": "Email" },
+        "phone": { "label": "Phone" },
+        "telegram": { "label": "Telegram" },
+        "whatsapp": { "label": "WhatsApp" },
+        "other": { "label": "Other" }
+      },
+      "contactLabels": {
+        "email": "Email address",
+        "phone": "Phone number",
+        "telegram": "Telegram username",
+        "whatsapp": "WhatsApp number",
+        "other": "Contact detail"
+      },
+      "contactValue": "Contact detail",
+      "contactPlaceholder": "Enter a reliable way to reach you",
+      "contactPlaceholders": {
+        "email": "you@company.com",
+        "phone": "+1 555 123 4567",
+        "telegram": "@username",
+        "whatsapp": "+1 555 123 4567",
+        "other": "LinkedIn, Signal, or another method"
+      },
+      "message": "Your message",
+      "messagePlaceholder": "Share the goal, context, or outcome you have in mind…",
+      "requiredChoice": "Choose one option to continue.",
+      "requiredContactMethod": "Choose at least one way to reach you.",
+      "nameError": "Enter at least two characters for your name.",
+      "emailError": "Enter a valid email address.",
+      "phoneError": "Enter a valid phone number with 7–15 digits.",
+      "telegramError": "Enter a Telegram username beginning with @ (5–32 characters).",
+      "contactError": "Enter a valid contact detail.",
+      "messageError": "Tell me a little more — at least 10 characters.",
+      "invalidFields": "Please review the highlighted fields.",
+      "previous": "Previous",
+      "continue": "Continue",
+      "sending": "Sending…",
+      "sent": "Message sent",
+      "send": "Send",
+      "success": "Your message arrived safely. I’ll get back to you as soon as I can.",
+      "failed": "The message could not be sent. Please try again shortly.",
+      "timeout": "Sending took too long. Check your connection and try again.",
+      "privacyNote": "Your details are used only to respond to this request.",
+      "privacyLink": "Read the privacy note",
+      "back": "Back to site",
+      "footer": "Let’s build with intention."
+    },
+    notFound: { label: "404 · Page not found", text: "This page does not exist, or the link you followed is no longer valid.", home: "Back home", contact: "Contact me" },
+    privacy: {"label":"Privacy","title":"Your message stays purposeful.","intro":"This page explains what information is handled when you contact Yasin through this portfolio and which limited preferences are stored in your browser.","form":"Information you submit","formText":"The contact form can include your request category, name, selected contact method and contact detail, message, and optional project details such as company, role, budget, timeline, or a related website.","processing":"Delivery and storage","processingText":"A Cloudflare Pages Function validates the submission and sends it directly to Yasin through the Telegram Bot API. This site does not keep a contact-message database; Telegram processes and retains the delivered message under its own service policies.","theme":"Local preferences","themeText":"Your theme and language choices are stored in localStorage on your device so the interface can remember them on future visits. You can remove them by clearing this site's browser data.","tracking":"Fonts and tracking","trackingText":"This site does not add advertising or unnecessary analytics trackers. Google Fonts may receive standard request data such as your IP address and browser information when font files are loaded.","disclaimer":"This is a plain-language explanation for visitors, not legal advice.","back":"Back"},
+  },
+  fa: {
+    nav: { about: "درباره من", services: "خدمات", skills: "مهارت‌ها", work: "پروژه‌ها", approach: "رویکرد من", contact: "ارتباط با من", navigation: "منوی سایت", close: "بستن منو", open: "باز کردن منو", home: "خانه" },
+    hero: {
+      eyebrow: " برنامه‌نویس فرانت‌اند · طراح سایت · مهندس کامپیوتر ",
+      title: "سلام من",
+      name: "یاسین",
+      nameSuffix: "هستم.",
+      lead: "سایت‌های مدرن می‌سازم؛ جایی که کدنویسی تمیز با جزئیات بصری دقیق کنار هم قرار می‌گیرن.",
+      body: "تمرکزم روی توسعه فرانت‌اند با React، طراحی ریسپانسیو و تعاملات نرم و حساب‌شده‌ست؛ با وسواس روی جزئیاتی که شاید به چشم نیان، ولی حس خوب محصول رو می‌سازن.",
+      start: "بیایید صحبت کنیم",
+      work: "دیدن پروژه‌ها",
+      scroll: "برای دیدن بیشتر اسکرول کنید",
+      frontend: "توسعه‌دهنده فرانت‌اند",
+      degree: "مهندسی کامپیوتر",
+      location: "قم، ایران",
+    },
+    facts: { stack: "تکنولوژی اصلی", focus: "تمرکز اصلی", craft: "تخصص بصری", degree: "رشته تحصیلی" },
+    about: {
+      eyebrow: "درباره من",
+      title: "توسعه‌دهنده‌ای که روی",
+      highlight: "جزئیات حساسه.",
+      description: "سلام من یاسین سلیمان پناه هستم و بیشتر از هر چیز، جایی رو دوست دارم که مهندسی و طراحی به هم می‌رسن؛ جایی که یک رابط ریسپانسیو با React ساخته می‌شه و با جزئیات درست، شخصیت پیدا می‌کنه.",
+      currentLabel: "این روزها",
+      current: "در حال حاضر دانشجوی مهندسی کامپیوترم و هم‌زمان با ساخت پروژه‌های مختلف، دارم روی مهارت‌های فرانت‌اند و نگاه طراحی‌ام کار می‌کنم.",
+    },
+    services: {
+      eyebrow: "چی کار می‌کنم؟",
+      title: "ساخت تجربه‌های دیجیتال با",
+      highlight: "فکر و خلاقیت.",
+      description: "روی چند حوزه مشخص تمرکز دارم تا رابط‌هایی بسازم که مدرن، سریع، ریسپانسیو و در عین حال شخصیت‌دار باشن.",
+    },
+    skills: {
+      eyebrow: "مهارت‌ها",
+      title: "تکنولوژی‌هایی که پشت",
+      highlight: "ظاهر کارن.",
+      description: "یک مجموعه ابزار کاربردی برای توسعه فرانت‌اند، طراحی رابط و ساخت تعاملات حساب‌شده.",
+      exploring: "در حال یادگیری",
+      exploringTitle: "هنوز در حال یادگیری، هنوز در حال ساختن...",
+    },
+    projects: {
+      eyebrow: "پروژه‌های منتخب",
+      title: "چیزهایی که",
+      highlight: "ساختم.",
+      description: "منتخبی از پروژه‌هایی که نشون می‌دن چطور فکر می‌کنم، طراحی می‌کنم و ایده رو به یک محصول واقعی تبدیل می‌کنم.",
+      projectInMind: "پروژه‌ای توی ذهنته؟",
+      projectBrief: "معرفی پروژه",
+      builtWith: "ساخته‌شده با",
+      features: "ویژگی‌های اصلی",
+      notes: "چالش و روند ساخت",
+      code: "کد پروژه",
+      demo: "نسخه آنلاین",
+      open: "مشاهده جزئیات پروژه",
+      showMore: "نمایش بیشتر",
+      showLess: "نمایش کمتر",
+    },
+    approach: {
+      eyebrow: "رویکرد من",
+      title: "پشت جزئیات پررنگ، یک روند",
+      highlight: "آروم و حساب‌شده هست.",
+      description: "ظاهر پروژه اولین چیزیه که دیده می‌شه، اما چیزی که تجربه رو خوب نگه می‌داره، روند درست پشت صحنه‌ست: واضح، قابل استفاده و سریع.",
+    },
+    closing: {
+      eyebrow: "ایده‌ای داری که ارزش ساختن داره؟",
+      title: "بیایید تبدیلش کنیم به",
+      highlight: "یه طرح ماندگار.",
+      description: "اگه محصول، ایده یا سایتی توی ذهنت هست، خوشحال می‌شم بدونم چی می‌خوای بسازی و از کجا باید شروع کنیم.",
+      cta: "بریم سراغش",
+    },
+    footer: {
+      statement: "تجربه‌های دیجیتال فکرشده می‌سازم؛ با وسواس روی هر جزئیات.",
+      body: "توسعه فرانت‌اند، طراحی رابط و موشن هدفمند؛ ترکیبی برای ساخت تجربه‌هایی که هم خوب کار می‌کنن و هم حس خوبی می‌دن.",
+      explore: "گشت‌وگذار",
+      connect: "ارتباط",
+      privacy: "حریم خصوصی",
+      rights: "تمامی حقوق محفوظ است.",
+      built: "با دقت طراحی و ساخته شده.",
+    },
+    contact: {
+      "homeLabel": "بازگشت به خانه",
+      "open": "برای گفت‌وگوهای تازه آماده‌ام",
+      "title": "بیایید چیزی بسازیم که",
+      "highlight": "به‌یادموندنی باشه.",
+      "body": "بگو چه کاری با من داری؛ فرم متناسب با انتخابت تغییر می‌کنه تا فقط اطلاعات لازم رو وارد کنی.",
+      "response": "معمولاً ظرف ۱۲ تا ۲۴ ساعت پاسخ می‌دم",
+      "connectDirect": "یا مستقیم در ارتباط باش",
+      "step": "مرحله",
+      "intentTitle": "چطور می‌تونم کمکت کنم؟",
+      "detailsTitle": "چند جزئیات کاربردی",
+      "contactTitle": "از چه راهی پاسخت رو بدم؟",
+      "intentLegend": "موضوع پیامت رو انتخاب کن",
+      "categories": {
+        "website": {
+          "label": "طراحی سایت",
+          "description": "سایت جدید، بازطراحی یا توسعه فرانت‌اند"
+        },
+        "collaboration": {
+          "label": "همکاری پروژه‌ای",
+          "description": "ساخت یک محصول یا پروژه در کنار هم"
+        },
+        "employment": {
+          "label": "پیشنهاد همکاری",
+          "description": "موقعیت شغلی، قراردادی یا عضویت در تیم"
+        },
+        "consultation": {
+          "label": "مشاوره",
+          "description": "بررسی ایده، محصول یا مسیر فنی"
+        },
+        "other": {
+          "label": "موضوع دیگر",
+          "description": "هر چیزی که در گزینه‌های بالا نیست"
+        }
+      },
+      "projectType": "نوع پروژه",
+      "projectTypes": {
+        "portfolio": "سایت شخصی",
+        "online store": "سایت فروشگاهی",
+        "landing": "لندینگ پیج",
+        "corporate": "سایت شرکتی",
+        "ecommerce": "فروشگاه اینترنتی",
+        "webapp": "وب‌اپلیکیشن",
+        "redesign": "بازطراحی یا بهبود فرانت‌اند",
+        "other": "سایر"
+      },
+      "budget": "بودجه تقریبی",
+      "budgets": {
+        "discuss": "نیاز به گفت‌وگو دارد",
+        "starter": "کمتر از ۱۰ میلیون تومان",
+        "Beginner": "۱۰ تا ۳۰ میلیون تومان",
+        "standard": "۳۰ تا ۸۰ میلیون تومان",
+        "advanced": "۸۰ تا ۲۰۰ میلیون تومان",
+        "custom": "بیشتر از ۲۰۰ میلیون تومان"
+      },
+      "timeline": "زمان‌بندی مدنظر",
+      "timelines": {
+        "asap": "در اولین فرصت",
+        "month": "تا یک ماه",
+        "quarter": "یک تا سه ماه",
+        "flexible": "منعطف یا هنوز مشخص نیست"
+      },
+      "website": "وب‌سایت یا لینک مرتبط",
+      "websitePlaceholder": "https://example.com",
+      "companyWebsitePlaceholder": "https://company.com",
+      "websiteError": "لینک کامل و معتبر با http:// یا https:// وارد کن.",
+      "company": "نام مجموعه یا تیم",
+      "companyPlaceholder": "مثلاً نام شرکت",
+      "companyError": "لطفاً نام مجموعه یا تیم رو وارد کن.",
+      "role": "مدل همکاری",
+      "collaborationModels": {
+        "build": "ساخت مشترک",
+        "frontend": "توسعه فرانت‌اند",
+        "design": "همکاری UI/UX",
+        "subcontract": "برون‌سپاری بخشی از پروژه",
+        "other": "سایر"
+      },
+      "employmentModels": {
+        "fulltime": "تمام‌وقت",
+        "parttime": "پاره‌وقت",
+        "contract": "قراردادی",
+        "internship": "کارآموزی",
+        "freelance": "فریلنس"
+      },
+      "consultationTopic": "موضوع مشاوره",
+      "consultationTopics": {
+        "product": "محصول و ایده",
+        "uiux": "بررسی UI/UX",
+        "frontend": "معماری فرانت‌اند",
+        "performance": "پرفورمنس و دسترس‌پذیری",
+        "other": "سایر"
+      },
+      "selectPlaceholder": "یک گزینه انتخاب کن",
+      "optional": "اختیاری",
+      "name": "نام شما",
+      "namePlaceholder": "نام و نام‌خانوادگی",
+      "contactMethod": "از چه راهی باهات تماس بگیرم؟",
+      "contactMethods": {
+        "email": { "label": "ایمیل" },
+        "phone": { "label": "تلفن" },
+        "telegram": { "label": "تلگرام" },
+        "whatsapp": { "label": "واتساپ" },
+        "other": { "label": "راه دیگر" }
+      },
+      "contactLabels": {
+        "email": "آدرس ایمیل",
+        "phone": "شماره تلفن",
+        "telegram": "نام کاربری تلگرام",
+        "whatsapp": "شماره واتساپ",
+        "other": "اطلاعات تماس"
+      },
+      "contactValue": "اطلاعات تماس",
+      "contactPlaceholder": "یک راه ارتباطی مطمئن وارد کن",
+      "contactPlaceholders": {
+        "email": "you@company.com",
+        "phone": "+98 912 123 4567",
+        "telegram": "@username",
+        "whatsapp": "+98 912 123 4567",
+        "other": "لینکدین، ایتا یا راه دیگر"
+      },
+      "message": "پیام شما",
+      "messagePlaceholder": "درباره هدف، شرایط یا نتیجه‌ای که در نظر داری بنویس…",
+      "requiredChoice": "برای ادامه یک گزینه انتخاب کن.",
+      "requiredContactMethod": "حداقل یک راه ارتباطی را انتخاب کن.",
+      "nameError": "نامت باید حداقل دو کاراکتر باشه.",
+      "emailError": "یک ایمیل معتبر وارد کن.",
+      "phoneError": "شماره‌ای معتبر با ۷ تا ۱۵ رقم وارد کن.",
+      "telegramError": "آیدی تلگرام رو با @ و بین ۵ تا ۳۲ کاراکتر وارد کن.",
+      "contactError": "یک راه ارتباطی معتبر وارد کن.",
+      "messageError": "کمی بیشتر توضیح بده؛ حداقل ۱۰ کاراکتر.",
+      "invalidFields": "لطفاً فیلدهای مشخص‌شده رو بررسی کن.",
+      "previous": "مرحله قبل",
+      "continue": "ادامه",
+      "sending": "در حال ارسال…",
+      "sent": "پیام ارسال شد",
+      "send": "ارسال درخواست",
+      "success": "پیامت امن به دستم رسید؛ در اولین فرصت باهات تماس می‌گیرم.",
+      "failed": "ارسال پیام انجام نشد؛ کمی بعد دوباره تلاش کن.",
+      "timeout": "ارسال بیش از حد طول کشید؛ اتصال اینترنت رو بررسی و دوباره تلاش کن.",
+      "privacyNote": "اطلاعاتت فقط برای پاسخ‌دادن به همین درخواست استفاده می‌شه.",
+      "privacyLink": "توضیحات حریم خصوصی",
+      "back": "برگشت به سایت",
+      "footer": "بیایید با فکر و دقت بسازیم."
+    },
+    notFound: { label: "۴۰۴ · صفحه پیدا نشد", text: "این صفحه وجود نداره یا لینکی که استفاده کردی دیگه معتبر نیست.", home: "بازگشت به خانه", contact: "ارتباط با من" },
+    privacy: {"label":"حریم خصوصی","title":"پیام شما فقط برای هدف مشخص پردازش می‌شه.","intro":"اینجا توضیح می‌دیم وقتی از طریق این پورتفولیو تماس می‌گیری چه اطلاعاتی پردازش می‌شه و چه ترجیح‌های محدودی داخل مرورگرت ذخیره می‌شن.","form":"اطلاعاتی که می‌فرستی","formText":"فرم تماس می‌تونه شامل دسته درخواست، نام، راه ارتباطی انتخاب‌شده و مشخصات اون، متن پیام و جزئیات اختیاری پروژه مثل مجموعه، نقش، بودجه، زمان‌بندی یا لینک مرتبط باشه.","processing":"ارسال و نگه‌داری","processingText":"یک Cloudflare Pages Function اطلاعات رو اعتبارسنجی می‌کنه و مستقیم از طریق Telegram Bot API برای یاسین می‌فرسته. این سایت پایگاه‌داده‌ای برای پیام‌های تماس نداره؛ پیام تحویل‌شده طبق سیاست‌های سرویس تلگرام پردازش و نگه‌داری می‌شه.","theme":"ترجیحات محلی","themeText":"انتخاب تم و زبان داخل localStorage دستگاهت ذخیره می‌شه تا در بازدید بعدی هم به خاطر بمونه. با پاک‌کردن داده‌های این سایت از مرورگر می‌تونی این موارد رو حذف کنی.","tracking":"فونت‌ها و ردیابی","trackingText":"این سایت تبلیغات یا ابزار تحلیل غیرضروری اضافه نمی‌کنه. هنگام بارگیری فایل‌های Google Fonts ممکنه اطلاعات معمول درخواست مثل IP و مشخصات مرورگر برای گوگل ارسال بشه.","disclaimer":"این متن یک توضیح ساده برای کاربره و مشاوره حقوقی محسوب نمی‌شه.","back":"بازگشت"},
+  },
+};
+
+export function getUI(language, section) {
+  return ui[language]?.[section] ?? ui.en[section];
+}
+
