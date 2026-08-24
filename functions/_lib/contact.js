@@ -159,6 +159,14 @@ const CATEGORY_LABELS = Object.freeze({
   other: "سایر",
 });
 
+const CATEGORY_EMOJIS = Object.freeze({
+  website: "🌐",
+  collaboration: "🤝",
+  employment: "💼",
+  consultation: "💡",
+  other: "📌",
+});
+
 const CONTACT_LABELS = Object.freeze({
   email: "ایمیل",
   phone: "تلفن",
@@ -167,27 +175,40 @@ const CONTACT_LABELS = Object.freeze({
   other: "راه ارتباطی دیگر",
 });
 
+const CONTACT_EMOJIS = Object.freeze({
+  email: "📧",
+  phone: "📞",
+  telegram: "✈️",
+  whatsapp: "💬",
+  other: "🔗",
+});
+
 export function formatTelegramMessage(data) {
   const e = escapeTelegramHtml;
+  const categoryLabel = CATEGORY_LABELS[data.category] || "سایر";
+  const categoryEmoji = CATEGORY_EMOJIS[data.category] || "📌";
   const lines = [
-    `<b>پیام جدید فرم تماس</b>  #${e(data.category)}`,
+    "📩 <b>پیام جدید از سایت</b>",
+    "━━━━━━━━━━━━━━",
+    `${categoryEmoji} <b>دسته‌بندی:</b> ${e(categoryLabel)}`,
+    `👤 <b>نام:</b> ${e(data.name)}`,
     "",
-    `<b>دسته:</b> ${e(CATEGORY_LABELS[data.category] || data.category)}`,
-    `<b>نام:</b> ${e(data.name)}`,
-    `<b>راه‌های ارتباطی:</b>`,
+    "📱 <b>راه‌های ارتباطی:</b>",
   ];
 
   for (const method of data.contactMethods || []) {
-    lines.push(`• <b>${e(CONTACT_LABELS[method] || method)}:</b> <code>${e(data.contactDetails?.[method] || "")}</code>`);
+    const label = CONTACT_LABELS[method] || "راه ارتباطی دیگر";
+    const emoji = CONTACT_EMOJIS[method] || "🔗";
+    lines.push(`${emoji} <b>${e(label)}:</b> <code>${e(data.contactDetails?.[method] || "")}</code>`);
   }
 
-  if (data.projectType) lines.push(`<b>نوع پروژه:</b> ${e(data.projectType)}`);
-  if (data.budget) lines.push(`<b>بودجه:</b> ${e(data.budget)}`);
-  if (data.timeline) lines.push(`<b>زمان‌بندی:</b> ${e(data.timeline)}`);
-  if (data.company) lines.push(`<b>مجموعه:</b> ${e(data.company)}`);
-  if (data.role) lines.push(`<b>نقش/موقعیت:</b> ${e(data.role)}`);
-  if (data.website) lines.push(`<b>وب‌سایت/لینک:</b> ${e(data.website)}`);
-  lines.push("", "<b>پیام:</b>", e(data.message));
+  if (data.projectType) lines.push(`🧩 <b>نوع پروژه:</b> ${e(data.projectType)}`);
+  if (data.budget) lines.push(`💰 <b>بودجه:</b> ${e(data.budget)}`);
+  if (data.timeline) lines.push(`⏱️ <b>زمان‌بندی:</b> ${e(data.timeline)}`);
+  if (data.company) lines.push(`🏢 <b>مجموعه:</b> ${e(data.company)}`);
+  if (data.role) lines.push(`🎯 <b>نقش / موقعیت:</b> ${e(data.role)}`);
+  if (data.website) lines.push(`🔗 <b>وب‌سایت:</b> ${e(data.website)}`);
+  lines.push("", "📝 <b>متن پیام:</b>", e(data.message), "", "━━━━━━━━━━━━━━", "✅ <b>پیام با موفقیت از سایت دریافت شد.</b>");
 
   return lines.join("\n");
 }
