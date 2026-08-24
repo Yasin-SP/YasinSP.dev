@@ -193,45 +193,140 @@ const CONTACT_EMOJIS = Object.freeze({
 
 const PROJECT_TYPE_LABELS = Object.freeze({
   portfolio: "نمونه‌کار / پورتفولیو",
-  "personal-portfolio": "پورتفولیو شخصی",
-  "personal-website": "وب‌سایت شخصی",
-  website: "وب‌سایت",
+  "landing-page": "لندینگ پیج",
+  "landing_page": "لندینگ پیج",
+  landingpage: "لندینگ پیج",
+  "company-website": "وب‌سایت شرکتی",
+  "company_website": "وب‌سایت شرکتی",
+  companywebsite: "وب‌سایت شرکتی",
   "business-website": "وب‌سایت شرکتی",
   corporate: "وب‌سایت شرکتی",
-  "landing-page": "لندینگ پیج",
-  landing: "لندینگ پیج",
   ecommerce: "فروشگاه اینترنتی",
   "e-commerce": "فروشگاه اینترنتی",
-  shop: "فروشگاه اینترنتی",
-  "web-app": "اپلیکیشن تحت وب",
-  webapp: "اپلیکیشن تحت وب",
-  saas: "نرم‌افزار تحت وب",
-  blog: "وبلاگ",
-  custom: "پروژه سفارشی",
+  "e_commerce": "فروشگاه اینترنتی",
+  "web-application": "وب‌اپلیکیشن",
+  "web_application": "وب‌اپلیکیشن",
+  webapplication: "وب‌اپلیکیشن",
+  "web-app": "وب‌اپلیکیشن",
+  webapp: "وب‌اپلیکیشن",
+  "redesign-frontend-improvement": "بازطراحی / بهبود فرانت‌اند",
+  "redesign_frontend_improvement": "بازطراحی / بهبود فرانت‌اند",
+  "redesign-frontend": "بازطراحی / بهبود فرانت‌اند",
+  redesignfrontend: "بازطراحی / بهبود فرانت‌اند",
+  other: "سایر",
 });
 
 const BUDGET_LABELS = Object.freeze({
-  low: "بودجه محدود",
-  medium: "بودجه متوسط",
-  high: "بودجه بالا",
-  flexible: "قابل مذاکره",
+  "let's-discuss": "نیاز به گفتگو",
+  letsdiscuss: "نیاز به گفتگو",
+  discuss: "نیاز به گفتگو",
+  "under-$500": "کمتر از ۵۰۰ دلار",
+  "under-500": "کمتر از ۵۰۰ دلار",
+  under500: "کمتر از ۵۰۰ دلار",
+  "$500–$1,500": "۵۰۰ تا ۱۵۰۰ دلار",
+  "$500-$1,500": "۵۰۰ تا ۱۵۰۰ دلار",
+  "500–1500": "۵۰۰ تا ۱۵۰۰ دلار",
+  "500-1500": "۵۰۰ تا ۱۵۰۰ دلار",
+  "500_1500": "۵۰۰ تا ۱۵۰۰ دلار",
+  "$1,500–$4,000": "۱۵۰۰ تا ۴۰۰۰ دلار",
+  "$1,500-$4,000": "۱۵۰۰ تا ۴۰۰۰ دلار",
+  "1500–4000": "۱۵۰۰ تا ۴۰۰۰ دلار",
+  "1500-4000": "۱۵۰۰ تا ۴۰۰۰ دلار",
+  "1500_4000": "۱۵۰۰ تا ۴۰۰۰ دلار",
+  "$4,000+": "بیشتر از ۴۰۰۰ دلار",
+  "4000+": "بیشتر از ۴۰۰۰ دلار",
+  "4000-plus": "بیشتر از ۴۰۰۰ دلار",
+  "4000_plus": "بیشتر از ۴۰۰۰ دلار",
+  "4000plus": "بیشتر از ۴۰۰۰ دلار",
 });
 
 const TIMELINE_LABELS = Object.freeze({
-  urgent: "فوری",
+  "as-soon-as-possible": "در اولین فرصت",
+  assoonaspossible: "در اولین فرصت",
   asap: "در اولین فرصت",
-  "1-week": "حدود یک هفته",
-  "2-weeks": "حدود دو هفته",
-  "1-month": "حدود یک ماه",
-  "2-months": "حدود دو ماه",
-  flexible: "انعطاف‌پذیر",
+  "within-one-month": "حداکثر تا یک ماه",
+  "within_one_month": "حداکثر تا یک ماه",
+  withinonemonth: "حداکثر تا یک ماه",
+  "1-3-months": "۱ تا ۳ ماه",
+  "1_3_months": "۱ تا ۳ ماه",
+  "1–3-months": "۱ تا ۳ ماه",
+  "1-3": "۱ تا ۳ ماه",
+  flexible: "انعطاف‌پذیر / هنوز مشخص نیست",
+  "flexible-not-decided": "انعطاف‌پذیر / هنوز مشخص نیست",
+  "flexible-not-decided-yet": "انعطاف‌پذیر / هنوز مشخص نیست",
 });
+
+const COLLABORATION_LABELS = Object.freeze({
+  "build-together": "ساخت مشترک",
+  "build_together": "ساخت مشترک",
+  buildtogether: "ساخت مشترک",
+  "frontend-development": "توسعه فرانت‌اند",
+  "frontend_development": "توسعه فرانت‌اند",
+  frontenddevelopment: "توسعه فرانت‌اند",
+  "ui/ux-collaboration": "همکاری UI/UX",
+  "ui-ux-collaboration": "همکاری UI/UX",
+  "ui_ux_collaboration": "همکاری UI/UX",
+  uiuxcollaboration: "همکاری UI/UX",
+  "subcontract-work": "همکاری پیمانکاری",
+  "subcontract_work": "همکاری پیمانکاری",
+  subcontractwork: "همکاری پیمانکاری",
+  other: "سایر",
+});
+
+const EMPLOYMENT_LABELS = Object.freeze({
+  "full-time-role": "همکاری تمام‌وقت",
+  "full-time": "همکاری تمام‌وقت",
+  "full_time": "همکاری تمام‌وقت",
+  fulltime: "همکاری تمام‌وقت",
+  "part-time-role": "همکاری پاره‌وقت",
+  "part-time": "همکاری پاره‌وقت",
+  "part_time": "همکاری پاره‌وقت",
+  parttime: "همکاری پاره‌وقت",
+  contract: "قراردادی",
+  internship: "کارآموزی",
+  "freelance-engagement": "همکاری فریلنسری",
+  "freelance-engagements": "همکاری فریلنسری",
+  freelance: "همکاری فریلنسری",
+});
+
+const CONSULTATION_LABELS = Object.freeze({
+  "product-and-idea": "محصول و ایده",
+  "product_and_idea": "محصول و ایده",
+  productandidea: "محصول و ایده",
+  "ui/ux-review": "بررسی UI/UX",
+  "ui-ux-review": "بررسی UI/UX",
+  "ui_ux_review": "بررسی UI/UX",
+  uiuxreview: "بررسی UI/UX",
+  "frontend-architecture": "معماری فرانت‌اند",
+  "frontend_architecture": "معماری فرانت‌اند",
+  frontendarchitecture: "معماری فرانت‌اند",
+  "performance-and-accessibility": "عملکرد و دسترسی‌پذیری",
+  "performance_accessibility": "عملکرد و دسترسی‌پذیری",
+  performanceandaccessibility: "عملکرد و دسترسی‌پذیری",
+  other: "سایر",
+});
+
+function normalizeOptionKey(value) {
+  return String(value || "")
+    .trim()
+    .toLowerCase()
+    .replace(/&/g, "and")
+    .replace(/[–—]/g, "-")
+    .replace(/\s+/g, "-");
+}
 
 function translateOption(value, labels) {
   const text = String(value || "").trim();
   if (!text) return "";
-  const key = text.toLowerCase().replace(/\s+/g, "-");
-  return labels[key] || text;
+  const key = normalizeOptionKey(text);
+  return labels[key] || labels[key.replace(/_/g, "-")] || text;
+}
+
+function translateProjectOption(category, value) {
+  if (category === "collaboration") return translateOption(value, COLLABORATION_LABELS);
+  if (category === "employment") return translateOption(value, EMPLOYMENT_LABELS);
+  if (category === "consultation") return translateOption(value, CONSULTATION_LABELS);
+  return translateOption(value, PROJECT_TYPE_LABELS);
 }
 
 export function formatTelegramMessage(data) {
@@ -242,7 +337,8 @@ export function formatTelegramMessage(data) {
   const lines = [
     "📩 <b>پیام جدید از سایت</b>",
     "━━━━━━━━━━━━━━",
-    `${categoryEmoji} <b>دسته‌بندی:</b> ${e(categoryLabel)}  ${categoryHashtag}`,
+    `${categoryEmoji} <b>دسته‌بندی:</b> ${e(categoryLabel)}`,
+    `🏷️ ${categoryHashtag}`,
     `👤 <b>نام:</b> ${e(data.name)}`,
     "",
     "📱 <b>راه‌های ارتباطی:</b>",
@@ -254,9 +350,9 @@ export function formatTelegramMessage(data) {
     lines.push(`${emoji} <b>${e(label)}:</b> <code>${e(data.contactDetails?.[method] || "")}</code>`);
   }
 
-  if (data.projectType) lines.push(`🧩 <b>نوع پروژه:</b> ${e(translateOption(data.projectType, PROJECT_TYPE_LABELS))}`);
-  if (data.budget) lines.push(`💰 <b>بودجه:</b> ${e(translateOption(data.budget, BUDGET_LABELS))}`);
-  if (data.timeline) lines.push(`⏱️ <b>زمان‌بندی:</b> ${e(translateOption(data.timeline, TIMELINE_LABELS))}`);
+  if (data.projectType) lines.push(`🧩 <b>${data.category === "website" ? "نوع پروژه" : data.category === "collaboration" ? "مدل همکاری" : data.category === "employment" ? "مدل همکاری برای استخدام" : data.category === "consultation" ? "موضوع مشاوره" : "نوع پروژه"}:</b> ${e(translateProjectOption(data.category, data.projectType))}`);
+  if (data.budget) lines.push(`💰 <b>بودجه تقریبی:</b> ${e(translateOption(data.budget, BUDGET_LABELS))}`);
+  if (data.timeline) lines.push(`⏱️ <b>زمان‌بندی ترجیحی:</b> ${e(translateOption(data.timeline, TIMELINE_LABELS))}`);
   if (data.company) lines.push(`🏢 <b>مجموعه:</b> ${e(data.company)}`);
   if (data.role) lines.push(`🎯 <b>نقش / موقعیت:</b> ${e(data.role)}`);
   if (data.website) lines.push(`🔗 <b>وب‌سایت:</b> ${e(data.website)}`);
