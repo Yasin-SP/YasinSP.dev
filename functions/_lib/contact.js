@@ -167,6 +167,14 @@ const CATEGORY_EMOJIS = Object.freeze({
   other: "📌",
 });
 
+const CATEGORY_HASHTAGS = Object.freeze({
+  website: "#طراحی_سایت",
+  collaboration: "#همکاری_پروژه‌ای",
+  employment: "#پیشنهاد_شغلی",
+  consultation: "#مشاوره",
+  other: "#سایر",
+});
+
 const CONTACT_LABELS = Object.freeze({
   email: "ایمیل",
   phone: "تلفن",
@@ -183,14 +191,58 @@ const CONTACT_EMOJIS = Object.freeze({
   other: "🔗",
 });
 
+const PROJECT_TYPE_LABELS = Object.freeze({
+  portfolio: "نمونه‌کار / پورتفولیو",
+  "personal-portfolio": "پورتفولیو شخصی",
+  "personal-website": "وب‌سایت شخصی",
+  website: "وب‌سایت",
+  "business-website": "وب‌سایت شرکتی",
+  corporate: "وب‌سایت شرکتی",
+  "landing-page": "لندینگ پیج",
+  landing: "لندینگ پیج",
+  ecommerce: "فروشگاه اینترنتی",
+  "e-commerce": "فروشگاه اینترنتی",
+  shop: "فروشگاه اینترنتی",
+  "web-app": "اپلیکیشن تحت وب",
+  webapp: "اپلیکیشن تحت وب",
+  saas: "نرم‌افزار تحت وب",
+  blog: "وبلاگ",
+  custom: "پروژه سفارشی",
+});
+
+const BUDGET_LABELS = Object.freeze({
+  low: "بودجه محدود",
+  medium: "بودجه متوسط",
+  high: "بودجه بالا",
+  flexible: "قابل مذاکره",
+});
+
+const TIMELINE_LABELS = Object.freeze({
+  urgent: "فوری",
+  asap: "در اولین فرصت",
+  "1-week": "حدود یک هفته",
+  "2-weeks": "حدود دو هفته",
+  "1-month": "حدود یک ماه",
+  "2-months": "حدود دو ماه",
+  flexible: "انعطاف‌پذیر",
+});
+
+function translateOption(value, labels) {
+  const text = String(value || "").trim();
+  if (!text) return "";
+  const key = text.toLowerCase().replace(/\s+/g, "-");
+  return labels[key] || text;
+}
+
 export function formatTelegramMessage(data) {
   const e = escapeTelegramHtml;
   const categoryLabel = CATEGORY_LABELS[data.category] || "سایر";
   const categoryEmoji = CATEGORY_EMOJIS[data.category] || "📌";
+  const categoryHashtag = CATEGORY_HASHTAGS[data.category] || "#سایر";
   const lines = [
     "📩 <b>پیام جدید از سایت</b>",
     "━━━━━━━━━━━━━━",
-    `${categoryEmoji} <b>دسته‌بندی:</b> ${e(categoryLabel)}`,
+    `${categoryEmoji} <b>دسته‌بندی:</b> ${e(categoryLabel)}  ${categoryHashtag}`,
     `👤 <b>نام:</b> ${e(data.name)}`,
     "",
     "📱 <b>راه‌های ارتباطی:</b>",
@@ -202,9 +254,9 @@ export function formatTelegramMessage(data) {
     lines.push(`${emoji} <b>${e(label)}:</b> <code>${e(data.contactDetails?.[method] || "")}</code>`);
   }
 
-  if (data.projectType) lines.push(`🧩 <b>نوع پروژه:</b> ${e(data.projectType)}`);
-  if (data.budget) lines.push(`💰 <b>بودجه:</b> ${e(data.budget)}`);
-  if (data.timeline) lines.push(`⏱️ <b>زمان‌بندی:</b> ${e(data.timeline)}`);
+  if (data.projectType) lines.push(`🧩 <b>نوع پروژه:</b> ${e(translateOption(data.projectType, PROJECT_TYPE_LABELS))}`);
+  if (data.budget) lines.push(`💰 <b>بودجه:</b> ${e(translateOption(data.budget, BUDGET_LABELS))}`);
+  if (data.timeline) lines.push(`⏱️ <b>زمان‌بندی:</b> ${e(translateOption(data.timeline, TIMELINE_LABELS))}`);
   if (data.company) lines.push(`🏢 <b>مجموعه:</b> ${e(data.company)}`);
   if (data.role) lines.push(`🎯 <b>نقش / موقعیت:</b> ${e(data.role)}`);
   if (data.website) lines.push(`🔗 <b>وب‌سایت:</b> ${e(data.website)}`);
