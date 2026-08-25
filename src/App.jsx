@@ -17,31 +17,31 @@ const Privacy = lazy(() => import("./pages/Privacy.jsx"));
 const routeMetadata = {
   "/": {
     en: {
-      title: "Yasin — Front-End Developer",
-      description: "Yasin builds modern React interfaces with responsive engineering, thoughtful visual detail, and purposeful motion.",
+      title: "Yasin SoleymanPanah — Front-End Developer",
+      description: "Yasin SoleymanPanah builds modern React interfaces with responsive engineering, thoughtful visual detail, and purposeful motion.",
     },
     fa: {
-      title: "یاسین — توسعه‌دهنده فرانت‌اند",
-      description: "پورتفولیوی یاسین؛ توسعه رابط‌های مدرن React با مهندسی ریسپانسیو، جزئیات بصری و موشن هدفمند.",
+      title: "یاسین سلیمان پناه — توسعه‌دهنده فرانت‌اند",
+      description: "پورتفولیوی یasin SoleymanPanah؛ توسعه رابط‌های مدرن React با مهندسی ریسپانسیو، جزئیات بصری و موشن هدفمند.",
     },
   },
   "/contact": {
     en: {
-      title: "Contact Yasin — Projects & Collaboration",
-      description: "Send Yasin a structured project, collaboration, or work request through the secure contact form.",
+      title: "Contact Yasin SoleymanPanah — Projects & Collaboration",
+      description: "Send Yasin SoleymanPanah a structured project, collaboration, or work request through the secure contact form.",
     },
     fa: {
-      title: "ارتباط با یاسین — پروژه و همکاری",
-      description: "درخواست پروژه، همکاری یا پیشنهاد کاری خود را از طریق فرم امن و دسته‌بندی‌شده برای یاسین ارسال کنید.",
+      title: "ارتباط با یاسین سلیمان پناه — پروژه و همکاری",
+      description: "درخواست پروژه، همکاری یا پیشنهاد کاری خود را از طریق فرم امن و دسته‌بندی‌شده برای یاسین سلیمان پناه ارسال کنید.",
     },
   },
   "/privacy": {
     en: {
-      title: "Privacy — Yasin Portfolio",
+      title: "Privacy — Yasin SoleymanPanah Portfolio",
       description: "How this portfolio handles contact details, local preferences, and visitor privacy.",
     },
     fa: {
-      title: "حریم خصوصی — پورتفولیوی یاسین",
+      title: "حریم خصوصی — پورتفولیوی یاسین سلیمان پناه",
       description: "نحوه مدیریت اطلاعات تماس، تنظیمات محلی و حریم خصوصی بازدیدکنندگان در این پورتفولیو.",
     },
   },
@@ -57,10 +57,12 @@ function RouteMetadata() {
     const metadata = isKnownRoute
       ? routeMetadata[normalizedPath][language]
       : language === "fa"
-        ? { title: "صفحه پیدا نشد — یاسین", description: "صفحه‌ای که دنبالش بودید پیدا نشد." }
-        : { title: "Page Not Found — Yasin", description: "The page you requested could not be found." };
+        ? { title: "صفحه پیدا نشد — یاسین سلیمان پناه", description: "صفحه‌ای که دنبالش بودید پیدا نشد." }
+        : { title: "Page Not Found — Yasin SoleymanPanah", description: "The page you requested could not be found." };
 
     document.title = metadata.title;
+    document.documentElement.lang = language === "fa" ? "fa" : "en";
+    document.documentElement.dir = language === "fa" ? "rtl" : "ltr";
     document.querySelector('meta[name="description"]')?.setAttribute("content", metadata.description);
     document.querySelector('meta[name="robots"]')?.setAttribute("content", isKnownRoute ? "index, follow" : "noindex, nofollow");
     document.querySelector('meta[property="og:title"]')?.setAttribute("content", metadata.title);
@@ -69,6 +71,37 @@ function RouteMetadata() {
     document.querySelector('meta[name="twitter:title"]')?.setAttribute("content", metadata.title);
     document.querySelector('meta[name="twitter:description"]')?.setAttribute("content", metadata.description);
   }, [language, pathname]);
+
+  return null;
+}
+
+function PersonStructuredData() {
+  useEffect(() => {
+    const scriptId = "person-structured-data";
+    let script = document.getElementById(scriptId);
+    if (!script) {
+      script = document.createElement("script");
+      script.id = scriptId;
+      script.type = "application/ld+json";
+      document.head.appendChild(script);
+    }
+
+    script.textContent = JSON.stringify({
+      "@context": "https://schema.org",
+      "@type": "Person",
+      name: "یاسین سلیمان پناه",
+      alternateName: ["Yasin SoleymanPanah", "Yasin Soleyman Panah"],
+      url: window.location.origin,
+      jobTitle: "Front-End Developer",
+      image: `${window.location.origin}/og-image.png`,
+      sameAs: [
+        "https://github.com/Yasin-SP",
+        "https://t.me/YasinSP",
+      ],
+    });
+
+    return () => script?.remove();
+  }, []);
 
   return null;
 }
@@ -128,6 +161,7 @@ function AppShell() {
           </Routes>
           <RouteFocus />
           <RouteMetadata />
+          <PersonStructuredData />
         </Suspense>
       </div>
     </div>
