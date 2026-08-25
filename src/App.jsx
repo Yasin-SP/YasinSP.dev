@@ -61,8 +61,6 @@ function RouteMetadata() {
         : { title: "Page Not Found — Yasin SoleymanPanah", description: "The page you requested could not be found." };
 
     document.title = metadata.title;
-    document.documentElement.lang = language === "fa" ? "fa" : "en";
-    document.documentElement.dir = language === "fa" ? "rtl" : "ltr";
     document.querySelector('meta[name="description"]')?.setAttribute("content", metadata.description);
     document.querySelector('meta[name="robots"]')?.setAttribute("content", isKnownRoute ? "index, follow" : "noindex, nofollow");
     document.querySelector('meta[property="og:title"]')?.setAttribute("content", metadata.title);
