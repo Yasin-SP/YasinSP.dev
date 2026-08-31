@@ -17,12 +17,12 @@ const Privacy = lazy(() => import("./pages/Privacy.jsx"));
 const routeMetadata = {
   "/": {
     en: {
-      title: "Yasin SoleymanPanah — Front-End Developer",
-      description: "Yasin SoleymanPanah builds modern React interfaces with responsive engineering, thoughtful visual detail, and purposeful motion.",
+      title: "Yasin SoleymanPanah — Front-End Developer & Web Designer in Qom",
+      description: "Yasin SoleymanPanah — Front-End Developer and Web Designer in Qom, specializing in modern React interfaces, responsive web design, visual detail, and purposeful motion.",
     },
     fa: {
-      title: "یاسین سلیمان پناه — توسعه‌دهنده فرانت‌اند",
-      description: "پورتفولیوی یاسین سلیمان پناه؛ توسعه رابط‌های مدرن React با مهندسی ریسپانسیو، جزئیات بصری و موشن هدفمند.",
+      title: "یاسین سلیمان پناه | برنامه نویس فرانت اند و طراح سایت قم",
+      description: "یاسین سلیمان پناه — برنامه نویس فرانت اند و طراح سایت در قم، متخصص React و طراحی رابط‌های مدرن و ریسپانسیو با توجه به جزئیات بصری و تجربه کاربری.",
     },
   },
   "/contact": {
