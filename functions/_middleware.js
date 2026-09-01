@@ -7,6 +7,15 @@ function createNonce() {
 }
 
 export async function onRequest(context) {
+  const requestUrl = new URL(context.request.url);
+
+  if (requestUrl.hostname !== 'yasinsp.dev') {
+    requestUrl.protocol = 'https:';
+    requestUrl.hostname = 'yasinsp.dev';
+    requestUrl.port = '';
+    return Response.redirect(requestUrl.toString(), 308);
+  }
+
   const nonce = createNonce();
   const response = await context.next();
   const contentType = response.headers.get('content-type') || '';
