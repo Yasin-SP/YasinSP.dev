@@ -73,37 +73,6 @@ function RouteMetadata() {
   return null;
 }
 
-function PersonStructuredData() {
-  useEffect(() => {
-    const scriptId = "person-structured-data";
-    let script = document.getElementById(scriptId);
-    if (!script) {
-      script = document.createElement("script");
-      script.id = scriptId;
-      script.type = "application/ld+json";
-      document.head.appendChild(script);
-    }
-
-    script.textContent = JSON.stringify({
-      "@context": "https://schema.org",
-      "@type": "Person",
-      name: "یاسین سلیمان پناه",
-      alternateName: ["Yasin SoleymanPanah", "Yasin Soleyman Panah"],
-      url: window.location.origin,
-      jobTitle: "Front-End Developer",
-      image: `${window.location.origin}/og-image.png`,
-      sameAs: [
-        "https://github.com/Yasin-SP",
-        "https://t.me/YasinSP",
-      ],
-    });
-
-    return () => script?.remove();
-  }, []);
-
-  return null;
-}
-
 function RouteFocus() {
   const location = useLocation();
   const previousPath = useRef(location.pathname);
@@ -159,7 +128,6 @@ function AppShell() {
           </Routes>
           <RouteFocus />
           <RouteMetadata />
-          <PersonStructuredData />
         </Suspense>
       </div>
     </div>
