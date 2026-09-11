@@ -1,3 +1,7 @@
+import NomaPoster from "../assets/projects/Noma-poster.webp";
+import NomaHome from "../assets/projects/Noma-home.webp";
+import NomaMenu from "../assets/projects/Noma-menu.webp";
+import NomaMobile from "../assets/projects/Noma-mobile.webp";
 import NabzCrypto1 from "../assets/projects/nabzCrypto1.webp";
 import NabzCrypto2 from "../assets/projects/nabzCrypto2.webp";
 import NabzCrypto3 from "../assets/projects/nabzCrypto3.webp";
@@ -12,6 +16,65 @@ import OstadSanj3 from "../assets/projects/Ostadsanj3.webp";
 // These entries are transparent concept studies, not commissioned client work.
 // Add external links only when a real repository or published case study exists.
 export const projects = [
+  {
+    id: "noma-restaurant",
+    title: "NOMA",
+    category: "Restaurant Website",
+    year: "2026",
+    description:
+      "A Persian RTL restaurant website with a rich responsive interface, dynamic menu pricing, interactive food cards, and a polished mobile-first experience.",
+    fullDescription:
+      "NOMA is a Persian RTL restaurant website built with React, TypeScript, and Vite. The project combines a visual food-focused landing page with a structured menu experience, animated item details, responsive layouts, discount sections, guest comments, FAQ content, and location information. Menu prices can adapt to the current USD/Toman rate using a live data source with rounding and fallback logic, while the map layer is prepared for Neshan with a Google Maps fallback.",
+    stack: [
+      "React",
+      "TypeScript",
+      "Vite",
+      "Tailwind CSS",
+      "Framer Motion",
+      "React Router",
+      "Neshan Web SDK",
+    ],
+    features: [
+      "Fully Persian RTL restaurant experience",
+      "Responsive desktop and mobile layouts",
+      "Structured multi-category food menu",
+      "Animated food cards and item detail modal",
+      "Dynamic USD/Toman-based menu pricing",
+      "Rounded price calculation with cached fallback rate",
+      "Discount and bestseller sections",
+      "Guest comments and FAQ sections",
+      "Neshan map integration with Google Maps fallback",
+      "Production deployment on Vercel",
+    ],
+    challenges:
+      "The main challenge was balancing a highly visual restaurant interface with a large amount of menu content while keeping the experience fast, readable, and consistent across desktop and mobile. The project also required reliable dynamic pricing based on an external exchange-rate source, graceful fallbacks for pricing and maps, and careful RTL layout work across interactive cards, modals, navigation, and long menu sections.",
+    github: "https://github.com/Yasin-SP/Noma",
+    demo: "https://noma-yasin-sp1.vercel.app/",
+    images: [NomaPoster, NomaHome, NomaMenu, NomaMobile],
+
+    fa: {
+      title: "نوما",
+      category: "وب‌سایت رستوران",
+      description:
+        "یک وب‌سایت فارسی و راست‌چین برای رستوران با رابطی ریسپانسیو، منوی پویا، کارت‌های تعاملی غذا و تجربه‌ای کامل در موبایل و دسکتاپ.",
+      fullDescription:
+        "نوما یک وب‌سایت فارسی و راست‌چین برای رستوران است که با React، TypeScript و Vite ساخته شده. پروژه یک لندینگ بصری و غذا‌محور را با منوی دسته‌بندی‌شده، جزئیات متحرک آیتم‌ها، طراحی ریسپانسیو، بخش تخفیف‌ها، نظرات مهمان‌ها، سوالات متداول و اطلاعات موقعیت ترکیب می‌کند. قیمت آیتم‌های منو می‌تواند با نرخ روز دلار به تومان به‌صورت پویا تغییر کند و با منطق رند کردن و نرخ جایگزین، حتی در صورت قطع منبع قیمت نیز پایدار بماند. بخش نقشه نیز برای نشان آماده شده و در نبود کلید API به Google Maps برمی‌گردد.",
+      features: [
+        "رابط کاربری کاملاً فارسی و راست‌چین",
+        "طراحی ریسپانسیو برای دسکتاپ و موبایل",
+        "منوی ساختاریافته با چند دسته غذایی",
+        "کارت‌های متحرک غذا و مودال جزئیات آیتم",
+        "قیمت‌گذاری پویا بر اساس نرخ دلار به تومان",
+        "رند کردن قیمت‌ها و استفاده از نرخ کش‌شده در حالت جایگزین",
+        "بخش تخفیف‌ها و آیتم‌های محبوب",
+        "بخش نظرات مهمان‌ها و سوالات متداول",
+        "آماده برای نقشه نشان با fallback گوگل مپ",
+        "استقرار نسخه Production روی Vercel",
+      ],
+      challenges:
+        "چالش اصلی پروژه ایجاد تعادل بین یک رابط بسیار بصری و حجم زیاد محتوای منو بود؛ بدون اینکه تجربه در موبایل و دسکتاپ شلوغ یا کند شود. پیاده‌سازی قیمت‌گذاری پویا با منبع خارجی نرخ ارز، طراحی fallback برای قیمت و نقشه، و حفظ یکپارچگی کامل RTL در کارت‌ها، مودال‌ها، ناوبری و سکشن‌های طولانی منو نیز از بخش‌های مهم فنی پروژه بودند.",
+    },
+  },
   {
     id: "nabz-crypto",
     title: "Nabz Crypto",
