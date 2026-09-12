@@ -6,9 +6,9 @@ const languages = { en: { code: "en", dir: "ltr" }, fa: { code: "fa", dir: "rtl"
 
 export function LanguageProvider({ children }) {
   const [language, setLanguage] = useState(() => {
-    if (typeof window === "undefined") return "en";
+    if (typeof window === "undefined") return "fa";
     const saved = safeStorageGet("language");
-    return saved === "fa" || saved === "en" ? saved : "en";
+    return saved === "fa" || saved === "en" ? saved : "fa";
   });
 
   useEffect(() => {
