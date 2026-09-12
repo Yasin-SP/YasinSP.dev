@@ -9,7 +9,7 @@
   };
 
   const savedLanguage = readPreference("language");
-  const language = savedLanguage === "fa" ? "fa" : "en";
+  const language = savedLanguage === "en" || savedLanguage === "fa" ? savedLanguage : "fa";
   root.lang = language;
   root.dir = language === "fa" ? "rtl" : "ltr";
   root.dataset.language = language;
