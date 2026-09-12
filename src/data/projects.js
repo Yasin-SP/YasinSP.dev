@@ -47,7 +47,7 @@ export const projects = [
     challenges:
       "The main challenge was balancing a highly visual restaurant interface with a large amount of menu content while keeping the experience fast, readable, and consistent across desktop and mobile. The project also required reliable dynamic pricing based on an external exchange-rate source, graceful fallbacks for pricing and maps, and careful RTL layout work across interactive cards, modals, navigation, and long menu sections.",
     demo: "https://noma-iota-flame.vercel.app/",
-    images: [NomaPoster, NomaHome, NomaMenu, NomaMobile],
+    images: [NomaPoster, NomaHome, NomaMobile, NomaMenu],
 
     fa: {
       title: "نوما",
