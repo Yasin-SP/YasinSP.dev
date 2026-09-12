@@ -1,7 +1,7 @@
-import NomaPoster from "../assets/projects/Noma-poster.webp";
-import NomaHome from "../assets/projects/Noma-home.webp";
-import NomaMenu from "../assets/projects/Noma-menu.webp";
-import NomaMobile from "../assets/projects/Noma-mobile.webp";
+import NomaPoster from "../assets/projects/NomaPoster.webp";
+import NomaHome from "../assets/projects/NomaHome.webp";
+import NomaMenu from "../assets/projects/NomaMenu.webp";
+import NomaMobile from "../assets/projects/NomaMobile.webp";
 import NabzCrypto1 from "../assets/projects/nabzCrypto1.webp";
 import NabzCrypto2 from "../assets/projects/nabzCrypto2.webp";
 import NabzCrypto3 from "../assets/projects/nabzCrypto3.webp";
@@ -32,7 +32,6 @@ export const projects = [
       "Tailwind CSS",
       "Framer Motion",
       "React Router",
-      "Neshan Web SDK",
     ],
     features: [
       "Fully Persian RTL restaurant experience",
@@ -44,11 +43,9 @@ export const projects = [
       "Discount and bestseller sections",
       "Guest comments and FAQ sections",
       "Neshan map integration with Google Maps fallback",
-      "Production deployment on Vercel",
     ],
     challenges:
       "The main challenge was balancing a highly visual restaurant interface with a large amount of menu content while keeping the experience fast, readable, and consistent across desktop and mobile. The project also required reliable dynamic pricing based on an external exchange-rate source, graceful fallbacks for pricing and maps, and careful RTL layout work across interactive cards, modals, navigation, and long menu sections.",
-    github: "https://github.com/Yasin-SP/Noma",
     demo: "https://noma-iota-flame.vercel.app/",
     images: [NomaPoster, NomaHome, NomaMenu, NomaMobile],
 
@@ -69,7 +66,6 @@ export const projects = [
         "بخش تخفیف‌ها و آیتم‌های محبوب",
         "بخش نظرات مهمان‌ها و سوالات متداول",
         "آماده برای نقشه نشان با fallback گوگل مپ",
-        "استقرار نسخه Production روی Vercel",
       ],
       challenges:
         "چالش اصلی پروژه ایجاد تعادل بین یک رابط بسیار بصری و حجم زیاد محتوای منو بود؛ بدون اینکه تجربه در موبایل و دسکتاپ شلوغ یا کند شود. پیاده‌سازی قیمت‌گذاری پویا با منبع خارجی نرخ ارز، طراحی fallback برای قیمت و نقشه، و حفظ یکپارچگی کامل RTL در کارت‌ها، مودال‌ها، ناوبری و سکشن‌های طولانی منو نیز از بخش‌های مهم فنی پروژه بودند.",
