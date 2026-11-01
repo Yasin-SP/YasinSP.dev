@@ -1,35 +1,36 @@
-import { motion } from "motion/react";
-import { ArrowUpRight } from "lucide-react";
-import { smoothEase } from "../constants/theme.js";
+import { Code2, Palette, Sparkles } from "lucide-react";
 import { services } from "../data/services.js";
 import { getUI } from "../i18n.js";
 import { localize, useLanguage } from "../context/LanguageContext.jsx";
+import Reveal from "./Reveal.jsx";
+import Section from "./Section.jsx";
 import SectionIntro from "./SectionIntro.jsx";
 
+const icons = [Code2, Palette, Sparkles];
+
 function ServicesSection() {
-  const { language, isRTL } = useLanguage();
+  const { language } = useLanguage();
   const copy = getUI(language, "services");
   return (
-    <section id="services" className="relative w-full py-28 md:py-36">
-      <div dir={isRTL ? "rtl" : "ltr"} className="max-w-7xl mx-auto px-6 md:px-12">
-        <SectionIntro eyebrow={copy.eyebrow} title={copy.title} highlight={copy.highlight} description={copy.description} />
-        <div className="mt-14 md:mt-20 border-t" style={{ borderColor: "var(--color-border)" }}>
-          {services.map((service, index) => {
-            const item = localize(service, language);
-            return <motion.article key={service.number} initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true, amount: 0.25 }} transition={{ duration: 0.65, ease: smoothEase, delay: index * 0.06 }} className="group grid grid-cols-[48px_1fr_auto] md:grid-cols-[80px_1.15fr_1fr_40px] gap-5 md:gap-10 py-8 md:py-10 border-b" style={{ borderColor: "var(--color-border)" }}>
-              <span className={`font-sans text-xs tracking-[0.18em] text-[var(--color-purple-1)] pt-1 ${isRTL ? "text-right" : ""}`}>{service.number}</span>
-              <div className={isRTL ? "text-right" : ""}>
-                <h3 className="font-display text-xl md:text-2xl font-semibold text-[var(--color-text-primary)] tracking-tight group-hover:translate-x-1 transition-transform duration-500">{item.title}</h3>
-                <div className="flex flex-wrap gap-2 mt-4 md:hidden">{item.tags.map((tag) => <span key={tag} className="text-[10px] px-2.5 py-1 rounded-full border text-[var(--color-text-secondary)]" style={{ borderColor: "var(--color-border)" }}>{tag}</span>)}</div>
-              </div>
-              <p className={`hidden md:block font-sans text-sm md:text-base leading-relaxed text-[var(--color-text-secondary)] max-w-md ${isRTL ? "text-right" : ""}`}>{item.description}</p>
-              <ArrowUpRight size={18} className="text-[var(--color-text-muted)] group-hover:text-[var(--color-purple-1)] group-hover:translate-x-1 group-hover:-translate-y-1 transition-all duration-500 mt-1" />
-              <p className={`col-start-2 col-span-2 md:hidden font-sans text-sm leading-relaxed text-[var(--color-text-secondary)] ${isRTL ? "text-right" : ""}`}>{item.description}</p>
-            </motion.article>;
-          })}
-        </div>
+    <Section id="services" band>
+      <SectionIntro eyebrow={copy.eyebrow} title={copy.title} highlight={copy.highlight} description={copy.description} />
+      <div className="mt-14 grid gap-5 md:mt-20 md:grid-cols-3">
+        {services.map((service, index) => {
+          const item = localize(service, language);
+          const Icon = icons[index % icons.length];
+          return (
+            <Reveal key={service.number} as="article" delay={index * 0.08} className="tile flex min-h-80 flex-col p-8 text-start md:p-9">
+              <Icon size={30} strokeWidth={1.5} className="text-accent" aria-hidden="true" />
+              <h3 className="mt-10 font-display text-2xl font-semibold leading-tight tracking-tight text-(--color-text-primary)">{item.title}</h3>
+              <p className="mt-3 font-sans text-base leading-relaxed text-(--color-text-secondary)">{item.description}</p>
+              <ul className="mt-auto flex flex-wrap gap-x-3 gap-y-1 pt-8 font-sans text-[13px] text-(--color-text-muted)">
+                {item.tags.map((tag) => <li key={tag}>{tag}</li>)}
+              </ul>
+            </Reveal>
+          );
+        })}
       </div>
-    </section>
+    </Section>
   );
 }
 export default ServicesSection;

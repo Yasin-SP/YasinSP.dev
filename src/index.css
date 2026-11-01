@@ -34,8 +34,9 @@ button:focus-visible,
 a:focus-visible,
 input:focus-visible,
 textarea:focus-visible,
-select:focus-visible {
-  outline: 2px solid var(--color-purple-1);
+select:focus-visible,
+[role="button"]:focus-visible {
+  outline: 2px solid var(--accent-fill);
   outline-offset: 3px;
 }
 
@@ -45,7 +46,7 @@ select:focus-visible {
   top: 1rem;
   z-index: 10000;
   transform: translateY(-160%);
-  padding: 0.7rem 1rem;
+  padding: 0.7rem 1.1rem;
   border-radius: 999px;
   background: var(--color-text-primary);
   color: var(--color-bg);
@@ -55,10 +56,4 @@ select:focus-visible {
 
 .skip-link:focus {
   transform: translateY(0);
-}
-
-@media (prefers-reduced-motion: reduce) {
-  .animate-bounce {
-    animation: none !important;
-  }
 }

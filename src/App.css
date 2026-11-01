@@ -1,61 +1,83 @@
 @import "tailwindcss";
 
+/* ==========================================================================
+   Design tokens
+   One neutral palette + a single blue accent. Surfaces are flat; depth comes
+   from tone, not from glows or gradients.
+   ========================================================================== */
 :root {
   --color-bg: #000000;
-  --color-bg-elevated: #0a0a0a;
-  --color-text-primary: #ffffff;
-  --color-text-secondary: #a3a3a3;
-  --color-text-muted: #737373;
-  --color-border: rgba(255, 255, 255, 0.1);
-  --color-border-strong: rgba(255, 255, 255, 0.18);
-  --color-surface: rgba(255, 255, 255, 0.03);
-  --color-surface-hover: rgba(255, 255, 255, 0.06);
-  --color-pill-bg: rgba(163, 163, 163, 0.15);
+  --color-bg-alt: #0d0d0f;
+  --color-bg-elevated: #1c1c1e;
+  --color-tile: #1c1c1e;
+  --color-tile-on-alt: #1c1c1e;
+  --color-surface: rgba(255, 255, 255, 0.08);
+  --color-surface-hover: rgba(255, 255, 255, 0.14);
+  --color-text-primary: #f5f5f7;
+  --color-text-secondary: #a1a1a6;
+  --color-text-muted: #86868b;
+  --color-border: rgba(255, 255, 255, 0.12);
+  --color-border-strong: rgba(255, 255, 255, 0.22);
 
-  --color-purple-1: #a855f7;
-  --color-purple-2: #6b21a8;
-  --color-purple-3: #3b0764;
-  --gradient-primary: linear-gradient(270deg, #3b0764, #581c87, #6b21a8, #581c87, #3b0764);
-  --shadow-glow-strong: 0 0 60px rgba(168, 85, 247, 0.6), 0 0 120px rgba(107, 33, 168, 0.4);
-  --shadow-glow-soft: 0 0 100px rgba(147, 51, 234, 0.55), 0 0 200px rgba(107, 33, 168, 0.35);
-  --blob-opacity: 0.4;
-  --aurora-opacity: 0.18;
+  --accent-text: #2997ff;
+  --accent-fill: #0071e3;
+  --accent-fill-hover: #0077ed;
+  --accent-ring: rgba(0, 113, 227, 0.3);
+  --accent-surface: rgba(41, 151, 255, 0.12);
+  --accent-border: rgba(41, 151, 255, 0.32);
+
+  --nav-bg: rgba(22, 22, 23, 0.72);
+  --scrim: rgba(0, 0, 0, 0.55);
+
+  --tracking-display: -0.03em;
+  --leading-display: 1.06;
+  --weight-display: 600;
 }
 
 [data-theme="light"] {
-  --color-bg: #faf9fc;
+  --color-bg: #fbfbfd;
+  --color-bg-alt: #f5f5f7;
   --color-bg-elevated: #ffffff;
-  --color-text-primary: #18181b;
-  --color-text-secondary: #52525b;
-  --color-text-muted: #8b8b93;
-  --color-border: rgba(24, 24, 27, 0.08);
-  --color-border-strong: rgba(24, 24, 27, 0.14);
-  --color-surface: rgba(24, 24, 27, 0.03);
-  --color-surface-hover: rgba(24, 24, 27, 0.06);
-  --color-pill-bg: rgba(147, 51, 234, 0.06);
+  --color-tile: #f5f5f7;
+  --color-tile-on-alt: #ffffff;
+  --color-surface: rgba(0, 0, 0, 0.05);
+  --color-surface-hover: rgba(0, 0, 0, 0.09);
+  --color-text-primary: #1d1d1f;
+  --color-text-secondary: #515154;
+  --color-text-muted: #6e6e73;
+  --color-border: rgba(0, 0, 0, 0.1);
+  --color-border-strong: rgba(0, 0, 0, 0.2);
 
-  --color-purple-1: #9333ea;
-  --color-purple-2: #7e22ce;
-  --color-purple-3: #6b21a8;
-  --gradient-primary: linear-gradient(270deg, #7e22ce, #9333ea, #a855f7, #9333ea, #7e22ce);
-  --shadow-glow-strong: 0 0 40px rgba(147, 51, 234, 0.25), 0 0 80px rgba(107, 33, 168, 0.15);
-  --shadow-glow-soft: 0 0 60px rgba(147, 51, 234, 0.2), 0 0 120px rgba(107, 33, 168, 0.1);
-  --blob-opacity: 0.12;
-  --aurora-opacity: 0.08;
+  --accent-text: #0066cc;
+  --accent-fill: #0071e3;
+  --accent-fill-hover: #0077ed;
+  --accent-ring: rgba(0, 113, 227, 0.22);
+  --accent-surface: rgba(0, 113, 227, 0.08);
+  --accent-border: rgba(0, 102, 204, 0.28);
+
+  --nav-bg: rgba(251, 251, 253, 0.8);
+  --scrim: rgba(0, 0, 0, 0.32);
+}
+
+/* Alternate full-bleed band: tiles inside it switch to their "on alt" tone. */
+.band-alt {
+  background-color: var(--color-bg-alt);
+  --color-tile: var(--color-tile-on-alt);
 }
 
 @theme {
   --color-background: var(--color-bg);
-  --color-background-elevated: var(--color-bg-elevated);
   --color-foreground: var(--color-text-primary);
-  --color-foreground-secondary: var(--color-text-secondary);
-  --color-foreground-muted: var(--color-text-muted);
-  --font-display: "Space Grotesk", sans-serif;
-  --font-sans: "Inter", sans-serif;
-  --font-persian: "Vazirmatn", sans-serif;
+  --color-accent: var(--accent-text);
+  --color-accent-fill: var(--accent-fill);
+  --font-sans: -apple-system, BlinkMacSystemFont, "SF Pro Text", "Inter", "Helvetica Neue", Helvetica, Arial, sans-serif;
+  --font-display: -apple-system, BlinkMacSystemFont, "SF Pro Display", "Inter", "Helvetica Neue", Helvetica, Arial, sans-serif;
+  --font-persian: "Vazirmatn", "SF Arabic", -apple-system, BlinkMacSystemFont, "Segoe UI", Tahoma, sans-serif;
 }
 
 html {
+  scroll-behavior: smooth;
+  scroll-padding-top: 4rem;
 }
 
 body {
@@ -64,38 +86,129 @@ body {
   font-family: var(--font-sans);
 }
 
+h1,
+h2,
+h3 {
+  text-wrap: balance;
+}
+
+p,
+li {
+  text-wrap: pretty;
+}
+
+::selection {
+  background: color-mix(in srgb, var(--accent-fill) 35%, transparent);
+}
+
+/* ==========================================================================
+   Shared component classes (kept in the components layer so Tailwind utility
+   classes on the element can still override them)
+   ========================================================================== */
+@layer components {
+  .btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem;
+    min-height: 3rem;
+    padding: 0 1.6rem;
+    border-radius: 999px;
+    font-size: 1.0625rem;
+    font-weight: 500;
+    line-height: 1.2;
+    white-space: nowrap;
+    cursor: pointer;
+    transition: background-color 300ms cubic-bezier(0.28, 0.11, 0.32, 1), color 300ms cubic-bezier(0.28, 0.11, 0.32, 1), transform 300ms cubic-bezier(0.28, 0.11, 0.32, 1), opacity 300ms;
+  }
+
+  .btn:active {
+    transform: scale(0.97);
+  }
+
+  .btn:disabled,
+  .btn[aria-disabled="true"] {
+    cursor: wait;
+    opacity: 0.6;
+  }
+
+  .btn-primary {
+    background-color: var(--accent-fill);
+    color: #ffffff;
+  }
+
+  .btn-primary:hover {
+    background-color: var(--accent-fill-hover);
+  }
+
+  .btn-secondary {
+    background-color: var(--color-surface);
+    color: var(--color-text-primary);
+  }
+
+  .btn-secondary:hover {
+    background-color: var(--color-surface-hover);
+  }
+
+  .btn-sm {
+    min-height: 2rem;
+    padding: 0 0.95rem;
+    font-size: 0.8125rem;
+  }
+
+  .link-cta {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.2rem;
+    font-size: 1.0625rem;
+    color: var(--accent-text);
+    cursor: pointer;
+  }
+
+  .link-cta:hover {
+    text-decoration: underline;
+    text-underline-offset: 3px;
+  }
+
+  .tile {
+    background-color: var(--color-tile);
+    border-radius: 1.75rem;
+  }
+
+  .hairline-t {
+    border-top: 1px solid var(--color-border);
+  }
+
+  .display-type {
+    font-family: var(--font-display);
+    font-weight: var(--weight-display);
+    letter-spacing: var(--tracking-display);
+    line-height: var(--leading-display);
+  }
+}
+
+/* ==========================================================================
+   Contact form helpers
+   ========================================================================== */
 :root {
-  --contact-bg: #000000;
-  --contact-bg-elevated: rgba(255, 255, 255, 0.045);
-  --contact-text: #ffffff;
-  --contact-text-soft: rgba(255, 255, 255, 0.55);
-  --contact-text-muted: rgba(255, 255, 255, 0.3);
-  --contact-border: rgba(255, 255, 255, 0.1);
-  --contact-border-strong: rgba(255, 255, 255, 0.18);
-  --contact-grid: rgba(255, 255, 255, 0.045);
-  --contact-orb: rgba(168, 85, 247, 0.24);
-  --contact-orb-soft: rgba(107, 33, 168, 0.08);
-  --contact-shadow: rgba(0, 0, 0, 0.5);
+  --contact-bg: var(--color-bg);
+  --contact-bg-elevated: var(--color-bg-elevated);
+  --contact-text: var(--color-text-primary);
+  --contact-text-soft: var(--color-text-secondary);
+  --contact-text-muted: var(--color-text-muted);
+  --contact-border: var(--color-border);
+  --contact-border-strong: var(--color-border-strong);
+  --contact-shadow: rgba(0, 0, 0, 0.35);
   --contact-logo-filter: none;
-  --contact-popup-bg: #17131f;
-  --contact-popup-text: #f4f4f5;
+  --contact-popup-bg: #1c1c1e;
+  --contact-popup-text: #f5f5f7;
 }
 
 [data-theme="light"] {
-  --contact-bg: #faf9fc;
-  --contact-bg-elevated: rgba(255, 255, 255, 0.72);
-  --contact-text: #18181b;
-  --contact-text-soft: rgba(24, 24, 27, 0.62);
-  --contact-text-muted: rgba(24, 24, 27, 0.42);
-  --contact-border: rgba(24, 24, 27, 0.1);
-  --contact-border-strong: rgba(24, 24, 27, 0.16);
-  --contact-grid: rgba(24, 24, 27, 0.055);
-  --contact-orb: rgba(147, 51, 234, 0.18);
-  --contact-orb-soft: rgba(126, 34, 206, 0.07);
-  --contact-shadow: rgba(54, 20, 76, 0.14);
+  --contact-shadow: rgba(0, 0, 0, 0.08);
   --contact-logo-filter: invert(1);
   --contact-popup-bg: #ffffff;
-  --contact-popup-text: #18181b;
+  --contact-popup-text: #1d1d1f;
 }
 
 .contact-page {
@@ -115,70 +228,6 @@ select.contact-input option {
   color: var(--contact-popup-text);
 }
 
-/* Shared accent surfaces keep theme styling consistent across components. */
-:root {
-  --color-accent-surface: rgba(147, 51, 234, 0.1);
-  --color-accent-border: rgba(147, 51, 234, 0.3);
-}
-
-[data-theme="light"] {
-  --color-accent-surface: rgba(147, 51, 234, 0.07);
-  --color-accent-border: rgba(126, 34, 206, 0.22);
-}
-
-.modal-scroll::-webkit-scrollbar {
-  width: 6px;
-}
-
-.modal-scroll::-webkit-scrollbar-track {
-  background: transparent;
-}
-
-.modal-scroll::-webkit-scrollbar-thumb {
-  background: linear-gradient(180deg, var(--color-purple-1), var(--color-purple-2));
-  border-radius: 999px;
-}
-
-.modal-scroll {
-  scrollbar-width: thin;
-  scrollbar-color: var(--color-purple-1) transparent;
-}
-
-@media (prefers-reduced-motion: reduce) {
-  html {
-    scroll-behavior: auto !important;
-  }
-
-  *,
-  *::before,
-  *::after {
-    animation-duration: 0.01ms !important;
-    animation-iteration-count: 1 !important;
-    transition-duration: 0.01ms !important;
-  }
-}
-
-:root {
-  --color-accent-glow: rgba(147, 51, 234, 0.18);
-}
-
-[data-theme="light"] {
-  --color-accent-glow: rgba(147, 51, 234, 0.1);
-}
-
-@media (max-width: 767px) {
-  .premium-blur-heavy {
-    filter: blur(70px) !important;
-  }
-}
-
-@media (prefers-reduced-motion: reduce) {
-  .motion-safe-only {
-    display: none !important;
-  }
-}
-
-
 .contact-honeypot {
   position: absolute !important;
   left: -10000px !important;
@@ -190,8 +239,35 @@ select.contact-input option {
   pointer-events: none !important;
 }
 
+.modal-scroll::-webkit-scrollbar {
+  width: 6px;
+}
 
-/* Persian typography: language changes type and text alignment, not the site's structural direction. */
+.modal-scroll::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.modal-scroll::-webkit-scrollbar-thumb {
+  background: var(--color-border-strong);
+  border-radius: 999px;
+}
+
+.modal-scroll {
+  scrollbar-width: thin;
+  scrollbar-color: var(--color-border-strong) transparent;
+}
+
+/* ==========================================================================
+   Persian typography
+   The page structure stays LTR; each section opts into RTL with an explicit
+   `dir` attribute. Persian never gets negative tracking (it breaks joining).
+   ========================================================================== */
+body[data-language="fa"] {
+  --tracking-display: 0em;
+  --leading-display: 1.3;
+  --weight-display: 700;
+}
+
 body[data-language="fa"],
 body[data-language="fa"] button,
 body[data-language="fa"] input,
@@ -236,55 +312,41 @@ body[data-language="fa"] .contact-input-ltr::placeholder {
   text-align: right;
 }
 
-body[data-language="fa"] .modal-scroll .font-sans {
-  letter-spacing: normal;
-}
-
-/* Structural UI stays LTR; only explicit copy blocks use RTL. */
 .rtl-copy {
   direction: rtl;
   text-align: right;
 }
 
-/* Persian is RTL at the reading level, while the site's structural layout stays LTR. */
-body[data-language="fa"] #main-content :is(h1, h2, h3, h4, h5, h6, p, li),
-body[data-language="fa"] footer :is(h1, h2, h3, h4, h5, h6, p, li, a),
+/* Contact wizard: Persian copy is right-aligned without mirroring the
+   familiar control geometry. */
 body[data-language="fa"] .contact-page :is(h1, h2, h3, h4, h5, h6, p, label, li) {
   direction: rtl;
   text-align: right;
 }
 
-/* Familiar controls keep their conventional left-to-right geometry. */
-body[data-language="fa"] #main-content a.inline-flex,
-body[data-language="fa"] #main-content button,
 body[data-language="fa"] .contact-page button,
-body[data-language="fa"] .contact-page header,
-body[data-language="fa"] footer .flex {
+body[data-language="fa"] .contact-page header {
   direction: ltr;
 }
 
-/* Navigation, carousel controls and modal geometry should never mirror with the copy language. */
+/* Fixed navigation keeps its structural LTR geometry in both languages. */
 body[data-language="fa"] header,
 body[data-language="fa"] [data-project-modal],
-body[data-language="fa"] [data-project-modal] button,
-body[data-language="fa"] .mobile-menu-panel {
+body[data-language="fa"] [data-project-modal] button {
   direction: ltr;
 }
 
-/* Contact wizard: Persian copy is right-aligned without mirroring the familiar control geometry. */
-body[data-language="fa"] .contact-page #contact-step-title,
-body[data-language="fa"] .contact-page #contact-step-title + * {
-  text-align: right;
-}
-
-/* The project information itself remains readable RTL inside the fixed LTR modal shell. */
+/* The project information itself stays readable RTL inside the fixed LTR
+   modal shell. */
 body[data-language="fa"] [data-project-modal] > div:last-child,
 body[data-language="fa"] [data-project-modal] > div:last-child :is(h2, h3, p, span, li) {
   direction: rtl;
   text-align: right;
 }
 
-
+/* ==========================================================================
+   Loading skeleton
+   ========================================================================== */
 .skeleton-block {
   background: linear-gradient(110deg, var(--color-surface) 22%, var(--color-surface-hover) 38%, var(--color-surface) 54%);
   background-size: 220% 100%;
@@ -296,48 +358,23 @@ body[data-language="fa"] [data-project-modal] > div:last-child :is(h2, h3, p, sp
   50% { background-position: 0 0; }
 }
 
-.typewriter-title {
-  position: relative;
-  isolation: isolate;
-}
-
-.typewriter-title__content {
-  /* Kept as one continuous text run (not split per-character) so Persian/
-     Arabic cursive letter-joining shapes correctly; only the not-yet-typed
-     tail is visually hidden via .typewriter-hidden, never removed from the
-     DOM, so the line never reflows while typing. */
-  display: inline;
-}
-
-.typewriter-hidden {
-  opacity: 0;
-}
-
-.typewriter-caret {
-  display: inline-block;
-  width: 0.075em;
-  height: 0.78em;
-  margin-inline-start: 0.1em;
-  vertical-align: -0.04em;
-  border-radius: 999px;
-  background: var(--color-purple-1);
-}
-
-.typewriter-caret--solid {
-  opacity: 1;
-}
-
-.typewriter-caret--blink {
-  opacity: 0;
-  animation: typewriter-caret 850ms steps(1, end) 4;
-}
-
-@keyframes typewriter-caret {
-  0%, 48% { opacity: 1; }
-  49%, 100% { opacity: 0; }
-}
-
+/* ==========================================================================
+   Reduced motion
+   ========================================================================== */
 @media (prefers-reduced-motion: reduce) {
-  .skeleton-block { animation: none; }
-  .typewriter-caret { display: none; }
+  html {
+    scroll-behavior: auto !important;
+  }
+
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+
+  .skeleton-block {
+    animation: none;
+  }
 }

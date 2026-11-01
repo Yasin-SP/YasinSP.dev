@@ -1,8 +1,6 @@
-import { motion } from "motion/react";
-import { ArrowUpRight, Mail } from "lucide-react";
 import { Link, useLocation } from "react-router-dom";
+import { Mail } from "lucide-react";
 import logo from "../assets/Signature.svg";
-import { purpleGradient, smoothEase } from "../constants/theme.js";
 import GithubIcon from "./icons/GithubIcon.jsx";
 import LinkedinIcon from "./icons/LinkedinIcon.jsx";
 import TelegramIcon from "./icons/TelegramIcon.jsx";
@@ -21,6 +19,8 @@ const navLinks = [
   { key: "approach", href: "#approach" },
 ];
 
+const linkClass = "font-sans text-sm text-(--color-text-secondary) transition-colors duration-300 hover:text-(--color-text-primary)";
+
 function Footer() {
   const { theme } = useTheme();
   const { language, isRTL } = useLanguage();
@@ -28,23 +28,60 @@ function Footer() {
   const copy = getUI(language, "footer");
   const navCopy = getUI(language, "nav");
   const year = new Date().getFullYear();
-  const getAnchor = (href) => location.pathname === "/" ? href : `/${href}`;
-  return <footer className="relative w-full border-t py-16 md:py-20" style={{ borderColor: "var(--color-border)" }}>
-    <div dir={isRTL ? "rtl" : "ltr"} className="max-w-7xl mx-auto px-6 md:px-12">
-      <motion.div initial={{ opacity: 0, y: 18 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ duration: 0.7, ease: smoothEase }} className="grid md:grid-cols-[1.4fr_0.6fr_0.6fr] gap-12" style={{ borderColor: "var(--color-border)" }}>
-        <div className="max-w-md">
-          <img src={logo} alt="Yasin signature" className="h-9 w-auto object-contain mb-6" style={{ transform: "scale(1.55)", transformOrigin: language === "fa" ? "right center" : "left center", filter: theme === "light" ? "invert(1)" : "none" }} />
-          <p className="font-display text-2xl md:text-3xl text-(--color-text-primary) leading-tight tracking-tight">{copy.statement}</p>
-          <p className="font-sans text-sm text-(--color-text-secondary) leading-relaxed mt-5 max-w-sm">{copy.body}</p>
+  const getAnchor = (href) => (location.pathname === "/" ? href : `/${href}`);
+
+  return (
+    <footer className="band-alt relative w-full pb-10 pt-16 md:pt-20">
+      <div dir={isRTL ? "rtl" : "ltr"} className="mx-auto w-full max-w-6xl px-6 text-start md:px-10">
+        <div className="grid gap-12 md:grid-cols-[1.6fr_0.7fr_0.7fr]">
+          <div className="max-w-md">
+            <div dir="ltr" className="mb-6 h-8 w-24">
+              <img src={logo} alt="" className="h-full w-full object-contain" style={{ transform: "scale(1.5)", filter: theme === "light" ? "invert(1)" : "none" }} />
+            </div>
+            <p className="font-display text-2xl font-semibold leading-snug tracking-tight text-(--color-text-primary)">{copy.statement}</p>
+            <p className="mt-4 font-sans text-sm leading-relaxed text-(--color-text-secondary)">{copy.body}</p>
+          </div>
+
+          <nav aria-label={copy.explore}>
+            <h4 className="font-sans text-xs font-semibold text-(--color-text-primary)">{copy.explore}</h4>
+            <ul className="mt-4 flex flex-col gap-3">
+              {navLinks.map((link) => (
+                <li key={link.key}><a href={getAnchor(link.href)} className={linkClass}>{navCopy[link.key]}</a></li>
+              ))}
+            </ul>
+          </nav>
+
+          <div>
+            <h4 className="font-sans text-xs font-semibold text-(--color-text-primary)">{copy.connect}</h4>
+            <ul className="mt-4 flex flex-col gap-3">
+              {socialLinks.map((social) => {
+                const Icon = iconMap[social.type];
+                const external = social.type !== "email";
+                return (
+                  <li key={social.label}>
+                    <a href={social.href} target={external ? "_blank" : undefined} rel={external ? "noopener noreferrer" : undefined} className={`${linkClass} inline-flex items-center gap-2`}>
+                      <Icon size={15} className="shrink-0" />
+                      {social.label}
+                    </a>
+                  </li>
+                );
+              })}
+            </ul>
+          </div>
         </div>
-        <div><h4 className="font-sans text-[10px] tracking-[0.2em] uppercase text-(--color-text-muted) mb-5">{copy.explore}</h4><ul className="flex flex-col gap-3">{navLinks.map((link) => <li key={link.key}><a href={getAnchor(link.href)} className="font-sans text-sm text-(--color-text-secondary) hover:text-(--color-text-primary) transition-colors">{navCopy[link.key]}</a></li>)}</ul></div>
-        <div><h4 className="font-sans text-[10px] tracking-[0.2em] uppercase text-(--color-text-muted) mb-5">{copy.connect}</h4><ul className="flex flex-col gap-3">{socialLinks.map((social) => { const Icon = iconMap[social.type]; return <li key={social.label}><a href={social.href} target={social.type !== "email" ? "_blank" : undefined} rel={social.type !== "email" ? "noopener noreferrer" : undefined} className={`group inline-flex items-center gap-2 font-sans text-sm text-(--color-text-secondary) hover:text-(--color-text-primary) transition-colors ${isRTL ? "flex-row-reverse" : ""}`}><Icon size={15} className="shrink-0 text-(--color-purple-1) opacity-70 group-hover:opacity-100" />{social.label}<ArrowUpRight size={12} className={`shrink-0 opacity-0 group-hover:opacity-100 transition-all ${isRTL ? "translate-x-1 group-hover:translate-x-0" : "-translate-x-1 group-hover:translate-x-0"}`} /></a></li>; })}</ul></div>
-      </motion.div>
-      <motion.div initial={{ opacity: 0 }} whileInView={{ opacity: 1 }} viewport={{ once: true }} transition={{ duration: 0.6, ease: smoothEase }} className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 pt-7 mt-7 border-t" style={{ borderColor: "var(--color-border)" }}>
-        <div className="flex flex-wrap items-center gap-4"><p className="font-sans text-(--color-text-muted) text-xs">© {year} Yasin. {copy.rights}</p><Link to="/privacy" className="font-sans text-xs text-(--color-text-muted) transition-colors hover:text-(--color-text-primary)">{copy.privacy}</Link><LanguageToggle variant="footer" /></div>
-        <p className="font-sans text-xs" style={{ backgroundImage: purpleGradient, WebkitBackgroundClip: "text", backgroundClip: "text", color: "transparent" }}>{copy.built}</p>
-      </motion.div>
-    </div>
-  </footer>;
+
+        <div className="hairline-t mt-14 flex flex-col items-start justify-between gap-4 pt-6 sm:flex-row sm:items-center">
+          <div className="flex flex-wrap items-center gap-x-5 gap-y-2 font-sans text-xs text-(--color-text-muted)">
+            <p>© {year} Yasin. {copy.rights}</p>
+            <Link to="/privacy" className="transition-colors duration-300 hover:text-(--color-text-primary)">{copy.privacy}</Link>
+          </div>
+          <div className="flex items-center gap-5">
+            <p className="font-sans text-xs text-(--color-text-muted)">{copy.built}</p>
+            <LanguageToggle variant="footer" />
+          </div>
+        </div>
+      </div>
+    </footer>
+  );
 }
 export default Footer;

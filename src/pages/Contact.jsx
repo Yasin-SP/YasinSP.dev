@@ -20,7 +20,7 @@ import {
 } from "lucide-react";
 import { Link } from "react-router-dom";
 import logo from "../assets/Signature.svg";
-import { purpleGradient, smoothEase } from "../constants/theme.js";
+import { smoothEase } from "../constants/theme.js";
 import { useTheme } from "../context/ThemeContext.jsx";
 import { useLanguage } from "../context/LanguageContext.jsx";
 import { getUI } from "../i18n.js";
@@ -64,11 +64,10 @@ function ContactThemeToggle() {
       aria-label={
         theme === "dark" ? "Switch to light theme" : "Switch to dark theme"
       }
-      className="flex h-11 w-11 cursor-pointer items-center justify-center rounded-full border backdrop-blur-xl transition-colors sm:h-12 sm:w-12"
+      className="flex h-10 w-10 cursor-pointer items-center justify-center rounded-full transition-colors duration-300 hover:bg-(--color-surface-hover)"
       style={{
         color: "var(--contact-text)",
-        borderColor: "var(--contact-border-strong)",
-        background: "var(--contact-bg-elevated)",
+        background: "var(--color-surface)",
       }}
     >
       <motion.span
@@ -107,7 +106,7 @@ function Field({
       className={`group block ${textarea ? "md:col-span-2" : ""}`}
     >
       <span
-        className="mb-2 block font-sans text-[9px] uppercase tracking-[0.24em]"
+        className="mb-2 block font-sans text-xs font-medium"
         style={{ color: "var(--contact-text-muted)" }}
       >
         {label}
@@ -127,7 +126,7 @@ function Field({
         dir={forceLTR ? "ltr" : undefined}
         aria-invalid={Boolean(error)}
         aria-describedby={error ? `${id}-error` : undefined}
-        className={`contact-input w-full resize-none rounded-xl border px-4 py-3.5 font-sans text-sm outline-none transition-all duration-300 focus:border-purple-400/60 focus:shadow-[0_0_0_4px_rgba(168,85,247,.08)] ${forceLTR ? "contact-input-ltr" : ""}`}
+        className={`contact-input w-full resize-none rounded-xl border px-4 py-3.5 font-sans text-base outline-none transition-all duration-300 focus:border-(--accent-fill) focus:shadow-[0_0_0_4px_var(--accent-ring)] ${forceLTR ? "contact-input-ltr" : ""}`}
         style={{
           color: "var(--contact-text)",
           borderColor: error
@@ -140,7 +139,7 @@ function Field({
         <span
           id={`${id}-error`}
           role="alert"
-          className="mt-1.5 block font-sans text-[10px] text-red-400"
+          className="mt-1.5 block font-sans text-xs text-red-400"
         >
           {error}
         </span>
@@ -164,7 +163,7 @@ function SelectField({
   return (
     <label htmlFor={id} dir={isRTL ? "rtl" : "ltr"} className="block">
       <span
-        className="mb-2 block font-sans text-[9px] uppercase tracking-[0.24em]"
+        className="mb-2 block font-sans text-xs font-medium"
         style={{ color: "var(--contact-text-muted)" }}
       >
         {label}
@@ -177,7 +176,7 @@ function SelectField({
         onChange={onChange}
         aria-invalid={Boolean(error)}
         aria-describedby={error ? `${id}-error` : undefined}
-        className="contact-input min-h-12 w-full rounded-xl border px-4 py-3 font-sans text-sm outline-none focus:border-purple-400/60 focus:shadow-[0_0_0_4px_rgba(168,85,247,.08)]"
+        className="contact-input min-h-12 w-full rounded-xl border px-4 py-3 font-sans text-base outline-none focus:border-(--accent-fill) focus:shadow-[0_0_0_4px_var(--accent-ring)]"
         style={{
           color: "var(--contact-text)",
           borderColor: error
@@ -207,7 +206,7 @@ function SelectField({
         <span
           id={`${id}-error`}
           role="alert"
-          className="mt-1.5 block font-sans text-[10px] text-red-400"
+          className="mt-1.5 block font-sans text-xs text-red-400"
         >
           {error}
         </span>
@@ -231,7 +230,7 @@ function ChoiceGrid({
     <fieldset data-field={name} className="md:col-span-2">
       <legend
         dir={isRTL ? "rtl" : "ltr"}
-        className="mb-3 w-full font-sans text-[9px] uppercase tracking-[0.24em]"
+        className="mb-3 w-full font-sans text-xs font-medium"
         style={{ color: "var(--contact-text-muted)" }}
       >
         {legend}
@@ -251,13 +250,13 @@ function ChoiceGrid({
                 className="peer sr-only"
               />
               <span
-                className="flex min-h-14 items-center gap-3 rounded-xl border px-4 py-3 font-sans text-sm transition-colors peer-focus-visible:ring-2 peer-focus-visible:ring-purple-400"
+                className="flex min-h-14 items-center gap-3 rounded-xl border px-4 py-3 font-sans text-sm transition-colors peer-focus-visible:ring-2 peer-focus-visible:ring-(--accent-fill)"
                 style={{
                   borderColor: active
-                    ? "rgba(192,132,252,.55)"
+                    ? "var(--accent-fill)"
                     : "var(--contact-border)",
                   background: active
-                    ? "rgba(168,85,247,.10)"
+                    ? "var(--accent-surface)"
                     : "var(--contact-bg-elevated)",
                   color: active
                     ? "var(--contact-text)"
@@ -267,7 +266,7 @@ function ChoiceGrid({
                 {Icon ? (
                   <Icon
                     size={17}
-                    className={`shrink-0 ${active ? "text-purple-300" : "opacity-60"}`}
+                    className={`shrink-0 ${active ? "text-(--accent-text)" : "opacity-60"}`}
                   />
                 ) : null}
                 <span
@@ -284,7 +283,7 @@ function ChoiceGrid({
                 {active ? (
                   <Check
                     size={15}
-                    className="ms-auto shrink-0 text-purple-300"
+                    className="ms-auto shrink-0 text-(--accent-text)"
                   />
                 ) : null}
               </span>
@@ -320,7 +319,7 @@ function MultiChoiceGrid({
     <fieldset data-field={name} className="md:col-span-2">
       <legend
         dir={isRTL ? "rtl" : "ltr"}
-        className="mb-3 w-full font-sans text-[9px] uppercase tracking-[0.24em]"
+        className="mb-3 w-full font-sans text-xs font-medium"
         style={{ color: "var(--contact-text-muted)" }}
       >
         {legend}
@@ -340,13 +339,13 @@ function MultiChoiceGrid({
                 className="peer sr-only"
               />
               <span
-                className="flex min-h-14 items-center gap-3 rounded-xl border px-4 py-3 font-sans text-sm transition-colors peer-focus-visible:ring-2 peer-focus-visible:ring-purple-400"
+                className="flex min-h-14 items-center gap-3 rounded-xl border px-4 py-3 font-sans text-sm transition-colors peer-focus-visible:ring-2 peer-focus-visible:ring-(--accent-fill)"
                 style={{
                   borderColor: active
-                    ? "rgba(192,132,252,.55)"
+                    ? "var(--accent-fill)"
                     : "var(--contact-border)",
                   background: active
-                    ? "rgba(168,85,247,.10)"
+                    ? "var(--accent-surface)"
                     : "var(--contact-bg-elevated)",
                   color: active
                     ? "var(--contact-text)"
@@ -356,7 +355,7 @@ function MultiChoiceGrid({
                 {Icon ? (
                   <Icon
                     size={17}
-                    className={`shrink-0 ${active ? "text-purple-300" : "opacity-60"}`}
+                    className={`shrink-0 ${active ? "text-(--accent-text)" : "opacity-60"}`}
                   />
                 ) : null}
                 <span
@@ -368,7 +367,7 @@ function MultiChoiceGrid({
                 {active ? (
                   <Check
                     size={15}
-                    className="ms-auto shrink-0 text-purple-300"
+                    className="ms-auto shrink-0 text-(--accent-text)"
                   />
                 ) : null}
               </span>
@@ -386,61 +385,6 @@ function MultiChoiceGrid({
         </p>
       ) : null}
     </fieldset>
-  );
-}
-
-function CinematicBackdrop() {
-  return (
-    <div
-      className="pointer-events-none absolute inset-0 overflow-hidden"
-      aria-hidden="true"
-    >
-      <div
-        className="absolute inset-0"
-        style={{
-          background:
-            "radial-gradient(circle at 50% 45%, var(--contact-orb), transparent 38%), radial-gradient(circle at 10% 90%, var(--contact-orb-soft), transparent 35%)",
-        }}
-      />
-      <div
-        className="absolute inset-0 opacity-[0.2]"
-        style={{
-          backgroundImage:
-            "linear-gradient(var(--contact-grid) 1px, transparent 1px), linear-gradient(90deg, var(--contact-grid) 1px, transparent 1px)",
-          backgroundSize: "72px 72px",
-          maskImage:
-            "radial-gradient(ellipse at center, black, transparent 72%)",
-        }}
-      />
-      <motion.div
-        animate={{
-          x: [0, 34, -18, 0],
-          y: [0, -24, 16, 0],
-          scale: [1, 1.08, 0.96, 1],
-        }}
-        transition={{ duration: 18, repeat: Infinity, ease: "easeInOut" }}
-        className="absolute left-1/2 top-[46%] h-136 w-136 -translate-x-1/2 -translate-y-1/2 rounded-full blur-[110px]"
-      >
-        <div
-          className="h-full w-full rounded-full"
-          style={{
-            background:
-              "radial-gradient(circle, var(--contact-orb), var(--contact-orb-soft) 38%, transparent 70%)",
-          }}
-        />
-      </motion.div>
-      <motion.div
-        animate={{ rotate: 360 }}
-        transition={{ duration: 32, repeat: Infinity, ease: "linear" }}
-        className="absolute left-1/2 top-1/2 h-[min(76vw,720px)] w-[min(76vw,720px)] -translate-x-1/2 -translate-y-1/2 rounded-full border border-purple-400/8"
-      />
-      <div
-        className="absolute bottom-0 left-0 h-32 w-full"
-        style={{
-          background: "linear-gradient(to top, var(--contact-bg), transparent)",
-        }}
-      />
-    </div>
   );
 }
 
@@ -916,9 +860,8 @@ function Contact() {
   return (
     <main
       id="main-content"
-      className="contact-page relative min-h-svh overflow-hidden selection:bg-purple-500/30"
+      className="contact-page relative min-h-svh overflow-hidden"
     >
-      <CinematicBackdrop />
       <div className="relative z-10 mx-auto flex min-h-svh w-full max-w-375 flex-col px-5 pb-6 pt-5 sm:px-8 md:px-10 lg:px-14">
         <header className="flex shrink-0 items-center justify-between gap-3">
           <Link
@@ -931,7 +874,7 @@ function Contact() {
             <ContactThemeToggle />
             <Link
               to="/"
-              className="group inline-flex items-center gap-2 rounded-full border px-4 py-2.5 font-sans text-xs backdrop-blur-xl transition-all duration-300 hover:border-purple-400/30"
+              className="group inline-flex items-center gap-2 rounded-full px-4 py-2.5 font-sans text-[13px] transition-colors duration-300 hover:bg-(--color-surface-hover)"
               style={{
                 color: "var(--contact-text-soft)",
                 borderColor: "var(--contact-border)",
@@ -957,27 +900,20 @@ function Contact() {
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.65, ease: smoothEase }}
               >
-                <span className="inline-flex items-center gap-2 font-sans text-[9px] uppercase tracking-[0.32em] text-purple-400/80 sm:text-[10px]">
-                  <span className="h-1.5 w-1.5 rounded-full bg-purple-400 shadow-[0_0_18px_rgba(168,85,247,.9)]" />{" "}
+                <span className="inline-flex items-center gap-2 font-sans text-[15px] font-medium" style={{ color: "var(--contact-text-soft)" }}>
+                  <span className="h-2 w-2 rounded-full bg-emerald-500" aria-hidden="true" />{" "}
                   {copy.open}
                 </span>
                 <h1
-                  className="mt-5 max-w-[11ch] font-display text-[clamp(3.25rem,7.5vw,7.2rem)] font-bold leading-[0.88] tracking-[-0.06em]"
+                  className="display-type mt-5 max-w-[12ch] text-[clamp(2.6rem,6.2vw,5rem)]"
                 >
                   {copy.title}{" "}
-                  <span
-                    style={{
-                      backgroundImage: purpleGradient,
-                      WebkitBackgroundClip: "text",
-                      backgroundClip: "text",
-                      color: "transparent",
-                    }}
-                  >
+                  <span style={{ color: "var(--contact-text-muted)" }}>
                     {copy.highlight}
                   </span>
                 </h1>
                 <p
-                  className="mt-5 max-w-xl font-sans text-sm leading-relaxed sm:text-base"
+                  className="mt-5 max-w-xl font-sans text-base leading-relaxed md:text-[17px]"
                   style={{ color: "var(--contact-text-soft)" }}
                 >
                   {copy.body}
@@ -990,7 +926,7 @@ function Contact() {
                 className="mt-7 flex flex-wrap gap-2.5"
               >
                 <span
-                  className="inline-flex items-center rounded-full border px-4 py-2.5 font-sans text-xs"
+                  className="inline-flex items-center rounded-full border px-4 py-2.5 font-sans text-[13px]"
                   style={{
                     color: "var(--contact-text-muted)",
                     borderColor: "var(--contact-border)",
@@ -1007,7 +943,7 @@ function Contact() {
                   className="mt-6"
                 >
                   <span
-                    className="mb-3 block font-sans text-[10px] uppercase tracking-[0.24em]"
+                    className="mb-3 block font-sans text-xs font-medium"
                     style={{ color: "var(--contact-text-muted)" }}
                   >
                     {copy.connectDirect}
@@ -1021,14 +957,14 @@ function Contact() {
                           href={social.href}
                           target={social.type !== "email" ? "_blank" : undefined}
                           rel={social.type !== "email" ? "noopener noreferrer" : undefined}
-                          className="group inline-flex items-center gap-2 rounded-full border px-4 py-2.5 font-sans text-xs backdrop-blur-xl transition-all duration-300 hover:border-purple-400/30"
+                          className="group inline-flex items-center gap-2 rounded-full px-4 py-2.5 font-sans text-[13px] transition-colors duration-300 hover:bg-(--color-surface-hover)"
                           style={{
                             color: "var(--contact-text-soft)",
                             borderColor: "var(--contact-border)",
                             background: "var(--contact-bg-elevated)",
                           }}
                         >
-                          <Icon size={14} className="text-(--color-purple-1) opacity-70 group-hover:opacity-100" />
+                          <Icon size={14} className="opacity-70 transition-opacity duration-300 group-hover:opacity-100" />
                           {social.label}
                         </a>
                       );
@@ -1047,15 +983,11 @@ function Contact() {
               aria-labelledby="contact-step-title"
             >
               <div
-                className="absolute -inset-5 rounded-4xl bg-purple-500/8 blur-3xl"
-                aria-hidden="true"
-              />
-              <div
-                className="relative overflow-hidden rounded-[1.6rem] border p-5 backdrop-blur-2xl sm:p-7"
+                className="relative overflow-hidden rounded-[1.75rem] border p-5 sm:p-8"
                 style={{
                   borderColor: "var(--contact-border)",
                   background: "var(--contact-bg-elevated)",
-                  boxShadow: "0 30px 100px var(--contact-shadow)",
+                  boxShadow: "0 20px 60px var(--contact-shadow)",
                 }}
               >
                 <div
@@ -1067,7 +999,7 @@ function Contact() {
                     className={`min-w-0 flex-1 ${isRTL ? "text-right" : "text-left"}`}
                   >
                     <span
-                      className="block font-sans text-[9px] uppercase tracking-[0.25em]"
+                      className="block font-sans text-xs font-medium"
                       style={{ color: "var(--contact-text-muted)" }}
                     >
                       {copy.step} {step} / 3
@@ -1075,12 +1007,12 @@ function Contact() {
                     <h2
                       id="contact-step-title"
                       tabIndex="-1"
-                      className="mt-2 font-display text-2xl font-semibold tracking-tight outline-none sm:text-3xl"
+                      className="mt-2 font-display text-2xl font-semibold leading-tight tracking-tight outline-none sm:text-3xl"
                     >
                       {stepTitle}
                     </h2>
                   </div>
-                  <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full border border-purple-400/20 bg-purple-500/10 text-purple-300">
+                  <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-(--accent-surface) text-(--accent-text)">
                     <Send size={15} />
                   </div>
                 </div>
@@ -1092,7 +1024,7 @@ function Contact() {
                       style={{
                         background:
                           n <= step
-                            ? "rgb(168 85 247)"
+                            ? "var(--accent-fill)"
                             : "var(--contact-border)",
                       }}
                     />
@@ -1181,7 +1113,7 @@ function Contact() {
                         error={fieldErrors.message}
                       />
                       <p
-                        className="font-sans text-[10px] leading-relaxed md:col-span-2"
+                        className="font-sans text-xs leading-relaxed md:col-span-2"
                         dir={isRTL ? "rtl" : "ltr"}
                         style={{ color: "var(--contact-text-muted)" }}
                       >
@@ -1189,7 +1121,7 @@ function Contact() {
                         <Link
                           to="/privacy"
                           state={{ fromContact: true }}
-                          className="text-purple-300 underline decoration-purple-400/40 underline-offset-4 hover:text-purple-200"
+                          className="text-(--accent-text) underline underline-offset-4 hover:opacity-80"
                         >
                           {copy.privacyLink}
                         </Link>
@@ -1218,11 +1150,7 @@ function Contact() {
                           setFieldErrors({});
                           setStatus("idle");
                         }}
-                        className="inline-flex cursor-pointer min-h-12 items-center justify-center gap-2 rounded-full border px-5 font-sans text-sm"
-                        style={{
-                          borderColor: "var(--contact-border)",
-                          color: "var(--contact-text-soft)",
-                        }}
+                        className="btn btn-secondary"
                       >
                         <ArrowLeft size={15} />
                         {copy.previous}
@@ -1234,8 +1162,7 @@ function Contact() {
                       <button
                         type="button"
                         onClick={nextStep}
-                        className="inline-flex cursor-pointer min-h-12 items-center justify-center gap-2 rounded-full border border-purple-400/30 px-6 font-sans text-sm font-medium text-white shadow-[0_15px_40px_rgba(107,33,168,.25)] transition-transform duration-300 hover:-translate-y-0.5"
-                        style={{ backgroundImage: purpleGradient }}
+                        className="btn btn-primary"
                       >
                         {copy.continue}
                         <ArrowRight size={15} />
@@ -1244,8 +1171,7 @@ function Contact() {
                       <button
                         type="submit"
                         disabled={isSubmitting || status === "success"}
-                        className="group inline-flex cursor-pointer min-h-12 items-center justify-center gap-3 rounded-full border border-purple-400/30 px-6 font-sans text-sm font-medium text-white shadow-[0_15px_40px_rgba(107,33,168,.25)] transition-all duration-300 disabled:cursor-wait disabled:opacity-70"
-                        style={{ backgroundImage: purpleGradient }}
+                        className="btn btn-primary group"
                       >
                         {isSubmitting
                           ? copy.sending
@@ -1260,7 +1186,7 @@ function Contact() {
                         ) : status === "success" ? (
                           <Check size={15} />
                         ) : (
-                          <ArrowUpRight className="group-hover:-translate-y-0.5 group-hover:translate-x-0.5 transition-transform duration-300" size={15} />
+                          <ArrowUpRight className="transition-transform duration-300 group-hover:-translate-y-0.5 group-hover:translate-x-0.5" size={15} />
                         )}
                       </button>
                     )}
@@ -1276,7 +1202,7 @@ function Contact() {
                         dir={isRTL ? "rtl" : "ltr"}
                       >
                         <Check size={15} className="mt-0.5 shrink-0" />
-                        <p className="font-sans text-[11px] leading-relaxed">
+                        <p className="font-sans text-xs leading-relaxed">
                           {copy.success}
                         </p>
                       </div>
@@ -1287,7 +1213,7 @@ function Contact() {
                         dir={isRTL ? "rtl" : "ltr"}
                       >
                         <AlertCircle size={15} className="mt-0.5 shrink-0" />
-                        <p className="font-sans text-[11px] leading-relaxed">
+                        <p className="font-sans text-xs leading-relaxed">
                           {errorMessage}
                         </p>
                       </div>
@@ -1299,7 +1225,7 @@ function Contact() {
           </div>
         </div>
         <footer
-          className="flex shrink-0 items-center justify-between border-t pt-4 font-sans text-[9px] uppercase tracking-[0.2em]"
+          className="flex shrink-0 items-center justify-between border-t pt-4 font-sans text-xs"
           style={{
             color: "var(--contact-text-muted)",
             borderColor: "var(--contact-border)",

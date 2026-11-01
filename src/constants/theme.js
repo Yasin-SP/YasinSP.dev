@@ -1,8 +1,8 @@
-export const purpleGradient = "var(--gradient-primary)";
-export const smoothEase = [0.22, 1, 0.36, 1];
+// Apple's standard UI easing: quick start, long, soft settle.
+export const smoothEase = [0.28, 0.11, 0.32, 1];
 
-// این مقادیر باید دقیقاً هم‌راستا با --color-bg در App.css باشن
+// These values must stay exactly aligned with --color-bg in App.css.
 export const themeColors = {
   dark: "#000000",
-  light: "#faf9fc",
+  light: "#fbfbfd",
 };

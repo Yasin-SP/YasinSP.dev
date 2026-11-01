@@ -3,9 +3,7 @@ import { BrowserRouter, Route, Routes, useLocation } from "react-router-dom";
 import { MotionConfig } from "motion/react";
 import "./App.css";
 import Header from "./components/Header";
-import Background from "./components/Background";
 import PageSkeleton from "./components/PageSkeleton.jsx";
-import { useSmoothScroll } from "./hooks/useSmoothScroll.js";
 import { ThemeProvider } from "./context/ThemeContext.jsx";
 import { LanguageProvider, useLanguage } from "./context/LanguageContext.jsx";
 
@@ -111,11 +109,8 @@ function AppShell() {
   const isHome = location.pathname === "/";
   const isStandalone = !isHome;
 
-  useSmoothScroll(!isStandalone);
-
   return (
     <div className="relative min-h-screen bg-background">
-      {!isStandalone && <Background />}
       <div className="relative z-10">
         <a href="#main-content" className="skip-link">Skip to content</a>
         {!isStandalone && <Header />}
