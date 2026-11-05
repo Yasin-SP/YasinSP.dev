@@ -8,7 +8,7 @@ export default function PageSkeleton({ variant = "page" }) {
     <main
       aria-label="Loading"
       aria-busy="true"
-      className="min-h-[100svh] bg-[var(--color-bg)] px-5 py-5 text-[var(--color-text-primary)] sm:px-8 md:px-10"
+      className="min-h-[100svh] px-5 py-5 text-[var(--color-text-primary)] sm:px-8 md:px-10"
     >
       <div className="mx-auto w-full max-w-375">
         <div className="flex items-center justify-between">

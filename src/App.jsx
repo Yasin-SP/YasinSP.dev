@@ -2,10 +2,13 @@ import { lazy, Suspense, useEffect, useRef } from "react";
 import { BrowserRouter, Route, Routes, useLocation } from "react-router-dom";
 import { MotionConfig } from "motion/react";
 import "./App.css";
+import Aurora from "./components/Aurora.jsx";
 import Header from "./components/Header";
-import Background from "./components/Background";
+import MobileDock from "./components/MobileDock.jsx";
+import ScrollProgress from "./components/ScrollProgress.jsx";
+import SmoothScroll from "./components/SmoothScroll.jsx";
+import { scrollToTop } from "./lib/scroll.js";
 import PageSkeleton from "./components/PageSkeleton.jsx";
-import { useSmoothScroll } from "./hooks/useSmoothScroll.js";
 import { ThemeProvider } from "./context/ThemeContext.jsx";
 import { LanguageProvider, useLanguage } from "./context/LanguageContext.jsx";
 
@@ -81,7 +84,7 @@ function RouteFocus() {
     if (previousPath.current === location.pathname) return undefined;
     previousPath.current = location.pathname;
 
-    window.scrollTo({ top: 0, left: 0, behavior: "auto" });
+    scrollToTop({ immediate: true });
     const focusMain = () => {
       const main = document.querySelector("#main-content");
       if (!main) return false;
@@ -111,14 +114,15 @@ function AppShell() {
   const isHome = location.pathname === "/";
   const isStandalone = !isHome;
 
-  useSmoothScroll(!isStandalone);
-
   return (
-    <div className="relative min-h-screen bg-background">
-      {!isStandalone && <Background />}
+    <div className="relative min-h-screen">
+      <SmoothScroll />
+      <Aurora />
+      {isHome && <ScrollProgress />}
       <div className="relative z-10">
         <a href="#main-content" className="skip-link">Skip to content</a>
         {!isStandalone && <Header />}
+        {!isStandalone && <MobileDock />}
         <Suspense fallback={<PageSkeleton variant={isContact ? "contact" : "page"} />}>
           <Routes>
             <Route path="/" element={<Home />} />

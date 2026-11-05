@@ -1,39 +1,80 @@
-import { motion } from "motion/react";
-import { ArrowUpRight } from "lucide-react";
-import { smoothEase } from "../constants/theme.js";
 import { learningNow, learningNowFa, skillCategories } from "../data/skills.js";
 import { getUI } from "../i18n.js";
 import { localize, useLanguage } from "../context/LanguageContext.jsx";
+import GlassCard from "./GlassCard.jsx";
+import Marquee from "./Marquee.jsx";
+import Reveal from "./Reveal.jsx";
+import Section from "./Section.jsx";
 import SectionIntro from "./SectionIntro.jsx";
 
+const tones = ["blue", "purple", "teal", "orange"];
+const dotColors = ["var(--c-purple)", "var(--c-indigo)", "var(--c-pink)", "var(--c-blue)", "var(--c-orange)", "var(--c-teal)"];
+
+function SkillChip({ label, index }) {
+  const color = dotColors[index % dotColors.length];
+  return (
+    <span className="pill whitespace-nowrap px-5 py-3 text-base text-(--color-text-primary)">
+      <span aria-hidden="true" className="h-2.5 w-2.5 rounded-full" style={{ background: color }} />
+      {label}
+    </span>
+  );
+}
+
 function SkillsSection() {
-  const { language, isRTL } = useLanguage();
+  const { language } = useLanguage();
   const copy = getUI(language, "skills");
   const learning = language === "fa" ? learningNowFa : learningNow;
+  const all = [...new Set(skillCategories.flatMap((category) => localize(category, language).skills))];
+  const half = Math.ceil(all.length / 2);
+  const rowA = all.slice(0, half);
+  const rowB = all.slice(half);
+
   return (
-    <section id="skills" className="relative w-full py-28 md:py-36">
-      <div dir={isRTL ? "rtl" : "ltr"} className="max-w-7xl mx-auto px-6 md:px-12">
-        <SectionIntro eyebrow={copy.eyebrow} title={copy.title} highlight={copy.highlight} description={copy.description} />
-        <div className="grid lg:grid-cols-[1.5fr_0.8fr] gap-8 md:gap-10 mt-14 md:mt-20">
-          <div className="rounded-2xl border overflow-hidden" style={{ borderColor: "var(--color-border)" }}>
-            {skillCategories.map((category, categoryIndex) => {
-              const item = localize(category, language);
-              return <motion.div key={category.name} initial={{ opacity: 0, y: 18 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true, amount: 0.25 }} transition={{ duration: 0.6, ease: smoothEase, delay: categoryIndex * 0.06 }} className="p-6 md:p-8 border-b last:border-b-0" style={{ borderColor: "var(--color-border)" }}>
-                <div className="flex flex-col md:flex-row md:items-start justify-between gap-4">
-                  <div><h3 className="font-display text-xl md:text-2xl font-semibold text-(--color-text-primary) tracking-tight">{item.name}</h3><p className="font-sans text-sm text-(--color-text-secondary) mt-1">{item.description}</p></div>
-                  <span className="font-sans text-[10px] tracking-[0.18em] uppercase text-(--color-text-muted)">{String(categoryIndex + 1).padStart(2, "0")}</span>
-                </div>
-                <div className="flex flex-wrap gap-2.5 mt-6">{item.skills.map((skill) => <span key={skill} className="group inline-flex items-center gap-2 rounded-full px-3.5 py-2 border text-xs md:text-sm text-(--color-text-secondary) hover:text-(--color-text-primary) transition-colors duration-300" style={{ borderColor: "var(--color-border)", background: "var(--color-surface)" }}><span className="w-1.5 h-1.5 rounded-full bg-(--color-purple-1) opacity-70 group-hover:opacity-100" />{skill}</span>)}</div>
-              </motion.div>;
-            })}
+    <Section id="skills" tone="teal">
+      <SectionIntro eyebrow={copy.eyebrow} title={copy.title} highlight={copy.highlight} description={copy.description} />
+
+      {/* Two endless rows moving in opposite directions: the stack, alive */}
+      <Reveal className="-mx-6 mt-14 flex flex-col gap-3 md:-mx-10 md:mt-20">
+        <Marquee duration={38}>{rowA.map((skill, i) => <SkillChip key={skill} label={skill} index={i} />)}</Marquee>
+        <Marquee duration={44} reverse>{rowB.map((skill, i) => <SkillChip key={skill} label={skill} index={i + 3} />)}</Marquee>
+      </Reveal>
+
+      <div className="mt-10 grid gap-4 md:mt-14 md:grid-cols-2 md:gap-5">
+        {skillCategories.map((category, index) => {
+          const item = localize(category, language);
+          return (
+            <GlassCard key={category.name} as="article" tone={tones[index % tones.length]} delay={(index % 2) * 0.1} className="p-8 text-start md:p-9">
+              <h3 className="font-display text-2xl font-bold leading-tight text-tone">{item.name}</h3>
+              <p className="mt-2 font-sans text-base leading-relaxed text-(--color-text-secondary)">{item.description}</p>
+              <ul className="mt-7 flex flex-wrap gap-2">
+                {item.skills.map((skill) => (
+                  <li key={skill} className="rounded-full px-3.5 py-1.5 font-sans text-sm text-(--color-text-primary)" style={{ background: "color-mix(in srgb, var(--tone) 16%, transparent)", boxShadow: "0 0 0 1px color-mix(in srgb, var(--tone) 30%, transparent) inset" }}>{skill}</li>
+                ))}
+              </ul>
+            </GlassCard>
+          );
+        })}
+
+        {/* "Currently learning" gets the rotating colour border */}
+        <Reveal as="aside" delay={0.1} className="ring-border" style={{ "--r": "1.75rem" }}>
+          <div className="relative flex h-full flex-col p-8 text-start md:p-9">
+            <span className="pill w-fit text-(--color-text-primary)">
+              <span aria-hidden="true" className="h-2 w-2 rounded-full" style={{ background: "var(--c-purple)" }} />
+              {copy.exploring}
+            </span>
+            <h3 className="display-type mt-5 text-2xl text-(--color-text-primary)">{copy.exploringTitle}</h3>
+            <ul className="mt-6">
+              {learning.map((entry, i) => (
+                <li key={entry} className="hairline-t flex items-center gap-3 py-3 font-sans text-base text-(--color-text-secondary)">
+                  <span aria-hidden="true" className="h-1.5 w-1.5 rounded-full" style={{ background: dotColors[i % dotColors.length] }} />
+                  {entry}
+                </li>
+              ))}
+            </ul>
           </div>
-          <motion.aside initial={{ opacity: 0, y: 18 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true, amount: 0.25 }} transition={{ duration: 0.65, ease: smoothEase, delay: 0.1 }} className="rounded-2xl border p-7 md:p-8 flex flex-col justify-between min-h-70" style={{ borderColor: "var(--color-border)", background: "linear-gradient(145deg, var(--color-surface-hover), var(--color-surface))" }}>
-            <div><span className="font-sans text-[10px] tracking-[0.2em] uppercase text-(--color-purple-1)">{copy.exploring}</span><h3 className="font-display text-2xl md:text-3xl font-semibold text-(--color-text-primary) mt-4 tracking-tight">{copy.exploringTitle}</h3></div>
-            <div className="flex flex-col gap-3 mt-10">{learning.map((item) => <div key={item} className="flex items-center justify-between py-3 border-b last:border-b-0" style={{ borderColor: "var(--color-border)" }}><span className="font-sans text-sm text-(--color-text-secondary)">{item}</span><ArrowUpRight size={14} className="text-(--color-text-muted)" /></div>)}</div>
-          </motion.aside>
-        </div>
+        </Reveal>
       </div>
-    </section>
+    </Section>
   );
 }
 export default SkillsSection;

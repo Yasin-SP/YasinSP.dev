@@ -1,6 +1,6 @@
 # Yasin — Premium Front-End Portfolio
 
-A premium, dark-first React portfolio focused on frontend development, interface craft, responsive engineering, and purposeful motion.
+A React portfolio with an Apple-inspired, content-first design (flat tiles, one blue accent, restrained motion), focused on frontend development, interface craft, responsive engineering, and purposeful motion.
 
 ## Stack
 
@@ -8,7 +8,6 @@ A premium, dark-first React portfolio focused on frontend development, interface
 - Vite
 - Tailwind CSS v4
 - Motion
-- Lenis
 - React Router
 
 ## Run locally

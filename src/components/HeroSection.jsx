@@ -1,67 +1,170 @@
-import { motion } from "motion/react";
-import { ArrowDown, ArrowUpRight, Code2, GraduationCap, MapPin } from "lucide-react";
+import { useEffect, useRef } from "react";
+import { motion, useMotionValue, useReducedMotion, useSpring, useTransform } from "motion/react";
+import { Atom, ChevronRight, GraduationCap, Layers, MapPin, Sparkles } from "lucide-react";
 import { Link } from "react-router-dom";
-import { purpleGradient, smoothEase } from "../constants/theme.js";
 import photoDark from "../assets/yasin-dark.webp";
 import photoLight from "../assets/yasin-light.webp";
+import avatarLight from "../assets/yasin-light-avatar.webp";
 import { useTheme } from "../context/ThemeContext.jsx";
 import { useLanguage } from "../context/LanguageContext.jsx";
 import { getUI } from "../i18n.js";
-import LanguageToggle from "./LanguageToggle.jsx";
-import TypewriterTitle from "./TypewriterTitle.jsx";
+import { MOTION, NO_PREFERENCE, gsap, useGSAP } from "../lib/gsap.js";
+import Magnetic from "./Magnetic.jsx";
+import WordReveal from "./WordReveal.jsx";
 
-function InfoRow({ infoItems }) {
-  return <motion.div dir="ltr" initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.7, delay: 0.35, ease: smoothEase }} className="mt-6 flex flex-wrap items-center gap-x-4 gap-y-2 font-sans md:mt-7">
-    {infoItems.map((item, i) => <div key={item.label} className="flex items-center gap-3"><span className="flex items-center gap-1.5"><item.icon size={13} strokeWidth={1.8} className="text-(--color-purple-1)" /><span className="text-[11px] text-(--color-text-secondary) md:text-sm">{item.label}</span></span>{i < infoItems.length - 1 && <span className="h-1 w-1 rounded-full bg-(--color-text-muted)" />}</div>)}
-  </motion.div>;
-}
-
-function MobilePortrait() {
-  const { theme } = useTheme();
-  const photo = theme === "light" ? photoLight : photoDark;
-  return <motion.div initial={{ opacity: 0, scale: 0.88, y: 14 }} animate={{ opacity: 1, scale: 1, y: 0 }} transition={{ duration: 0.75, ease: smoothEase, delay: 0.12 }} className="relative mx-auto mb-7 h-37 w-37 sm:h-43 sm:w-43" aria-hidden="true">
-    <motion.div className="absolute -inset-5 rounded-full blur-2xl" style={{ background: "radial-gradient(circle, rgba(168,85,247,.32), transparent 68%)" }} animate={{ opacity: [0.45, 0.8, 0.45], scale: [0.92, 1.05, 0.92] }} transition={{ duration: 5, repeat: Infinity, ease: "easeInOut" }} />
-    <motion.div className="absolute -inset-1 rounded-full p-1.25" style={{ backgroundImage: purpleGradient, backgroundSize: "240% 240%" }} animate={{ backgroundPosition: ["0% 50%", "100% 50%", "0% 50%"] }} transition={{ duration: 6, repeat: Infinity, ease: "easeInOut" }}>
-      <div className="h-full w-full overflow-hidden rounded-full border-2 border-black bg-black"><img src={photo} alt="" className="h-full w-full object-cover object-top" style={{ WebkitMaskImage: "radial-gradient(ellipse 82% 84% at 50% 42%, black 62%, transparent 100%)", maskImage: "radial-gradient(ellipse 82% 84% at 50% 42%, black 62%, transparent 100%)" }} /></div>
+/** A glass badge beside the portrait: the pointer moves it (motion), GSAP brings it in, CSS makes it float. */
+function FloatingChip({ icon: Icon, label, tone, depth, mx, my, floatDuration, floatDelay, className }) {
+  const x = useTransform(mx, (v) => v * depth);
+  const y = useTransform(my, (v) => v * depth);
+  return (
+    <motion.div style={{ x, y }} className={`absolute z-30 ${className}`}>
+      <div data-chip>
+        <div className={`glass tone-${tone} float-y flex items-center gap-2.5 py-2 ps-2 pe-4`} style={{ "--r": "999px", "--float-duration": `${floatDuration}s`, "--float-delay": `${floatDelay}s` }}>
+          <span className="tone-icon h-8 w-8 rounded-[0.65rem]"><Icon size={16} strokeWidth={2} /></span>
+          <span className="font-sans text-[13px] font-semibold text-(--color-text-primary)">{label}</span>
+        </div>
+      </div>
     </motion.div>
-  </motion.div>;
+  );
 }
 
 function Hero() {
   const { language, isRTL } = useLanguage();
+  const { theme } = useTheme();
   const copy = getUI(language, "hero");
-  const infoItems = [
-    { icon: Code2, label: copy.frontend },
-    { icon: GraduationCap, label: copy.degree },
-    { icon: MapPin, label: copy.location },
-  ];
-  return <section className="relative w-full overflow-hidden lg:min-h-[calc(100vh-6.25rem)]">
-    <div className="absolute left-6 top-4 z-30 sm:left-8 md:left-12 md:top-6" aria-label="Language selection">
-      <LanguageToggle variant="hero" />
-    </div>
-    <div className="relative z-10 mx-auto flex min-h-[calc(100svh-5rem)] w-full max-w-7xl items-center px-6 pb-16 pt-28 sm:px-8 md:min-h-[calc(100vh-6.25rem)] md:px-12 md:py-16 lg:items-center">
-      <div dir={isRTL ? "rtl" : "ltr"} className={`w-full max-w-5xl lg:max-w-[56%] ${isRTL ? "text-right" : "text-left"}`}>
-        <div className="lg:hidden"><MobilePortrait /></div>
-        <motion.p initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.7, ease: smoothEase }} className="font-sans text-[10px] uppercase tracking-[0.21em] text-(--color-text-muted) sm:text-xs md:text-sm md:tracking-[0.24em]">{copy.eyebrow}</motion.p>
-        <TypewriterTitle
-          title={copy.title}
-          highlight={copy.name}
-          suffix={copy.nameSuffix}
-          isRTL={isRTL}
-          className="mt-4 max-w-full font-display text-[clamp(3.2rem,10vw,7.5rem)] font-bold leading-[0.9] tracking-[-0.055em] text-(--color-text-primary) md:mt-5"
-        />
-        <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.75, ease: smoothEase, delay: 0.2 }} className="mt-6 max-w-3xl md:mt-9">
-          <p className="font-display text-[1.22rem] leading-tight text-(--color-text-primary) sm:text-2xl md:text-3xl md:leading-snug">{copy.lead.includes("modern interfaces") ? <>I build <span className="text-(--color-purple-1)">modern interfaces</span> where clean engineering meets thoughtful visual detail.</> : copy.lead}</p>
-          <p className="mt-3 max-w-2xl font-sans text-[13px] leading-relaxed text-(--color-text-secondary) sm:text-sm md:mt-4 md:text-base">{copy.body}</p>
-        </motion.div>
-        <motion.div initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.7, ease: smoothEase, delay: 0.3 }} dir="ltr" className="mt-7 flex w-full flex-col gap-2.5 sm:w-auto sm:flex-row sm:items-center sm:gap-3 md:mt-8">
-          <Link to="/contact" className="group inline-flex min-h-12 w-full items-center justify-center gap-2 rounded-full border border-purple-400/30 px-5 py-3 text-sm font-medium text-white transition-transform duration-300 hover:-translate-y-0.5 sm:w-auto" style={{ backgroundImage: purpleGradient, backgroundSize: "200% 200%" }}>{copy.start}<ArrowUpRight className="group-hover:-translate-y-0.5 group-hover:translate-x-0.5 transition-transform duration-300" size={15} /></Link>
-          <a href="#projects" className="inline-flex min-h-12 w-full items-center justify-center gap-2 rounded-full border px-5 py-3 text-sm font-medium text-(--color-text-secondary) transition-colors duration-300 hover:text-(--color-text-primary) sm:w-auto" style={{ borderColor: "var(--color-border)" }}>{copy.work}</a>
-        </motion.div>
-        <InfoRow infoItems={infoItems} />
+  const contactCopy = getUI(language, "contact");
+  const isLight = theme === "light";
+  const photo = isLight ? photoLight : photoDark;
+  const avatar = avatarLight;
+  const portraitAlt = isRTL ? "پرتره یاسین سلیمان پناه" : "Portrait of Yasin SoleymanPanah";
+  const reduce = useReducedMotion();
+  const roles = copy.eyebrow.split("·").map((part) => part.trim()).filter(Boolean);
+  const sectionRef = useRef(null);
+
+  // One timeline for the whole entrance, then scrubbed parallax as the hero leaves.
+  useGSAP(() => {
+    const mm = gsap.matchMedia();
+    mm.add(NO_PREFERENCE, () => {
+      const tl = gsap.timeline({ defaults: { ease: MOTION.ease, duration: MOTION.duration } });
+      tl.from("[data-hero]", { autoAlpha: 0, y: 30, filter: "blur(8px)", stagger: MOTION.stagger, clearProps: "transform,filter,opacity,visibility" }, 0.1)
+        .from("[data-stage]", { autoAlpha: 0, y: 40, scale: 0.95, duration: 1.3, clearProps: "transform,opacity,visibility" }, 0.2)
+        .from("[data-chip]", { autoAlpha: 0, scale: 0.6, ease: "back.out(1.7)", stagger: 0.14, clearProps: "transform,opacity,visibility" }, 1);
+
+      const leave = { trigger: sectionRef.current, start: "top top", end: "bottom top", scrub: MOTION.scrub };
+      gsap.to("[data-text]", { y: -70, ease: "none", scrollTrigger: leave });
+      gsap.to("[data-parallax]", { y: 90, ease: "none", modifiers: { y: (v) => `${Math.round(parseFloat(v))}px` }, scrollTrigger: leave });
+    });
+    return () => mm.revert();
+  }, { scope: sectionRef });
+
+  // Pointer position in [-0.5, 0.5] across the hero, smoothed with a spring.
+  const rawX = useMotionValue(0);
+  const rawY = useMotionValue(0);
+  const mx = useSpring(rawX, { stiffness: 90, damping: 18, mass: 0.6 });
+  const my = useSpring(rawY, { stiffness: 90, damping: 18, mass: 0.6 });
+  const chipX = useTransform(mx, (v) => v * 90);
+  const chipY = useTransform(my, (v) => v * 90);
+
+  useEffect(() => {
+    const el = sectionRef.current;
+    if (!el || reduce || !window.matchMedia("(pointer: fine)").matches) return undefined;
+    // Only react while the pointer is over the portrait or within a margin around it.
+    const NEAR = 110;
+    const move = (event) => {
+      const stage = el.querySelector("[data-stage]");
+      if (!stage) return;
+      const r = stage.getBoundingClientRect();
+      const inside = event.clientX > r.left - NEAR && event.clientX < r.right + NEAR && event.clientY > r.top - NEAR && event.clientY < r.bottom + NEAR;
+      if (!inside) { rawX.set(0); rawY.set(0); return; }
+      rawX.set((event.clientX - (r.left + r.width / 2)) / (r.width + NEAR * 2));
+      rawY.set((event.clientY - (r.top + r.height / 2)) / (r.height + NEAR * 2));
+    };
+    const leave = () => { rawX.set(0); rawY.set(0); };
+    el.addEventListener("pointermove", move);
+    el.addEventListener("pointerleave", leave);
+    return () => { el.removeEventListener("pointermove", move); el.removeEventListener("pointerleave", leave); };
+  }, [reduce, rawX, rawY]);
+
+  return (
+    <section ref={sectionRef} className="relative w-full overflow-hidden">
+      <div
+        dir={isRTL ? "rtl" : "ltr"}
+        className="mx-auto grid w-full max-w-6xl items-center gap-10 px-6 pb-24 pt-6 md:px-10 lg:min-h-[calc(100svh-4.5rem)] lg:grid-cols-[1.05fr_0.95fr] lg:gap-4 lg:pb-16 lg:pt-4"
+      >
+        <div data-text className="relative z-10 text-center lg:text-start">
+          {/* Mobile portrait: avatar inside a spinning purple ring */}
+          <div data-hero className="mx-auto mb-8 h-32 w-32 lg:hidden">
+            <div className="ring-border h-full w-full" style={{ "--r": "999px" }}>
+              <img src={avatar} alt={portraitAlt} className="h-full w-full scale-110 rounded-full object-cover object-top" />
+            </div>
+          </div>
+
+          <div data-hero className="flex justify-center lg:justify-start">
+            <span className="pill text-(--color-text-primary)">
+              <span className="relative flex h-2 w-2" aria-hidden="true">
+                <span className="absolute inset-0 rounded-full bg-(--c-green)" style={{ animation: "ping-dot 1.8s cubic-bezier(0, 0, 0.2, 1) infinite" }} />
+                <span className="relative h-2 w-2 rounded-full bg-(--c-green)" />
+              </span>
+              {contactCopy.open}
+            </span>
+          </div>
+
+          <h1 className="display-type mt-7 text-[clamp(2.7rem,12vw,4.6rem)] text-(--color-text-primary) lg:text-[clamp(3.2rem,5.4vw,5.2rem)]">
+            <WordReveal as="span" inView={false} text={copy.title} delay={0.3} className="block text-(--color-text-secondary)" />
+            <span className="block">
+              <WordReveal as="span" inView={false} text={copy.name} delay={0.6} wordClassName="text-aurora" />
+              {copy.nameSuffix ? <>{" "}<WordReveal as="span" inView={false} text={copy.nameSuffix} delay={0.8} /></> : null}
+            </span>
+          </h1>
+
+          <p data-hero className="mx-auto mt-7 max-w-xl font-sans text-[19px] leading-snug text-(--color-text-primary) md:text-[22px] lg:mx-0">{copy.lead}</p>
+          <p data-hero className="mx-auto mt-4 max-w-xl font-sans text-base leading-relaxed text-(--color-text-secondary) md:text-[17px] lg:mx-0">{copy.body}</p>
+
+          <div data-hero className="mt-9 flex flex-col items-center gap-4 sm:flex-row sm:justify-center sm:gap-6 lg:justify-start">
+            <Magnetic className="w-full sm:w-auto">
+              <Link to="/contact" className="btn btn-primary w-full sm:w-auto">{copy.start}</Link>
+            </Magnetic>
+            <a href="#projects" className="btn btn-secondary w-full sm:w-auto">
+              {copy.work}
+              <ChevronRight size={17} strokeWidth={2} className="rtl:rotate-180" aria-hidden="true" />
+            </a>
+          </div>
+
+          <ul data-hero className="mt-9 flex flex-wrap items-center justify-center gap-2.5 lg:justify-start" aria-label={roles.join(", ")}>
+            {roles.map((role) => <li key={role} className="pill text-(--color-text-secondary)">{role}</li>)}
+          </ul>
+        </div>
+
+        {/* Desktop stage: a crisp framed portrait on a soft purple halo, chips orbiting in depth */}
+        <div data-parallax className="relative hidden lg:block">
+          <div data-stage className="relative mx-auto aspect-4/5 w-full max-w-100">
+            <span aria-hidden="true" className="absolute inset-0 translate-x-4 translate-y-4 rounded-[2.25rem] border" style={{ borderColor: "color-mix(in srgb, var(--c-purple) 45%, transparent)" }} />
+            <div className="relative h-full w-full overflow-hidden rounded-[2.25rem]" style={{ backgroundColor: "var(--color-bg)", boxShadow: "0 0 0 1px var(--color-border-strong), 0 40px 80px -40px rgba(0,0,0,0.6)" }}>
+              <img src={photo} alt={portraitAlt} width={1124} height={1399} decoding="async" fetchPriority="high" className="h-full w-full object-cover object-top" />
+                          </div>
+            <FloatingChip icon={Atom} label="React" tone="blue" depth={1.0} mx={chipX} my={chipY} floatDuration={6} floatDelay={0} className="start-[-9%] top-[14%]" />
+            <FloatingChip icon={Layers} label="Frontend" tone="purple" depth={-0.7} mx={chipX} my={chipY} floatDuration={7.5} floatDelay={0.8} className="end-[-10%] top-[34%]" />
+            <FloatingChip icon={Sparkles} label="UI / Motion" tone="pink" depth={1.3} mx={chipX} my={chipY} floatDuration={6.8} floatDelay={1.6} className="start-[-12%] bottom-[24%]" />
+            <FloatingChip icon={MapPin} label={copy.location} tone="teal" depth={-1.0} mx={chipX} my={chipY} floatDuration={8} floatDelay={0.4} className="end-[-4%] bottom-[8%]" />
+          </div>
+        </div>
       </div>
-    </div>
-    <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ duration: 1.2, delay: 0.6 }} className="absolute bottom-8 right-6 hidden items-center gap-3 text-(--color-text-muted) md:flex md:right-12"><span className="font-sans text-[10px] uppercase tracking-[0.25em]">{copy.scroll}</span><ArrowDown size={14} className="animate-bounce" /></motion.div>
-  </section>;
+
+      {/* Mobile degree line */}
+      <p data-hero className="mx-auto -mt-12 mb-14 flex items-center justify-center gap-2 px-6 font-sans text-sm text-(--color-text-muted) lg:hidden">
+        <GraduationCap size={15} strokeWidth={1.8} aria-hidden="true" />{copy.degree}
+        <span aria-hidden="true">·</span>
+        <MapPin size={14} strokeWidth={1.8} aria-hidden="true" />{copy.location}
+      </p>
+
+      {/* Scroll cue */}
+      <div data-hero className="pointer-events-none absolute inset-x-0 bottom-6 hidden justify-center lg:flex" aria-hidden="true">
+        <div className="glass flex h-11 w-7 items-start justify-center pt-2" style={{ "--r": "999px" }}>
+          <span className="block h-2 w-1 rounded-full bg-(--color-text-secondary)" style={{ animation: "scroll-nudge 2s ease-in-out infinite" }} />
+        </div>
+      </div>
+    </section>
+  );
 }
+
 export default Hero;

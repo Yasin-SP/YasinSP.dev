@@ -1,15 +1,18 @@
 import { useEffect, useRef } from "react";
-import { motion } from "motion/react";
+import { motion, useDragControls } from "motion/react";
+import { useMediaQuery } from "../hooks/useMediaQuery.js";
 import { ExternalLink, X } from "lucide-react";
-import { purpleGradient, smoothEase } from "../constants/theme.js";
+import { smoothEase } from "../constants/theme.js";
 import ProjectImageCarousel from "./ProjectImageCarousel.jsx";
 import GithubIcon from "./icons/GithubIcon.jsx";
-import { stopGlobalScroll, startGlobalScroll } from "../lib/lenisInstance.js";
 import { getUI } from "../i18n.js";
+import { startScroll, stopScroll } from "../lib/scroll.js";
 import { localize, useLanguage } from "../context/LanguageContext.jsx";
 
 function ProjectModal({ project, index, onClose }) {
   const closeButtonRef = useRef(null);
+  const isPhone = useMediaQuery("(max-width: 639px)");
+  const dragControls = useDragControls();
   const { language } = useLanguage();
   const copy = getUI(language, "projects");
   const item = localize(project, language);
@@ -20,14 +23,14 @@ function ProjectModal({ project, index, onClose }) {
     const previousOverflow = document.body.style.overflow;
     const previousActiveElement = document.activeElement;
     document.body.style.overflow = "hidden";
-    stopGlobalScroll();
+    stopScroll();
 
     const frame = requestAnimationFrame(() => closeButtonRef.current?.focus());
 
     return () => {
       cancelAnimationFrame(frame);
       document.body.style.overflow = previousOverflow;
-      startGlobalScroll();
+      startScroll();
       if (previousActiveElement instanceof HTMLElement) previousActiveElement.focus();
     };
   }, []);
@@ -63,7 +66,7 @@ function ProjectModal({ project, index, onClose }) {
 
   return (
     <div
-      className="fixed inset-0 z-[200] flex items-center justify-center p-3 md:p-6"
+      className="fixed inset-0 z-200 flex items-end justify-center sm:items-center sm:p-6"
       role="dialog"
       aria-modal="true"
       aria-labelledby="project-modal-title"
@@ -78,94 +81,91 @@ function ProjectModal({ project, index, onClose }) {
         exit={{ opacity: 0 }}
         transition={{ duration: 0.3 }}
         onClick={onClose}
-        className="fixed inset-0 backdrop-blur-sm"
-        style={{ backgroundColor: "rgba(0,0,0,0.7)" }}
+        className="fixed inset-0"
+        style={{ backgroundColor: "var(--scrim)", backdropFilter: "blur(18px) saturate(140%)", WebkitBackdropFilter: "blur(18px) saturate(140%)" }}
       />
 
       <motion.div
-        layoutId={cardLayoutId}
-        transition={{ duration: 0.5, ease: smoothEase }}
+        layoutId={isPhone ? undefined : cardLayoutId}
+        initial={isPhone ? { y: "100%" } : undefined}
+        animate={isPhone ? { y: 0 } : undefined}
+        exit={isPhone ? { y: "100%", transition: { duration: 0.32, ease: smoothEase } } : undefined}
+        transition={isPhone ? { type: "spring", stiffness: 340, damping: 38, mass: 0.9 } : { type: "spring", stiffness: 210, damping: 28, mass: 0.9 }}
+        drag={isPhone ? "y" : false}
+        dragControls={dragControls}
+        dragListener={false}
+        dragConstraints={{ top: 0, bottom: 0 }}
+        dragElastic={{ top: 0, bottom: 0.6 }}
+        onDragEnd={(_, info) => { if (info.offset.y > 120 || info.velocity.y > 520) onClose(); }}
         data-project-modal
-        className="modal-scroll relative w-full max-w-3xl rounded-2xl md:rounded-3xl overflow-hidden overflow-y-auto overscroll-contain max-h-[88vh]"
-        style={{
-          backgroundColor: "var(--color-bg-elevated)",
-          border: "1px solid var(--color-border)",
-        }}
+        data-lenis-prevent
+        className="modal-scroll glass tone-purple relative max-h-[92dvh] w-full overflow-hidden overflow-y-auto overscroll-contain sm:max-h-[88vh] sm:max-w-3xl"
+        style={{ "--r": isPhone ? "1.9rem 1.9rem 0 0" : "2rem", "--glass-blur": "48px", backgroundColor: "var(--glass-solid)", boxShadow: "0 40px 100px rgba(0,0,0,0.45)" }}
       >
+        {isPhone && (
+          <div
+            onPointerDown={(e) => dragControls.start(e)}
+            className="absolute inset-x-0 top-0 z-20 flex h-9 cursor-grab touch-none items-start justify-center pt-2.5"
+            aria-hidden="true"
+          >
+            <span className="h-1.5 w-10 rounded-full" style={{ background: "rgba(255,255,255,0.7)", boxShadow: "0 1px 4px rgba(0,0,0,0.4)" }} />
+          </div>
+        )}
         <button
           ref={closeButtonRef}
           type="button"
           onClick={onClose}
           aria-label={language === "fa" ? "بستن جزئیات پروژه" : "Close project details"}
-          className="absolute top-3 right-3 z-20 flex items-center justify-center w-9 h-9 rounded-full backdrop-blur-md transition-colors duration-300"
-          style={{
-            backgroundColor: "var(--color-surface-hover)",
-            border: "1px solid var(--color-border)",
-            color: "var(--color-text-primary)",
-          }}
+          className="absolute right-3 top-3 z-30 flex h-9 w-9 cursor-pointer items-center justify-center rounded-full text-white transition-colors duration-300 hover:bg-black/70"
+          style={{ backgroundColor: "rgba(0,0,0,0.5)", backdropFilter: "blur(10px)", WebkitBackdropFilter: "blur(10px)" }}
         >
-          <X size={16} />
+          <X size={16} strokeWidth={2} />
         </button>
 
-        <motion.div layoutId={imageLayoutId} className="relative w-full aspect-video">
-          <ProjectImageCarousel
-            images={project.images}
-            title={item.title}
-            index={index}
-            showControls
-            interval={4000}
-          />
-          <div className="absolute inset-0 bg-gradient-to-t from-black/45 via-transparent to-transparent pointer-events-none" />
+        <motion.div layoutId={isPhone ? undefined : imageLayoutId} className="relative aspect-video w-full">
+          <ProjectImageCarousel images={project.images} title={item.title} index={index} showControls interval={4000} />
         </motion.div>
 
         <motion.div
           initial={{ opacity: 0, y: 12 }}
           animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.4, ease: smoothEase, delay: 0.16 }}
-          className={`p-5 sm:p-7 md:p-10 ${language === "fa" ? "text-right" : "text-left"}`}
+          transition={{ duration: 0.45, ease: smoothEase, delay: 0.16 }}
+          className={`p-6 pb-10 sm:p-8 md:p-10 ${language === "fa" ? "text-right" : "text-left"}`}
         >
-          <div className="flex flex-wrap items-center gap-3">
-            <span className="font-sans text-xs tracking-[0.16em] uppercase text-[var(--color-purple-1)]">{item.category}</span>
-            <span className="w-1 h-1 rounded-full bg-[var(--color-text-muted)]" />
-            <span className="font-sans text-xs text-[var(--color-text-muted)]">{item.year}</span>
+          <div className="flex flex-wrap items-center gap-3 font-sans text-sm text-(--color-text-muted)">
+            <span>{item.category}</span>
+            <span aria-hidden="true" className="h-1 w-1 rounded-full" style={{ background: "var(--tone)" }} />
+            <span>{item.year}</span>
           </div>
 
-          <h2 id="project-modal-title" className="font-display text-[var(--color-text-primary)] text-3xl md:text-4xl font-bold mt-3 tracking-tight">
+          <h2 id="project-modal-title" className="mt-3 font-display text-3xl font-bold leading-tight text-(--color-text-primary) md:text-4xl">
             {item.title}
           </h2>
 
-          <div className="grid md:grid-cols-[1.2fr_0.8fr] gap-8 mt-8">
+          <div className="mt-8 grid gap-8 md:grid-cols-[1.2fr_0.8fr]">
             <div>
-              <span className="font-sans text-[10px] tracking-[0.2em] uppercase text-[var(--color-text-muted)]">{copy.projectBrief}</span>
-              <p className="font-sans text-[var(--color-text-secondary)] text-sm md:text-base leading-relaxed mt-3">{item.fullDescription}</p>
+              <p className="font-sans text-sm font-medium text-(--color-text-muted)">{copy.projectBrief}</p>
+              <p className="mt-3 font-sans text-base leading-relaxed text-(--color-text-secondary)">{item.fullDescription}</p>
             </div>
             <div>
-              <span className="font-sans text-[10px] tracking-[0.2em] uppercase text-[var(--color-text-muted)]">{copy.builtWith}</span>
-              <div className="flex flex-wrap gap-2 mt-3">
+              <p className="font-sans text-sm font-medium text-(--color-text-muted)">{copy.builtWith}</p>
+              <ul className="mt-3 flex flex-wrap gap-2">
                 {project.stack.map((tech) => (
-                  <span
-                    key={tech}
-                    className="font-sans text-xs font-medium px-3 py-1.5 rounded-full"
-                    style={{
-                      backgroundColor: "var(--color-accent-surface)",
-                      border: "1px solid var(--color-accent-border)",
-                      color: "var(--color-purple-1)",
-                    }}
-                  >
+                  <li key={tech} className="rounded-full px-3 py-1.5 font-sans text-[13px] text-(--color-text-primary)" style={{ background: "color-mix(in srgb, var(--tone) 16%, transparent)", boxShadow: "0 0 0 1px color-mix(in srgb, var(--tone) 32%, transparent) inset" }}>
                     {tech}
-                  </span>
+                  </li>
                 ))}
-              </div>
+              </ul>
             </div>
           </div>
 
           {hasFeatures && (
-            <div className="mt-9 pt-8 border-t" style={{ borderColor: "var(--color-border)" }}>
-              <h3 className="font-display text-[var(--color-text-primary)] text-lg font-semibold">{copy.features}</h3>
-              <ul className="grid sm:grid-cols-2 gap-x-8 gap-y-3 mt-4">
+            <div className="hairline-t mt-9 pt-8">
+              <h3 className="font-display text-lg font-semibold text-(--color-text-primary)">{copy.features}</h3>
+              <ul className="mt-4 grid gap-x-8 gap-y-3 sm:grid-cols-2">
                 {item.features.map((feature) => (
-                  <li key={feature} className="flex items-start gap-3 font-sans text-sm leading-relaxed text-[var(--color-text-secondary)]">
-                    <span className="mt-2 w-1.5 h-1.5 rounded-full shrink-0" style={{ backgroundImage: purpleGradient }} />
+                  <li key={feature} className="flex items-start gap-3 font-sans text-[15px] leading-relaxed text-(--color-text-secondary)">
+                    <span aria-hidden="true" className="mt-2.5 h-1.5 w-1.5 shrink-0 rounded-full" style={{ background: "var(--tone)" }} />
                     {feature}
                   </li>
                 ))}
@@ -174,21 +174,21 @@ function ProjectModal({ project, index, onClose }) {
           )}
 
           {project.challenges && (
-            <div className="mt-9 pt-8 border-t" style={{ borderColor: "var(--color-border)" }}>
-              <span className="font-sans text-[10px] tracking-[0.2em] uppercase text-[var(--color-text-muted)]">{copy.notes}</span>
-              <p className="font-sans text-[var(--color-text-secondary)] text-sm md:text-base leading-relaxed mt-3">{item.challenges}</p>
+            <div className="hairline-t mt-9 pt-8">
+              <p className="font-sans text-sm font-medium text-(--color-text-muted)">{copy.notes}</p>
+              <p className="mt-3 font-sans text-base leading-relaxed text-(--color-text-secondary)">{item.challenges}</p>
             </div>
           )}
 
-          <div className="flex flex-wrap gap-3 mt-9 pt-8 border-t" style={{ borderColor: "var(--color-border)" }}>
-            {project.github && (
-              <a href={project.github} target="_blank" rel="noopener noreferrer" className="flex items-center gap-2 px-5 py-2.5 rounded-full text-sm font-medium transition-colors duration-300" style={{ border: "1px solid var(--color-border-strong)", color: "var(--color-text-primary)" }}>
-                <GithubIcon size={16} /> Code
+          <div dir="ltr" className="hairline-t mt-9 flex flex-wrap gap-3 pt-8">
+            {project.demo && (
+              <a href={project.demo} target="_blank" rel="noopener noreferrer" className="btn btn-primary">
+                <ExternalLink size={16} /> {copy.demo}
               </a>
             )}
-            {project.demo && (
-              <a href={project.demo} target="_blank" rel="noopener noreferrer" className="flex items-center gap-2 px-5 py-2.5 rounded-full text-white text-sm font-medium border border-purple-400/30" style={{ backgroundImage: purpleGradient }}>
-                <ExternalLink size={16} /> {copy.demo}
+            {project.github && (
+              <a href={project.github} target="_blank" rel="noopener noreferrer" className="btn btn-secondary">
+                <GithubIcon size={16} /> Code
               </a>
             )}
           </div>

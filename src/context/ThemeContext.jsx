@@ -1,5 +1,4 @@
 import { createContext, useContext, useEffect, useRef, useState } from "react";
-import { stopGlobalScroll, startGlobalScroll } from "../lib/lenisInstance.js";
 import { safeStorageGet, safeStorageSet } from "../lib/safeStorage.js";
 import { themeColors } from "../constants/theme.js";
 
@@ -23,7 +22,7 @@ export function ThemeProvider({ children }) {
     themeRef.current = theme;
     document.documentElement.setAttribute("data-theme", theme);
     safeStorageSet("theme", theme);
-    document.querySelector('meta[name="theme-color"]')?.setAttribute("content", theme === "light" ? "#faf9fc" : "#000000");
+    document.querySelector('meta[name="theme-color"]')?.setAttribute("content", theme === "light" ? themeColors.light : themeColors.dark);
   }, [theme]);
 
   useEffect(() => {
@@ -39,7 +38,6 @@ export function ThemeProvider({ children }) {
         overlay.style.opacity = "0";
         overlay.style.clipPath = "circle(0px at 50% 50%)";
       }
-      startGlobalScroll();
     };
   }, []);
 
@@ -69,7 +67,6 @@ export function ThemeProvider({ children }) {
     isAnimatingRef.current = true;
 
     try {
-      stopGlobalScroll();
       overlay.style.pointerEvents = "none";
       overlay.style.opacity = "1";
       overlay.style.backgroundColor = themeColors.light;
@@ -100,7 +97,6 @@ export function ThemeProvider({ children }) {
         overlay.style.opacity = "0";
         overlay.style.clipPath = `circle(0px at ${x}px ${y}px)`;
       }
-      startGlobalScroll();
     }
   }
 

@@ -1,150 +1,149 @@
-import { useEffect, useRef, useState } from "react";
-import { ArrowRight, Menu, Moon, Sun, X } from "lucide-react";
-import logo from "../assets/Signature.svg";
-import { useScroll, useMotionValueEvent, motion, AnimatePresence } from "motion/react";
+import { useEffect, useLayoutEffect, useRef, useState } from "react";
+import { Moon, Sun } from "lucide-react";
+import { motion } from "motion/react";
 import { Link, useLocation } from "react-router-dom";
-import { purpleGradient } from "../constants/theme.js";
+import logo from "../assets/Signature.svg";
+import { smoothEase } from "../constants/theme.js";
 import { useTheme } from "../context/ThemeContext.jsx";
 import { useLanguage } from "../context/LanguageContext.jsx";
-import { stopGlobalScroll, startGlobalScroll, scrollToTop } from "../lib/lenisInstance.js";
+import { useActiveSection } from "../hooks/useActiveSection.js";
+import { scrollToTop } from "../lib/scroll.js";
+import LanguageToggle from "./LanguageToggle.jsx";
 
-function ThemeToggle({ floating = false }) {
+const navLinks = [
+  { key: "about", href: "#about", tone: "blue" },
+  { key: "services", href: "#services", tone: "purple" },
+  { key: "skills", href: "#skills", tone: "teal" },
+  { key: "work", href: "#projects", tone: "pink" },
+  { key: "approach", href: "#approach", tone: "indigo" },
+];
+
+const LABELS = {
+  en: { about: "About", services: "Services", skills: "Skills", work: "Work", approach: "Approach", navigation: "Navigation", close: "Close navigation", open: "Open navigation", contact: "Contact me", themeLight: "Switch to light theme", themeDark: "Switch to dark theme" },
+  fa: { about: "درباره من", services: "خدمات", skills: "مهارت‌ها", work: "پروژه‌ها", approach: "رویکرد من", navigation: "منوی سایت", close: "بستن منو", open: "باز کردن منو", contact: "ارتباط با من", themeLight: "تغییر به تم روشن", themeDark: "تغییر به تم تاریک" },
+};
+
+function ThemeToggle({ label }) {
   const { theme, toggleThemeAtPoint } = useTheme();
   return (
-    <motion.button
+    <button
       type="button"
       onClick={(e) => toggleThemeAtPoint(e.clientX, e.clientY)}
-      whileTap={{ scale: 0.92 }}
-      aria-label={theme === "dark" ? "Switch to light theme" : "Switch to dark theme"}
-      className={`flex shrink-0 items-center justify-center cursor-pointer rounded-full border transition-colors duration-300 ${floating ? "h-12 w-12" : "h-9 w-9"}`}
-      style={{ borderColor: "var(--color-border-strong)", color: "var(--color-text-primary)", backgroundColor: "var(--color-surface)", backdropFilter: floating ? "blur(12px)" : undefined }}
+      aria-label={label}
+      className="flex h-9 w-9 shrink-0 cursor-pointer items-center justify-center rounded-full text-(--color-text-secondary) transition-colors duration-300 hover:bg-(--color-surface-hover) hover:text-(--color-text-primary)"
     >
-      <motion.div key={theme} initial={{ rotate: -90, opacity: 0, scale: 0.6 }} animate={{ rotate: 0, opacity: 1, scale: 1 }} transition={{ duration: 0.35, ease: "easeOut" }}>
-        {theme === "dark" ? <Moon size={floating ? 18 : 15} /> : <Sun size={floating ? 18 : 15} />}
-      </motion.div>
-    </motion.button>
+      <motion.span key={theme} className="flex" initial={{ rotate: -80, opacity: 0, scale: 0.6 }} animate={{ rotate: 0, opacity: 1, scale: 1 }} transition={{ duration: 0.5, ease: smoothEase }}>
+        {theme === "dark" ? <Moon size={17} strokeWidth={1.8} /> : <Sun size={17} strokeWidth={1.8} />}
+      </motion.span>
+    </button>
   );
 }
 
-const navLinks = [
-  { key: "about", href: "#about" },
-  { key: "services", href: "#services" },
-  { key: "skills", href: "#skills" },
-  { key: "work", href: "#projects" },
-  { key: "approach", href: "#approach" },
-];
+function Logo({ theme, onClick }) {
+  return (
+    <Link to="/" onClick={onClick} aria-label="Yasin — Home" className="flex h-8 w-24 shrink-0 items-center justify-center">
+      <img src={logo} alt="" className="h-full w-full object-contain" style={{ transform: "scale(1.5)", filter: theme === "light" ? "invert(1)" : "none" }} />
+    </Link>
+  );
+}
 
 function Header() {
   const { theme } = useTheme();
   const { language } = useLanguage();
   const location = useLocation();
   const [scrolled, setScrolled] = useState(false);
-  const [mobileOpen, setMobileOpen] = useState(false);
-  const menuButtonRef = useRef(null);
-  const closeButtonRef = useRef(null);
-  const wasMobileOpenRef = useRef(false);
-  const { scrollY } = useScroll();
-  useMotionValueEvent(scrollY, "change", (latest) => setScrolled(latest > 50));
-  const labels = {
-    en: { about: "About", services: "Services", skills: "Skills", work: "Work", approach: "Approach", navigation: "Navigation", close: "Close navigation", open: "Open navigation", contact: "Contact me" },
-    fa: { about: "درباره من", services: "خدمات", skills: "مهارت‌ها", work: "پروژه‌ها", approach: "رویکرد من", navigation: "منوی سایت", close: "بستن منو", open: "باز کردن منو", contact: "ارتباط با من" },
-  }[language];
-  const getAnchor = (href) => (location.pathname === "/" ? href : `/${href}`);
+  const [tucked, setTucked] = useState(false);
+  const labels = LABELS[language];
+  const isHome = location.pathname === "/";
+  const active = useActiveSection(isHome);
+  const navRef = useRef(null);
+  const [bubble, setBubble] = useState({ x: 0, w: 0, show: false });
+
+  // One bubble that glides between links; measured from the live DOM so it survives language/size changes.
+  useLayoutEffect(() => {
+    const nav = navRef.current;
+    if (!nav) return undefined;
+    const measure = () => {
+      const el = nav.querySelector('[aria-current="true"]');
+      setBubble((previous) => {
+        if (!el) return previous.show ? { ...previous, show: false } : previous;
+        const next = { x: el.offsetLeft, w: el.offsetWidth, show: true };
+        return previous.x === next.x && previous.w === next.w && previous.show ? previous : next;
+      });
+    };
+    measure();
+    const observer = new ResizeObserver(measure);
+    observer.observe(nav);
+    return () => observer.disconnect();
+  }, [active, language]);
+  const getAnchor = (href) => (isHome ? href : `/${href}`);
 
   useEffect(() => {
-    if (!mobileOpen) {
-      if (wasMobileOpenRef.current) menuButtonRef.current?.focus();
-      wasMobileOpenRef.current = false;
-      return undefined;
-    }
-    wasMobileOpenRef.current = true;
-    const previousOverflow = document.body.style.overflow;
-    document.body.style.overflow = "hidden";
-    stopGlobalScroll();
-    closeButtonRef.current?.focus();
-
-    const onKeyDown = (event) => {
-      if (event.key === "Escape") { setMobileOpen(false); return; }
-      if (event.key !== "Tab") return;
-      const dialog = document.getElementById("mobile-navigation");
-      if (!dialog) return;
-      const focusable = dialog.querySelectorAll("a[href], button:not([disabled])");
-      if (!focusable.length) return;
-      const first = focusable[0];
-      const last = focusable[focusable.length - 1];
-      if (event.shiftKey && document.activeElement === first) { event.preventDefault(); last.focus(); }
-      else if (!event.shiftKey && document.activeElement === last) { event.preventDefault(); first.focus(); }
+    let last = window.scrollY;
+    const update = () => {
+      const y = window.scrollY;
+      setScrolled(y > 8);
+      // On phones the top bar slides away while reading and returns on the first upward flick.
+      if (Math.abs(y - last) > 6) { setTucked(window.innerWidth < 1024 && y > last && y > 160); last = y; }
     };
+    update();
+    window.addEventListener("scroll", update, { passive: true });
+    return () => window.removeEventListener("scroll", update);
+  }, []);
 
-    document.addEventListener("keydown", onKeyDown);
-    return () => {
-      document.body.style.overflow = previousOverflow;
-      startGlobalScroll();
-      document.removeEventListener("keydown", onKeyDown);
-    };
-  }, [mobileOpen]);
+  function handleLogoClick(event) {
+    if (isHome) { event.preventDefault(); scrollToTop(); }
+  }
 
   return (
     <>
-      <header
-        className={`fixed left-1/2 top-0 z-100 flex -translate-x-1/2 items-center justify-between font-display transition-all duration-500 ease-in-out ${scrolled ? "mt-3 h-16 w-[calc(100%-1.5rem)] rounded-full border px-4 backdrop-blur-xl sm:w-[92%] md:w-[82%] md:px-5" : "mt-0 h-20 w-full rounded-none border-transparent bg-transparent px-5 md:h-25 md:px-0"}`}
-        style={{ color: "var(--color-text-primary)", backgroundColor: scrolled ? "var(--color-pill-bg)" : "transparent", borderColor: scrolled ? "var(--color-border-strong)" : "transparent", boxShadow: scrolled ? "0 8px 32px rgba(0,0,0,0.25), 0 0 0 1px var(--color-border)" : "none" }}
+      <motion.header
+        initial={{ y: -80, opacity: 0 }}
+        animate={{ y: tucked ? -90 : 0, opacity: 1 }}
+        transition={tucked !== undefined && scrolled ? { type: "spring", stiffness: 380, damping: 36 } : { duration: 1, ease: smoothEase, delay: 0.1 }}
+        className="fixed inset-x-0 top-3 z-100 flex justify-center px-3 font-sans"
       >
-        <Link to="/" onClick={(event) => { if (location.pathname === "/") { event.preventDefault(); scrollToTop(); } }} aria-label="Yasin — Home" className={`${scrolled ? "h-8 w-24 md:h-8 md:w-28" : "h-10 w-28 md:h-14 md:w-48"} flex shrink-0 items-center justify-center transition-all duration-500`}>
-          <img src={logo} alt="Yasin signature" className="h-full w-full object-contain" style={{ transform: "scale(1.45)", filter: theme === "light" ? "invert(1)" : "none" }} />
-        </Link>
+        <div
+          dir="ltr"
+          className="glass flex h-14 w-full max-w-5xl items-center justify-between ps-5 pe-2 transition-[background-color,box-shadow] duration-500"
+          style={{ "--r": "999px", "--glass-blur": "32px", backgroundColor: scrolled ? "var(--nav-bg)" : "transparent" }}
+        >
+          <Logo theme={theme} onClick={handleLogoClick} />
 
-        <nav aria-label="Primary navigation" className="hidden items-center gap-7 font-sans lg:flex">
-          {navLinks.map((item) => (
-            <a key={item.key} href={getAnchor(item.href)} className="group relative py-2 text-sm text-(--color-text-secondary) transition-colors duration-300 hover:text-(--color-text-primary)">
-              {labels[item.key]}
-              <span className="absolute bottom-0 left-0 h-px w-full origin-left scale-x-0 transition-transform duration-300 group-hover:scale-x-100" style={{ backgroundImage: purpleGradient }} />
-            </a>
-          ))}
-          <ThemeToggle />
-        </nav>
+          <nav ref={navRef} aria-label="Primary navigation" className="relative hidden items-center gap-0.5 lg:flex">
+            <motion.span
+              aria-hidden="true"
+              initial={false}
+              animate={{ x: bubble.x, width: bubble.w, opacity: bubble.show ? 1 : 0 }}
+              transition={{ type: "spring", stiffness: 380, damping: 34 }}
+              className="pointer-events-none absolute inset-y-0 left-0 rounded-full"
+              style={{ background: "color-mix(in srgb, var(--c-purple) 20%, transparent)", boxShadow: "0 0 0 1px color-mix(in srgb, var(--c-purple) 38%, transparent) inset, 0 1px 0 rgba(255,255,255,0.18) inset" }}
+            />
+            {navLinks.map((item) => {
+              const isActive = active === item.href.slice(1);
+              return (
+                <a
+                  key={item.key}
+                  href={getAnchor(item.href)}
+                  aria-current={isActive ? "true" : undefined}
+                  className={`relative rounded-full px-3.5 py-2 text-[13px] font-medium transition-colors duration-300 ${isActive ? "text-(--color-text-primary)" : "text-(--color-text-secondary) hover:text-(--color-text-primary)"}`}
+                >
+                  <span className="relative">{labels[item.key]}</span>
+                </a>
+              );
+            })}
+          </nav>
 
-        <div className="flex items-center gap-2 mr-5">
-          <Link to="/contact" className="group hidden min-h-10 items-center justify-center gap-2 rounded-full border border-purple-400/30 px-4 text-xs font-medium text-white shadow-[0_10px_30px_rgba(107,33,168,.2)] transition-all duration-300 hover:scale-x-103 hover:shadow-[0_14px_38px_rgba(107,33,168,.3)] sm:inline-flex md:min-h-11 md:px-5 md:text-sm" style={{ backgroundImage: purpleGradient, backgroundSize: "200% 200%" }}>
-            {labels.contact} <ArrowRight className="group-hover:translate-x-0.5 transition-all duration-300" size={14} />
-          </Link>
-          <button ref={menuButtonRef} type="button" onClick={() => setMobileOpen(true)} aria-label={labels.open} aria-expanded={mobileOpen} aria-controls="mobile-navigation" className="flex h-11 w-11 items-center justify-center rounded-full border text-(--color-text-primary) transition-transform duration-300 active:scale-95 lg:hidden" style={{ borderColor: "var(--color-border-strong)", background: "var(--color-surface)", backdropFilter: "blur(12px)" }}>
-            <Menu size={19} />
-          </button>
+          <div className="flex items-center gap-1.5">
+            <LanguageToggle variant="nav" />
+            <ThemeToggle label={theme === "dark" ? labels.themeLight : labels.themeDark} />
+            <Link to="/contact" className="btn btn-primary btn-sm hidden md:inline-flex">{labels.contact}</Link>
+          </div>
         </div>
-      </header>
+      </motion.header>
 
-      <div className="h-20 md:h-25" />
-      <div className="fixed bottom-[max(1rem,env(safe-area-inset-bottom))] right-4 z-110 flex items-center gap-2 md:hidden"><ThemeToggle floating /></div>
+      <div aria-hidden="true" className="h-[4.5rem]" />
 
-      <AnimatePresence>
-        {mobileOpen && (
-          <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} transition={{ duration: 0.22 }} className="fixed inset-0 z-150 bg-black/70 backdrop-blur-md lg:hidden" onClick={() => setMobileOpen(false)}>
-            <motion.aside id="mobile-navigation" role="dialog" aria-modal="true" aria-label={labels.navigation} initial={{ x: "100%" }} animate={{ x: 0 }} exit={{ x: "100%" }} transition={{ duration: 0.34, ease: [0.22, 1, 0.36, 1] }} onClick={(e) => e.stopPropagation()} className="mobile-menu-panel ml-auto flex h-dvh w-[min(88vw,390px)] min-h-0 flex-col overflow-hidden border-l bg-(--color-bg-elevated)" style={{ borderColor: "var(--color-border)" }}>
-              <div className="flex shrink-0 items-center justify-between px-6 pb-5 pt-[max(1.25rem,env(safe-area-inset-top))]">
-                <span className="font-sans text-[10px] uppercase tracking-[0.22em] text-(--color-text-muted)">{labels.navigation}</span>
-                <button ref={closeButtonRef} type="button" onClick={() => setMobileOpen(false)} aria-label={labels.close} className="flex h-11 w-11 items-center justify-center rounded-full border text-(--color-text-primary)" style={{ borderColor: "var(--color-border)" }}><X size={18} /></button>
-              </div>
-
-              <nav aria-label={labels.navigation} className="min-h-0 flex-1 overflow-y-auto overscroll-contain px-6 pb-6">
-                <div className="border-t" style={{ borderColor: "var(--color-border)" }}>
-                  {navLinks.map((item, index) => (
-                    <a key={item.key} href={getAnchor(item.href)} onClick={() => setMobileOpen(false)} className="flex min-h-16.5 items-center justify-between border-b font-display text-[clamp(1.35rem,6vw,1.8rem)] leading-none text-(--color-text-primary) transition-colors duration-200 hover:text-(--color-purple-1)" style={{ borderColor: "var(--color-border)" }}>
-                      <span>{labels[item.key]}</span><span className="font-sans text-xs text-(--color-purple-1)">0{index + 1}</span>
-                    </a>
-                  ))}
-                </div>
-                <Link to="/contact" onClick={() => setMobileOpen(false)} className="mt-5 flex min-h-14 items-center justify-between rounded-2xl border border-purple-400/30 px-5 text-sm font-medium text-white shadow-[0_18px_50px_rgba(107,33,168,.22)] transition-transform duration-300 active:scale-[0.99]" style={{ backgroundImage: purpleGradient }}>
-                  {labels.contact} <ArrowRight size={16} />
-                </Link>
-                <div className="mt-3 flex gap-2">
-                  <ThemeToggle />
-                </div>
-              </nav>
-            </motion.aside>
-          </motion.div>
-        )}
-      </AnimatePresence>
     </>
   );
 }
