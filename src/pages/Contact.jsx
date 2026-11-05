@@ -8,7 +8,9 @@ import {
   BriefcaseBusiness,
   Check,
   CircleHelp,
+  Clock,
   Code2,
+  Copy,
   Handshake,
   LoaderCircle,
   Mail,
@@ -21,6 +23,7 @@ import {
 import { Link } from "react-router-dom";
 import logo from "../assets/Signature.svg";
 import { smoothEase } from "../constants/theme.js";
+import IOSSelect from "../components/IOSSelect.jsx";
 import { useTheme } from "../context/ThemeContext.jsx";
 import { useLanguage } from "../context/LanguageContext.jsx";
 import { getUI } from "../i18n.js";
@@ -52,6 +55,43 @@ const CONTACT_ICONS = {
   telegram: Send,
   whatsapp: MessageCircle,
   other: CircleHelp,
+};
+
+const EXTRA = {
+  en: {
+    steps: ["Topic", "Details", "Contact"],
+    stepOf: (n) => `Step ${n} of 3`,
+    topic: "Topic",
+    change: "Change",
+    sentTitle: "Message sent",
+    home: "Back to home",
+    again: "Send another message",
+    direct: "Prefer to reach out directly?",
+    copy: "Copy email",
+    copied: "Copied",
+    required: "All fields are required unless marked optional.",
+    nums: ["1", "2", "3"],
+  },
+  fa: {
+    steps: ["موضوع", "جزئیات", "تماس"],
+    stepOf: (n) => `مرحله ${["۱", "۲", "۳"][n - 1]} از ۳`,
+    topic: "موضوع",
+    change: "تغییر",
+    sentTitle: "پیامت ارسال شد",
+    home: "بازگشت به خانه",
+    again: "ارسال پیام دیگر",
+    direct: "ترجیح می‌دی مستقیم پیام بدی؟",
+    copy: "کپی ایمیل",
+    copied: "کپی شد",
+    required: "همهٔ فیلدها اجباری‌اند مگر اینکه «اختیاری» نوشته شده باشد.",
+    nums: ["۱", "۲", "۳"],
+  },
+};
+
+const directValue = (social) => {
+  if (social.type === "email") return social.href.replace("mailto:", "");
+  const tail = social.href.split("/").filter(Boolean).pop() || social.label;
+  return social.type === "telegram" ? `@${tail}` : tail;
 };
 
 function ContactThemeToggle() {
@@ -95,6 +135,7 @@ function Field({
   inputMode,
   maxLength,
   forceLTR = false,
+  wide = false,
 }) {
   const { isRTL } = useLanguage();
   const id = useId();
@@ -103,11 +144,11 @@ function Field({
     <label
       htmlFor={id}
       dir={isRTL ? "rtl" : "ltr"}
-      className={`group block ${textarea ? "md:col-span-2" : ""}`}
+      className={`group block ${textarea || wide ? "md:col-span-2" : ""}`}
     >
       <span
-        className="mb-2 block font-sans text-xs font-medium"
-        style={{ color: "var(--contact-text-muted)" }}
+        className="mb-2 block font-sans text-[13px] font-medium"
+        style={{ color: "var(--contact-text-soft)" }}
       >
         {label}
       </span>
@@ -118,7 +159,7 @@ function Field({
         value={value}
         onChange={onChange}
         type={textarea ? undefined : type}
-        rows={textarea ? 4 : undefined}
+        rows={textarea ? 5 : undefined}
         placeholder={placeholder}
         autoComplete={autoComplete}
         inputMode={inputMode}
@@ -135,12 +176,18 @@ function Field({
           background: "var(--contact-bg-elevated)",
         }}
       />
+      {textarea && maxLength ? (
+        <span dir="ltr" className="mt-1.5 block text-end font-sans text-[11px] tabular-nums" style={{ color: "var(--contact-text-muted)" }}>
+          {String(value).length} / {maxLength}
+        </span>
+      ) : null}
       {error ? (
         <span
           id={`${id}-error`}
           role="alert"
-          className="mt-1.5 block font-sans text-xs text-red-400"
+          className="mt-1.5 flex items-center gap-1.5 font-sans text-xs text-red-400"
         >
+          <AlertCircle size={13} className="shrink-0" />
           {error}
         </span>
       ) : null}
@@ -158,60 +205,38 @@ function SelectField({
   error,
 }) {
   const { isRTL } = useLanguage();
-  const { theme } = useTheme();
   const id = useId();
   return (
-    <label htmlFor={id} dir={isRTL ? "rtl" : "ltr"} className="block">
-      <span
-        className="mb-2 block font-sans text-xs font-medium"
-        style={{ color: "var(--contact-text-muted)" }}
+    <div dir={isRTL ? "rtl" : "ltr"} className="block">
+      <label
+        htmlFor={id}
+        className="mb-2 block font-sans text-[13px] font-medium"
+        style={{ color: "var(--contact-text-soft)" }}
       >
         {label}
-      </span>
-      <select
+      </label>
+      <IOSSelect
         id={id}
-        data-field={name}
         name={name}
         value={value}
         onChange={onChange}
-        aria-invalid={Boolean(error)}
-        aria-describedby={error ? `${id}-error` : undefined}
-        className="contact-input min-h-12 w-full rounded-xl border px-4 py-3 font-sans text-base outline-none focus:border-(--accent-fill) focus:shadow-[0_0_0_4px_var(--accent-ring)]"
-        style={{
-          color: "var(--contact-text)",
-          borderColor: error
-            ? "rgba(248,113,113,.65)"
-            : "var(--contact-border)",
-          background: "var(--contact-bg-elevated)",
-          colorScheme: theme === "dark" ? "dark" : "light",
-        }}
-      >
-        <option value="" disabled hidden>
-          {placeholder}
-        </option>
-        {options.map((o) => (
-          <option
-            key={o.value}
-            value={o.value}
-            style={{
-              color: "var(--contact-popup-text)",
-              backgroundColor: "var(--contact-popup-bg)",
-            }}
-          >
-            {o.label}
-          </option>
-        ))}
-      </select>
+        options={options}
+        placeholder={placeholder}
+        label={label}
+        error={error}
+        describedBy={error ? `${id}-error` : undefined}
+      />
       {error ? (
         <span
           id={`${id}-error`}
           role="alert"
-          className="mt-1.5 block font-sans text-xs text-red-400"
+          className="mt-1.5 flex items-center gap-1.5 font-sans text-xs text-red-400"
         >
+          <AlertCircle size={13} className="shrink-0" />
           {error}
         </span>
       ) : null}
-    </label>
+    </div>
   );
 }
 
@@ -250,11 +275,12 @@ function ChoiceGrid({
                 className="peer sr-only"
               />
               <span
-                className="flex min-h-14 items-center gap-3 rounded-xl border px-4 py-3 font-sans text-sm transition-colors peer-focus-visible:ring-2 peer-focus-visible:ring-(--accent-fill)"
+                className="flex min-h-16 items-center gap-3 rounded-xl border border-(--contact-border) px-4 py-3 font-sans text-sm transition-[border-color,background-color,box-shadow] duration-300 hover:border-(--accent-border) peer-focus-visible:ring-2 peer-focus-visible:ring-(--accent-fill)"
                 style={{
                   borderColor: active
                     ? "var(--accent-fill)"
-                    : "var(--contact-border)",
+                    : undefined,
+                  boxShadow: active ? "0 0 0 3px var(--accent-ring)" : undefined,
                   background: active
                     ? "var(--accent-surface)"
                     : "var(--contact-bg-elevated)",
@@ -264,10 +290,16 @@ function ChoiceGrid({
                 }}
               >
                 {Icon ? (
-                  <Icon
-                    size={17}
-                    className={`shrink-0 ${active ? "text-(--accent-text)" : "opacity-60"}`}
-                  />
+                  <span
+                    aria-hidden="true"
+                    className="flex h-9 w-9 shrink-0 items-center justify-center rounded-[0.7rem] transition-colors duration-300"
+                    style={{
+                      background: active ? "var(--btn-fill)" : "var(--accent-surface)",
+                      color: active ? "#fff" : "var(--accent-text)",
+                    }}
+                  >
+                    <Icon size={17} />
+                  </span>
                 ) : null}
                 <span
                   dir={isRTL ? "rtl" : "ltr"}
@@ -281,10 +313,9 @@ function ChoiceGrid({
                   ) : null}
                 </span>
                 {active ? (
-                  <Check
-                    size={15}
-                    className="ms-auto shrink-0 text-(--accent-text)"
-                  />
+                  <span className="ms-auto flex h-5 w-5 shrink-0 items-center justify-center rounded-full text-white" style={{ background: "var(--btn-fill)" }}>
+                    <Check size={12} strokeWidth={3} />
+                  </span>
                 ) : null}
               </span>
             </label>
@@ -339,11 +370,12 @@ function MultiChoiceGrid({
                 className="peer sr-only"
               />
               <span
-                className="flex min-h-14 items-center gap-3 rounded-xl border px-4 py-3 font-sans text-sm transition-colors peer-focus-visible:ring-2 peer-focus-visible:ring-(--accent-fill)"
+                className="flex min-h-16 items-center gap-3 rounded-xl border border-(--contact-border) px-4 py-3 font-sans text-sm transition-[border-color,background-color,box-shadow] duration-300 hover:border-(--accent-border) peer-focus-visible:ring-2 peer-focus-visible:ring-(--accent-fill)"
                 style={{
                   borderColor: active
                     ? "var(--accent-fill)"
-                    : "var(--contact-border)",
+                    : undefined,
+                  boxShadow: active ? "0 0 0 3px var(--accent-ring)" : undefined,
                   background: active
                     ? "var(--accent-surface)"
                     : "var(--contact-bg-elevated)",
@@ -353,10 +385,16 @@ function MultiChoiceGrid({
                 }}
               >
                 {Icon ? (
-                  <Icon
-                    size={17}
-                    className={`shrink-0 ${active ? "text-(--accent-text)" : "opacity-60"}`}
-                  />
+                  <span
+                    aria-hidden="true"
+                    className="flex h-9 w-9 shrink-0 items-center justify-center rounded-[0.7rem] transition-colors duration-300"
+                    style={{
+                      background: active ? "var(--btn-fill)" : "var(--accent-surface)",
+                      color: active ? "#fff" : "var(--accent-text)",
+                    }}
+                  >
+                    <Icon size={17} />
+                  </span>
                 ) : null}
                 <span
                   dir={isRTL ? "rtl" : "ltr"}
@@ -365,10 +403,9 @@ function MultiChoiceGrid({
                   <span className="block font-medium">{o.label}</span>
                 </span>
                 {active ? (
-                  <Check
-                    size={15}
-                    className="ms-auto shrink-0 text-(--accent-text)"
-                  />
+                  <span className="ms-auto flex h-5 w-5 shrink-0 items-center justify-center rounded-full text-white" style={{ background: "var(--btn-fill)" }}>
+                    <Check size={12} strokeWidth={3} />
+                  </span>
                 ) : null}
               </span>
             </label>
@@ -391,6 +428,7 @@ function MultiChoiceGrid({
 function Contact() {
   const { language, isRTL } = useLanguage();
   const copy = getUI(language, "contact");
+  const { theme } = useTheme();
   const reduceMotion = useReducedMotion();
   const emptyForm = {
     category: "",
@@ -440,6 +478,7 @@ function Contact() {
   const [status, setStatus] = useState("idle");
   const [errorMessage, setErrorMessage] = useState("");
   const [fieldErrors, setFieldErrors] = useState({});
+  const [copied, setCopied] = useState(false);
   const formRef = useRef(null);
   const abortRef = useRef(null);
   const startedAtRef = useRef(Date.now());
@@ -660,6 +699,10 @@ function Contact() {
   async function handleSubmit(event) {
     event.preventDefault();
     setErrorMessage("");
+    if (step < 3) {
+      nextStep();
+      return;
+    }
     if (!validate(3)) return;
     if (form.honeypot) {
       setStatus("success");
@@ -857,380 +900,250 @@ function Contact() {
   const stepTitle = [copy.intentTitle, copy.detailsTitle, copy.contactTitle][
     step - 1
   ];
+  const x = EXTRA[language] || EXTRA.en;
+  const selectedCategory = categoryOptions.find((item) => item.value === form.category);
+  const emailLink = socialLinks.find((item) => item.type === "email");
+  const copyEmail = async () => {
+    if (!emailLink) return;
+    try {
+      await navigator.clipboard.writeText(directValue(emailLink));
+      setCopied(true);
+      window.setTimeout(() => setCopied(false), 1800);
+    } catch {
+      window.location.href = emailLink.href;
+    }
+  };
+  const dirAttr = isRTL ? "rtl" : "ltr";
+  const goToStep = (target) => {
+    if (target >= step) return;
+    setStep(target);
+    setFieldErrors({});
+    setStatus("idle");
+    window.requestAnimationFrame(() => document.getElementById("contact-step-title")?.focus());
+  };
+  const enter = (delay = 0) => ({
+    initial: reduceMotion ? false : { opacity: 0, y: 18 },
+    animate: { opacity: 1, y: 0 },
+    transition: { duration: 0.65, ease: smoothEase, delay },
+  });
+
   return (
-    <main
-      id="main-content"
-      className="contact-page relative min-h-svh overflow-hidden"
-    >
-      <div className="relative z-10 mx-auto flex min-h-svh w-full max-w-375 flex-col px-5 pb-6 pt-5 sm:px-8 md:px-10 lg:px-14">
-        <header className="flex shrink-0 items-center justify-between gap-3">
-          <Link
-            to="/"
-            aria-label={copy.homeLabel}
-            className="flex h-10 w-24 items-center justify-center sm:h-12 sm:w-28"
-          >
+    <main id="main-content" className="contact-page relative min-h-svh overflow-hidden">
+      <div className="relative z-10 mx-auto flex min-h-svh w-full max-w-6xl flex-col px-5 pb-6 pt-5 sm:px-8 md:px-10">
+        <header className="flex shrink-0 items-center justify-between gap-3" dir="ltr">
+          <Link to="/" aria-label={copy.homeLabel} className="flex h-10 w-24 items-center justify-center sm:h-12 sm:w-28">
+            <img src={logo} alt="" className="h-full w-full object-contain" style={{ transform: "scale(1.5)", filter: theme === "light" ? "invert(1)" : "none" }} />
           </Link>
-          <div className="flex items-center gap-2" dir="ltr">
+          <div className="flex items-center gap-2">
+            <LanguageToggle variant="nav" />
             <ContactThemeToggle />
-            <Link
-              to="/"
-              className="group inline-flex items-center gap-2 rounded-full px-4 py-2.5 font-sans text-[13px] transition-colors duration-300 hover:bg-(--color-surface-hover)"
-              style={{
-                color: "var(--contact-text-soft)",
-                borderColor: "var(--contact-border)",
-                background: "var(--contact-bg-elevated)",
-              }}
-            >
-              <ArrowLeft
-                size={14}
-                className="transition-transform duration-300 group-hover:-translate-x-0.5"
-              />{" "}
+            <Link to="/" className="btn btn-secondary btn-sm group">
+              <ArrowLeft size={14} className="transition-transform duration-300 group-hover:-translate-x-0.5" />
               {copy.back}
             </Link>
           </div>
         </header>
-        <div className="flex flex-1 items-center py-8 sm:py-10 lg:py-8">
-          <div className="grid w-full grid-cols-1 items-center gap-9 lg:grid-cols-[minmax(0,0.9fr)_minmax(520px,0.9fr)] lg:gap-16 xl:gap-24">
-            <section
-              dir={isRTL ? "rtl" : "ltr"}
-              className={`max-w-2xl ${isRTL ? "text-right" : "text-left"}`}
-            >
-              <motion.div
-                initial={reduceMotion ? false : { opacity: 0, y: 18 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.65, ease: smoothEase }}
-              >
-                <span className="inline-flex items-center gap-2 font-sans text-[15px] font-medium" style={{ color: "var(--contact-text-soft)" }}>
-                  <span className="h-2 w-2 rounded-full bg-emerald-500" aria-hidden="true" />{" "}
-                  {copy.open}
+
+        <div className="grid flex-1 items-start gap-10 py-10 sm:py-14 lg:grid-cols-[0.85fr_1.15fr] lg:gap-16 lg:py-16">
+          {/* Left: who, how fast, and the quickest direct routes */}
+          <section dir={dirAttr} className="text-start lg:sticky lg:top-10">
+            <motion.div {...enter(0)}>
+              <span className="pill text-(--color-text-primary)">
+                <span className="relative flex h-2 w-2" aria-hidden="true">
+                  <span className="absolute inset-0 rounded-full bg-(--c-green)" style={{ animation: "ping-dot 1.8s cubic-bezier(0, 0, 0.2, 1) infinite" }} />
+                  <span className="relative h-2 w-2 rounded-full bg-(--c-green)" />
                 </span>
-                <h1
-                  className="display-type mt-5 max-w-[12ch] text-[clamp(2.6rem,6.2vw,5rem)]"
-                >
-                  {copy.title}{" "}
-                  <span style={{ color: "var(--contact-text-muted)" }}>
-                    {copy.highlight}
-                  </span>
-                </h1>
-                <p
-                  className="mt-5 max-w-xl font-sans text-base leading-relaxed md:text-[17px]"
-                  style={{ color: "var(--contact-text-soft)" }}
-                >
-                  {copy.body}
-                </p>
-              </motion.div>
-              <motion.div
-                initial={reduceMotion ? false : { opacity: 0, y: 16 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.65, ease: smoothEase, delay: 0.12 }}
-                className="mt-7 flex flex-wrap gap-2.5"
-              >
-                <span
-                  className="inline-flex items-center rounded-full border px-4 py-2.5 font-sans text-[13px]"
-                  style={{
-                    color: "var(--contact-text-muted)",
-                    borderColor: "var(--contact-border)",
-                  }}
-                >
-                  {copy.response}
-                </span>
-              </motion.div>
-              {socialLinks.length > 0 ? (
-                <motion.div
-                  initial={reduceMotion ? false : { opacity: 0, y: 16 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  transition={{ duration: 0.65, ease: smoothEase, delay: 0.2 }}
-                  className="mt-6"
-                >
-                  <span
-                    className="mb-3 block font-sans text-xs font-medium"
-                    style={{ color: "var(--contact-text-muted)" }}
-                  >
-                    {copy.connectDirect}
-                  </span>
-                  <div className="flex flex-wrap gap-2.5" dir="ltr">
-                    {socialLinks.map((social) => {
-                      const Icon = SOCIAL_ICONS[social.type];
-                      return (
+                {copy.open}
+              </span>
+              <h1 className="display-type mt-6 max-w-[14ch] text-[clamp(2.1rem,4.2vw,3.4rem)]">
+                {copy.title} <span style={{ color: "var(--accent-text)" }}>{copy.highlight}</span>
+              </h1>
+              <p className="mt-5 max-w-md font-sans text-base leading-relaxed md:text-[17px]" style={{ color: "var(--contact-text-soft)" }}>{copy.body}</p>
+              <p className="mt-6 inline-flex items-center gap-2 font-sans text-sm" style={{ color: "var(--contact-text-soft)" }}>
+                <Clock size={16} className="text-(--accent-text)" aria-hidden="true" />
+                {copy.response}
+              </p>
+            </motion.div>
+
+            {socialLinks.length > 0 ? (
+              <motion.div {...enter(0.15)} className="mt-10">
+                <h2 className="font-sans text-[13px] font-semibold" style={{ color: "var(--contact-text)" }}>{x.direct}</h2>
+                <ul className="glass mt-4 divide-y divide-(--color-border) overflow-hidden" style={{ "--r": "1.5rem", "--glass-blur": "24px" }}>
+                  {socialLinks.map((social) => {
+                    const Icon = SOCIAL_ICONS[social.type];
+                    const external = social.type !== "email";
+                    return (
+                      <li key={social.label} className="group flex items-center transition-colors duration-300 hover:bg-(--color-surface)">
                         <a
-                          key={social.label}
                           href={social.href}
-                          target={social.type !== "email" ? "_blank" : undefined}
-                          rel={social.type !== "email" ? "noopener noreferrer" : undefined}
-                          className="group inline-flex items-center gap-2 rounded-full px-4 py-2.5 font-sans text-[13px] transition-colors duration-300 hover:bg-(--color-surface-hover)"
-                          style={{
-                            color: "var(--contact-text-soft)",
-                            borderColor: "var(--contact-border)",
-                            background: "var(--contact-bg-elevated)",
-                          }}
+                          target={external ? "_blank" : undefined}
+                          rel={external ? "noopener noreferrer" : undefined}
+                          className="flex min-w-0 flex-1 items-center gap-4 px-4 py-3.5"
                         >
-                          <Icon size={14} className="opacity-70 transition-opacity duration-300 group-hover:opacity-100" />
-                          {social.label}
+                          <span className="tone-icon tone-purple h-10 w-10 shrink-0 rounded-[0.8rem]"><Icon size={18} /></span>
+                          <span className="min-w-0 flex-1 text-start">
+                            <span className="block font-sans text-sm font-semibold" style={{ color: "var(--contact-text)" }}>{social.label}</span>
+                            <span dir="ltr" className="block truncate text-start font-sans text-[13px]" style={{ color: "var(--contact-text-muted)" }}>{directValue(social)}</span>
+                          </span>
+                          {external ? <ArrowUpRight size={16} className="shrink-0 opacity-50 transition-all duration-300 group-hover:translate-x-0.5 group-hover:-translate-y-0.5 group-hover:opacity-100 rtl:-scale-x-100" aria-hidden="true" /> : null}
                         </a>
+                        {social.type === "email" ? (
+                          <button
+                            type="button"
+                            onClick={copyEmail}
+                            aria-label={x.copy}
+                            className="me-3 inline-flex shrink-0 cursor-pointer items-center gap-1.5 rounded-full px-3 py-1.5 font-sans text-xs font-medium transition-colors duration-300 hover:bg-(--color-surface-hover)"
+                            style={{ color: copied ? "var(--c-green)" : "var(--contact-text-soft)", background: "var(--color-surface)" }}
+                          >
+                            {copied ? <Check size={13} /> : <Copy size={13} />}
+                            {copied ? x.copied : x.copy}
+                          </button>
+                        ) : null}
+                      </li>
+                    );
+                  })}
+                </ul>
+              </motion.div>
+            ) : null}
+          </section>
+
+          {/* Right: the guided form */}
+          <motion.section {...enter(0.1)} className="relative" aria-labelledby="contact-step-title">
+            <div className="glass tone-purple p-5 sm:p-9" style={{ "--r": "2rem", "--glass-blur": "40px" }}>
+              {status === "success" ? (
+                <div dir={dirAttr} className="flex flex-col items-center py-8 text-center" role="status">
+                  <span className="flex h-16 w-16 items-center justify-center rounded-full text-white" style={{ background: "var(--btn-fill)" }}>
+                    <Check size={30} strokeWidth={2.4} />
+                  </span>
+                  <h2 id="contact-step-title" tabIndex="-1" className="mt-6 font-display text-3xl font-bold outline-none">{x.sentTitle}</h2>
+                  <p className="mt-3 max-w-sm font-sans text-base leading-relaxed" style={{ color: "var(--contact-text-soft)" }}>{copy.success}</p>
+                  <div className="mt-8 flex flex-col gap-3 sm:flex-row">
+                    <Link to="/" className="btn btn-primary">{x.home}</Link>
+                    <button type="button" onClick={() => setStatus("idle")} className="btn btn-secondary">{x.again}</button>
+                  </div>
+                </div>
+              ) : (
+                <>
+                  {/* Stepper: numbered, labelled, completed steps can be revisited */}
+                  <ol className="flex items-center" dir={dirAttr} aria-label={x.stepOf(step)}>
+                    {x.steps.map((label, index) => {
+                      const n = index + 1;
+                      const done = n < step;
+                      const current = n === step;
+                      return (
+                        <li key={label} className={`flex items-center ${n < 3 ? "flex-1" : ""}`}>
+                          <button
+                            type="button"
+                            disabled={!done}
+                            onClick={() => goToStep(n)}
+                            aria-current={current ? "step" : undefined}
+                            className={`group flex items-center gap-2.5 rounded-full ${done ? "cursor-pointer" : "cursor-default"}`}
+                          >
+                            <span
+                              className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full font-sans text-[13px] font-semibold transition-colors duration-300"
+                              style={{
+                                background: done || current ? "var(--btn-fill)" : "transparent",
+                                color: done || current ? "#fff" : "var(--contact-text-muted)",
+                                boxShadow: done || current ? "none" : "0 0 0 1px var(--contact-border-strong) inset",
+                              }}
+                            >
+                              {done ? <Check size={15} strokeWidth={2.6} /> : x.nums[index]}
+                            </span>
+                            <span className="hidden font-sans text-[13px] font-medium sm:inline" style={{ color: current ? "var(--contact-text)" : "var(--contact-text-muted)" }}>{label}</span>
+                          </button>
+                          {n < 3 ? <span aria-hidden="true" className="mx-3 h-px flex-1 transition-colors duration-500" style={{ background: n < step ? "var(--c-purple)" : "var(--contact-border)" }} /> : null}
+                        </li>
                       );
                     })}
-                  </div>
-                </motion.div>
-              ) : null}
-            </section>
-            <motion.section
-              initial={
-                reduceMotion ? false : { opacity: 0, y: 28, scale: 0.985 }
-              }
-              animate={{ opacity: 1, y: 0, scale: 1 }}
-              transition={{ duration: 0.8, ease: smoothEase, delay: 0.18 }}
-              className="relative"
-              aria-labelledby="contact-step-title"
-            >
-              <div
-                className="relative overflow-hidden rounded-[1.75rem] border p-5 sm:p-8"
-                style={{
-                  borderColor: "var(--contact-border)",
-                  background: "var(--contact-bg-elevated)",
-                  boxShadow: "0 20px 60px var(--contact-shadow)",
-                }}
-              >
-                <div
-                  className="mb-6 flex items-start justify-between gap-5"
-                  dir="ltr"
-                >
-                  <div
-                    dir={isRTL ? "rtl" : "ltr"}
-                    className={`min-w-0 flex-1 ${isRTL ? "text-right" : "text-left"}`}
-                  >
-                    <span
-                      className="block font-sans text-xs font-medium"
-                      style={{ color: "var(--contact-text-muted)" }}
-                    >
-                      {copy.step} {step} / 3
-                    </span>
-                    <h2
-                      id="contact-step-title"
-                      tabIndex="-1"
-                      className="mt-2 font-display text-2xl font-semibold leading-tight tracking-tight outline-none sm:text-3xl"
-                    >
-                      {stepTitle}
-                    </h2>
-                  </div>
-                  <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-(--accent-surface) text-(--accent-text)">
-                    <Send size={15} />
-                  </div>
-                </div>
-                <div className="mb-6 grid grid-cols-3 gap-2" aria-hidden="true">
-                  {[1, 2, 3].map((n) => (
-                    <span
-                      key={n}
-                      className="h-1 rounded-full"
-                      style={{
-                        background:
-                          n <= step
-                            ? "var(--accent-fill)"
-                            : "var(--contact-border)",
-                      }}
-                    />
-                  ))}
-                </div>
-                <form ref={formRef} onSubmit={handleSubmit} noValidate>
-                  {step === 1 ? (
-                    <ChoiceGrid
-                      legend={copy.intentLegend}
-                      name="category"
-                      value={form.category}
-                      onChange={selectCategory}
-                      options={categoryOptions}
-                      icons={CATEGORY_ICONS}
-                      error={fieldErrors.category}
-                    />
-                  ) : null}
-                  {step === 2 ? (
-                    <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
-                      {detailFields}
-                    </div>
-                  ) : null}
-                  {step === 3 ? (
-                    <div
-                      dir={isRTL ? "rtl" : "ltr"}
-                      className="grid grid-cols-1 gap-4 md:grid-cols-2"
-                    >
-                      <Field
-                        label={copy.name}
-                        name="name"
-                        value={form.name}
-                        onChange={update("name")}
-                        placeholder={copy.namePlaceholder}
-                        autoComplete="name"
-                        maxLength={MAX.name}
-                        error={fieldErrors.name}
-                      />
-                      <MultiChoiceGrid
-                        legend={copy.contactMethod}
-                        name="contactMethods"
-                        values={form.contactMethods}
-                        onChange={toggleContactMethod}
-                        options={contactOptions}
-                        icons={CONTACT_ICONS}
-                        error={fieldErrors.contactMethods}
-                      />
-                      {form.contactMethods.map((method) => (
-                        <Field
-                          key={method}
-                          label={copy.contactLabels[method]}
-                          name={`contact.${method}`}
-                          value={form.contactDetails[method] || ""}
-                          onChange={updateContactDetail(method)}
-                          placeholder={
-                            copy.contactPlaceholders[method] ||
-                            copy.contactPlaceholder
-                          }
-                          type={method === "email" ? "email" : "text"}
-                          inputMode={
-                            ["phone", "whatsapp"].includes(method)
-                              ? "tel"
-                              : method === "email"
-                                ? "email"
-                                : "text"
-                          }
-                          autoComplete={
-                            method === "email"
-                              ? "email"
-                              : method === "phone"
-                                ? "tel"
-                                : "off"
-                          }
-                          maxLength={MAX.contact}
-                          error={fieldErrors[`contact.${method}`]}
-                          forceLTR={["phone", "whatsapp", "telegram", "email"].includes(method)}
-                        />
-                      ))}
-                      <Field
-                        label={copy.message}
-                        name="message"
-                        value={form.message}
-                        onChange={update("message")}
-                        placeholder={copy.messagePlaceholder}
-                        textarea
-                        maxLength={MAX.message}
-                        error={fieldErrors.message}
-                      />
-                      <p
-                        className="font-sans text-xs leading-relaxed md:col-span-2"
-                        dir={isRTL ? "rtl" : "ltr"}
-                        style={{ color: "var(--contact-text-muted)" }}
-                      >
-                        {copy.privacyNote}{" "}
-                        <Link
-                          to="/privacy"
-                          state={{ fromContact: true }}
-                          className="text-(--accent-text) underline underline-offset-4 hover:opacity-80"
-                        >
-                          {copy.privacyLink}
-                        </Link>
+                  </ol>
+
+                  <div dir={dirAttr} className="mt-8 text-start">
+                    <span className="block font-sans text-xs font-medium" style={{ color: "var(--contact-text-muted)" }}>{x.stepOf(step)}</span>
+                    <h2 id="contact-step-title" tabIndex="-1" className="mt-1.5 font-display text-2xl font-bold leading-tight outline-none sm:text-[1.9rem]">{stepTitle}</h2>
+                    {step > 1 && selectedCategory ? (
+                      <p className="mt-4 inline-flex items-center gap-2 rounded-full py-1.5 ps-3.5 pe-1.5 font-sans text-[13px]" style={{ background: "var(--accent-surface)", color: "var(--contact-text)" }}>
+                        <span style={{ color: "var(--contact-text-muted)" }}>{x.topic}:</span>
+                        <span className="font-semibold">{selectedCategory.label}</span>
+                        <button type="button" onClick={() => goToStep(1)} className="inline-flex cursor-pointer items-center gap-1 rounded-full px-2.5 py-1 text-xs font-medium text-(--accent-text) transition-colors duration-300 hover:bg-(--accent-surface)">
+                          {x.change}
+                        </button>
                       </p>
-                    </div>
-                  ) : null}
-                  <input
-                    type="text"
-                    name="website_confirm"
-                    value={form.honeypot}
-                    onChange={update("honeypot")}
-                    tabIndex="-1"
-                    autoComplete="off"
-                    aria-hidden="true"
-                    className="contact-honeypot"
-                  />
-                  <div
-                    className={`mt-6 flex flex-col-reverse gap-3 sm:flex-row sm:items-center ${isRTL ? "sm:justify-end" : "sm:justify-between"}`}
-                    dir="ltr"
-                  >
-                    {step > 1 ? (
-                      <button
-                        type="button"
-                        onClick={() => {
-                          setStep((s) => s - 1);
-                          setFieldErrors({});
-                          setStatus("idle");
-                        }}
-                        className="btn btn-secondary"
-                      >
-                        <ArrowLeft size={15} />
-                        {copy.previous}
-                      </button>
-                    ) : (
-                      <span />
-                    )}
-                    {step < 3 ? (
-                      <button
-                        type="button"
-                        onClick={nextStep}
-                        className="btn btn-primary"
-                      >
-                        {copy.continue}
-                        <ArrowRight size={15} />
-                      </button>
-                    ) : (
-                      <button
-                        type="submit"
-                        disabled={isSubmitting || status === "success"}
-                        className="btn btn-primary group"
-                      >
-                        {isSubmitting
-                          ? copy.sending
-                          : status === "success"
-                            ? copy.sent
-                            : copy.send}
-                        {isSubmitting ? (
-                          <LoaderCircle
-                            size={15}
-                            className="animate-spin motion-reduce:animate-none"
+                    ) : null}
+                  </div>
+
+                  <form ref={formRef} onSubmit={handleSubmit} noValidate className="mt-7">
+                    {step === 1 ? (
+                      <ChoiceGrid legend={copy.intentLegend} name="category" value={form.category} onChange={selectCategory} options={categoryOptions} icons={CATEGORY_ICONS} error={fieldErrors.category} />
+                    ) : null}
+                    {step === 2 ? <div className="grid grid-cols-1 gap-5 md:grid-cols-2">{detailFields}</div> : null}
+                    {step === 3 ? (
+                      <div dir={dirAttr} className="grid grid-cols-1 gap-5 md:grid-cols-2">
+                        <Field label={copy.name} name="name" value={form.name} onChange={update("name")} placeholder={copy.namePlaceholder} autoComplete="name" maxLength={MAX.name} error={fieldErrors.name} wide />
+                        <MultiChoiceGrid legend={copy.contactMethod} name="contactMethods" values={form.contactMethods} onChange={toggleContactMethod} options={contactOptions} icons={CONTACT_ICONS} error={fieldErrors.contactMethods} />
+                        {form.contactMethods.map((method) => (
+                          <Field
+                            key={method}
+                            label={copy.contactLabels[method]}
+                            name={`contact.${method}`}
+                            value={form.contactDetails[method] || ""}
+                            onChange={updateContactDetail(method)}
+                            placeholder={copy.contactPlaceholders[method] || copy.contactPlaceholder}
+                            type={method === "email" ? "email" : "text"}
+                            inputMode={["phone", "whatsapp"].includes(method) ? "tel" : method === "email" ? "email" : "text"}
+                            autoComplete={method === "email" ? "email" : method === "phone" ? "tel" : "off"}
+                            maxLength={MAX.contact}
+                            error={fieldErrors[`contact.${method}`]}
+                            forceLTR={["phone", "whatsapp", "telegram", "email"].includes(method)}
+                            wide
                           />
-                        ) : status === "success" ? (
-                          <Check size={15} />
-                        ) : (
-                          <ArrowUpRight className="transition-transform duration-300 group-hover:-translate-y-0.5 group-hover:translate-x-0.5" size={15} />
-                        )}
-                      </button>
-                    )}
-                  </div>
-                  <div
-                    className="mt-4 min-h-5"
-                    aria-live="polite"
-                    aria-atomic="true"
-                  >
-                    {status === "success" ? (
-                      <div
-                        className="flex items-start gap-2 rounded-xl border border-emerald-400/20 bg-emerald-400/6 px-3 py-2.5 text-emerald-300"
-                        dir={isRTL ? "rtl" : "ltr"}
-                      >
-                        <Check size={15} className="mt-0.5 shrink-0" />
-                        <p className="font-sans text-xs leading-relaxed">
-                          {copy.success}
+                        ))}
+                        <Field label={copy.message} name="message" value={form.message} onChange={update("message")} placeholder={copy.messagePlaceholder} textarea maxLength={MAX.message} error={fieldErrors.message} />
+                        <p className="font-sans text-xs leading-relaxed md:col-span-2" style={{ color: "var(--contact-text-muted)" }}>
+                          {copy.privacyNote}{" "}
+                          <Link to="/privacy" state={{ fromContact: true }} className="text-(--accent-text) underline underline-offset-4 hover:opacity-80">{copy.privacyLink}</Link>
                         </p>
                       </div>
                     ) : null}
-                    {status === "error" ? (
-                      <div
-                        className="flex items-start gap-2 rounded-xl border border-red-400/20 bg-red-400/6 px-3 py-2.5 text-red-300"
-                        dir={isRTL ? "rtl" : "ltr"}
-                      >
-                        <AlertCircle size={15} className="mt-0.5 shrink-0" />
-                        <p className="font-sans text-xs leading-relaxed">
-                          {errorMessage}
-                        </p>
-                      </div>
-                    ) : null}
-                  </div>
-                </form>
-              </div>
-            </motion.section>
-          </div>
+                    <input type="text" name="website_confirm" value={form.honeypot} onChange={update("honeypot")} tabIndex="-1" autoComplete="off" aria-hidden="true" className="contact-honeypot" />
+
+                    <div className="hairline-t mt-8 flex flex-col-reverse gap-3 pt-6 sm:flex-row sm:items-center sm:justify-between" dir={dirAttr}>
+                      {step > 1 ? (
+                        <button type="button" onClick={() => goToStep(step - 1)} className="btn btn-secondary">
+                          <ArrowLeft size={15} className="rtl:-scale-x-100" />
+                          {copy.previous}
+                        </button>
+                      ) : (
+                        <span className="hidden font-sans text-xs sm:block" style={{ color: "var(--contact-text-muted)" }}>{x.required}</span>
+                      )}
+                      {step < 3 ? (
+                        <button type="button" onClick={nextStep} className="btn btn-primary">
+                          {copy.continue}
+                          <ArrowRight size={15} className="rtl:-scale-x-100" />
+                        </button>
+                      ) : (
+                        <button type="submit" disabled={isSubmitting} className="btn btn-primary group disabled:opacity-70">
+                          {isSubmitting ? copy.sending : copy.send}
+                          {isSubmitting ? <LoaderCircle size={15} className="animate-spin motion-reduce:animate-none" /> : <ArrowUpRight className="transition-transform duration-300 group-hover:-translate-y-0.5 group-hover:translate-x-0.5 rtl:-scale-x-100" size={15} />}
+                        </button>
+                      )}
+                    </div>
+
+                    <div className="mt-4 min-h-5" aria-live="polite" aria-atomic="true">
+                      {status === "error" ? (
+                        <div className="flex items-start gap-2 rounded-xl border border-red-400/25 bg-red-400/8 px-3.5 py-3 text-red-400" dir={dirAttr}>
+                          <AlertCircle size={16} className="mt-0.5 shrink-0" />
+                          <p className="font-sans text-[13px] leading-relaxed">{errorMessage}</p>
+                        </div>
+                      ) : null}
+                    </div>
+                  </form>
+                </>
+              )}
+            </div>
+          </motion.section>
         </div>
-        <footer
-          className="flex shrink-0 items-center justify-between border-t pt-4 font-sans text-xs"
-          style={{
-            color: "var(--contact-text-muted)",
-            borderColor: "var(--contact-border)",
-          }}
-        >
+
+        <footer className="flex shrink-0 items-center justify-between border-t pt-4 font-sans text-xs" style={{ color: "var(--contact-text-muted)", borderColor: "var(--contact-border)" }}>
           <span>Yasin · Frontend Developer</span>
           <div className="flex items-center gap-3" dir="ltr">
             <span className="hidden sm:inline">{copy.footer}</span>

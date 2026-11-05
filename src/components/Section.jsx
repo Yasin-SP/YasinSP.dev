@@ -1,14 +1,14 @@
 import { useLanguage } from "../context/LanguageContext.jsx";
 
 /**
- * Shared section frame: consistent vertical rhythm, an optional alternate
- * background band, and a content wrapper that carries the reading direction so
- * grids and text flip together in Persian.
+ * Shared section frame: consistent vertical rhythm and a content wrapper that
+ * carries the reading direction so grids and text flip together in Persian.
+ * `tone` sets the colour family every card and heading inside will use.
  */
-export default function Section({ id, band = false, className = "", innerClassName = "", children }) {
+export default function Section({ id, tone = "blue", className = "", innerClassName = "", sectionRef, children }) {
   const { isRTL } = useLanguage();
   return (
-    <section id={id} className={`relative w-full py-24 md:py-32 ${band ? "band-alt" : ""} ${className}`}>
+    <section ref={sectionRef} id={id} className={`relative w-full py-16 md:py-36 tone-${tone} ${className}`}>
       <div dir={isRTL ? "rtl" : "ltr"} className={`mx-auto w-full max-w-6xl px-6 md:px-10 ${innerClassName}`}>
         {children}
       </div>

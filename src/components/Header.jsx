@@ -1,20 +1,21 @@
-import { useEffect, useRef, useState } from "react";
-import { Menu, Moon, Sun, X } from "lucide-react";
-import { AnimatePresence, motion } from "motion/react";
+import { useEffect, useLayoutEffect, useRef, useState } from "react";
+import { Moon, Sun } from "lucide-react";
+import { motion } from "motion/react";
 import { Link, useLocation } from "react-router-dom";
 import logo from "../assets/Signature.svg";
 import { smoothEase } from "../constants/theme.js";
 import { useTheme } from "../context/ThemeContext.jsx";
 import { useLanguage } from "../context/LanguageContext.jsx";
+import { useActiveSection } from "../hooks/useActiveSection.js";
 import { scrollToTop } from "../lib/scroll.js";
 import LanguageToggle from "./LanguageToggle.jsx";
 
 const navLinks = [
-  { key: "about", href: "#about" },
-  { key: "services", href: "#services" },
-  { key: "skills", href: "#skills" },
-  { key: "work", href: "#projects" },
-  { key: "approach", href: "#approach" },
+  { key: "about", href: "#about", tone: "blue" },
+  { key: "services", href: "#services", tone: "purple" },
+  { key: "skills", href: "#skills", tone: "teal" },
+  { key: "work", href: "#projects", tone: "pink" },
+  { key: "approach", href: "#approach", tone: "indigo" },
 ];
 
 const LABELS = {
@@ -29,10 +30,10 @@ function ThemeToggle({ label }) {
       type="button"
       onClick={(e) => toggleThemeAtPoint(e.clientX, e.clientY)}
       aria-label={label}
-      className="flex h-8 w-8 shrink-0 cursor-pointer items-center justify-center rounded-full text-(--color-text-secondary) transition-colors duration-300 hover:bg-(--color-surface) hover:text-(--color-text-primary)"
+      className="flex h-9 w-9 shrink-0 cursor-pointer items-center justify-center rounded-full text-(--color-text-secondary) transition-colors duration-300 hover:bg-(--color-surface-hover) hover:text-(--color-text-primary)"
     >
-      <motion.span key={theme} className="flex" initial={{ rotate: -40, opacity: 0, scale: 0.7 }} animate={{ rotate: 0, opacity: 1, scale: 1 }} transition={{ duration: 0.35, ease: smoothEase }}>
-        {theme === "dark" ? <Moon size={16} strokeWidth={1.8} /> : <Sun size={16} strokeWidth={1.8} />}
+      <motion.span key={theme} className="flex" initial={{ rotate: -80, opacity: 0, scale: 0.6 }} animate={{ rotate: 0, opacity: 1, scale: 1 }} transition={{ duration: 0.5, ease: smoothEase }}>
+        {theme === "dark" ? <Moon size={17} strokeWidth={1.8} /> : <Sun size={17} strokeWidth={1.8} />}
       </motion.span>
     </button>
   );
@@ -48,162 +49,101 @@ function Logo({ theme, onClick }) {
 
 function Header() {
   const { theme } = useTheme();
-  const { language, isRTL } = useLanguage();
+  const { language } = useLanguage();
   const location = useLocation();
   const [scrolled, setScrolled] = useState(false);
-  const [mobileOpen, setMobileOpen] = useState(false);
-  const menuButtonRef = useRef(null);
-  const closeButtonRef = useRef(null);
-  const wasMobileOpenRef = useRef(false);
+  const [tucked, setTucked] = useState(false);
   const labels = LABELS[language];
-  const getAnchor = (href) => (location.pathname === "/" ? href : `/${href}`);
+  const isHome = location.pathname === "/";
+  const active = useActiveSection(isHome);
+  const navRef = useRef(null);
+  const [bubble, setBubble] = useState({ x: 0, w: 0, show: false });
+
+  // One bubble that glides between links; measured from the live DOM so it survives language/size changes.
+  useLayoutEffect(() => {
+    const nav = navRef.current;
+    if (!nav) return undefined;
+    const measure = () => {
+      const el = nav.querySelector('[aria-current="true"]');
+      setBubble((previous) => {
+        if (!el) return previous.show ? { ...previous, show: false } : previous;
+        const next = { x: el.offsetLeft, w: el.offsetWidth, show: true };
+        return previous.x === next.x && previous.w === next.w && previous.show ? previous : next;
+      });
+    };
+    measure();
+    const observer = new ResizeObserver(measure);
+    observer.observe(nav);
+    return () => observer.disconnect();
+  }, [active, language]);
+  const getAnchor = (href) => (isHome ? href : `/${href}`);
 
   useEffect(() => {
-    const update = () => setScrolled(window.scrollY > 8);
+    let last = window.scrollY;
+    const update = () => {
+      const y = window.scrollY;
+      setScrolled(y > 8);
+      // On phones the top bar slides away while reading and returns on the first upward flick.
+      if (Math.abs(y - last) > 6) { setTucked(window.innerWidth < 1024 && y > last && y > 160); last = y; }
+    };
     update();
     window.addEventListener("scroll", update, { passive: true });
     return () => window.removeEventListener("scroll", update);
   }, []);
 
-  useEffect(() => {
-    if (!mobileOpen) {
-      if (wasMobileOpenRef.current) menuButtonRef.current?.focus();
-      wasMobileOpenRef.current = false;
-      return undefined;
-    }
-    wasMobileOpenRef.current = true;
-    const previousOverflow = document.body.style.overflow;
-    document.body.style.overflow = "hidden";
-    closeButtonRef.current?.focus();
-
-    const onKeyDown = (event) => {
-      if (event.key === "Escape") { setMobileOpen(false); return; }
-      if (event.key !== "Tab") return;
-      const dialog = document.getElementById("mobile-navigation");
-      if (!dialog) return;
-      const focusable = dialog.querySelectorAll("a[href], button:not([disabled])");
-      if (!focusable.length) return;
-      const first = focusable[0];
-      const last = focusable[focusable.length - 1];
-      if (event.shiftKey && document.activeElement === first) { event.preventDefault(); last.focus(); }
-      else if (!event.shiftKey && document.activeElement === last) { event.preventDefault(); first.focus(); }
-    };
-
-    document.addEventListener("keydown", onKeyDown);
-    return () => {
-      document.body.style.overflow = previousOverflow;
-      document.removeEventListener("keydown", onKeyDown);
-    };
-  }, [mobileOpen]);
-
-  // Close the sheet first, then scroll, so the page is scrollable again when the jump starts.
-  function goTo(event, href) {
-    if (location.pathname !== "/") { setMobileOpen(false); return; }
-    event.preventDefault();
-    setMobileOpen(false);
-    requestAnimationFrame(() => document.querySelector(href)?.scrollIntoView({ behavior: "smooth", block: "start" }));
-  }
-
   function handleLogoClick(event) {
-    if (location.pathname === "/") { event.preventDefault(); setMobileOpen(false); scrollToTop(); }
+    if (isHome) { event.preventDefault(); scrollToTop(); }
   }
 
   return (
     <>
-      <header
-        className="fixed inset-x-0 top-0 z-100 h-12 font-sans transition-[background-color,backdrop-filter] duration-300"
-        style={{
-          backgroundColor: scrolled ? "var(--nav-bg)" : "transparent",
-          backdropFilter: scrolled ? "saturate(180%) blur(20px)" : "none",
-          WebkitBackdropFilter: scrolled ? "saturate(180%) blur(20px)" : "none",
-        }}
+      <motion.header
+        initial={{ y: -80, opacity: 0 }}
+        animate={{ y: tucked ? -90 : 0, opacity: 1 }}
+        transition={tucked !== undefined && scrolled ? { type: "spring", stiffness: 380, damping: 36 } : { duration: 1, ease: smoothEase, delay: 0.1 }}
+        className="fixed inset-x-0 top-3 z-100 flex justify-center px-3 font-sans"
       >
-        <div dir="ltr" className="relative mx-auto flex h-full max-w-6xl items-center justify-between px-5 md:px-10">
+        <div
+          dir="ltr"
+          className="glass flex h-14 w-full max-w-5xl items-center justify-between ps-5 pe-2 transition-[background-color,box-shadow] duration-500"
+          style={{ "--r": "999px", "--glass-blur": "32px", backgroundColor: scrolled ? "var(--nav-bg)" : "transparent" }}
+        >
           <Logo theme={theme} onClick={handleLogoClick} />
 
-          <nav aria-label="Primary navigation" className="absolute left-1/2 hidden -translate-x-1/2 items-center gap-8 lg:flex">
-            {navLinks.map((item) => (
-              <a key={item.key} href={getAnchor(item.href)} className="text-[13px] text-(--color-text-secondary) transition-colors duration-300 hover:text-(--color-text-primary)">
-                {labels[item.key]}
-              </a>
-            ))}
+          <nav ref={navRef} aria-label="Primary navigation" className="relative hidden items-center gap-0.5 lg:flex">
+            <motion.span
+              aria-hidden="true"
+              initial={false}
+              animate={{ x: bubble.x, width: bubble.w, opacity: bubble.show ? 1 : 0 }}
+              transition={{ type: "spring", stiffness: 380, damping: 34 }}
+              className="pointer-events-none absolute inset-y-0 left-0 rounded-full"
+              style={{ background: "color-mix(in srgb, var(--c-purple) 20%, transparent)", boxShadow: "0 0 0 1px color-mix(in srgb, var(--c-purple) 38%, transparent) inset, 0 1px 0 rgba(255,255,255,0.18) inset" }}
+            />
+            {navLinks.map((item) => {
+              const isActive = active === item.href.slice(1);
+              return (
+                <a
+                  key={item.key}
+                  href={getAnchor(item.href)}
+                  aria-current={isActive ? "true" : undefined}
+                  className={`relative rounded-full px-3.5 py-2 text-[13px] font-medium transition-colors duration-300 ${isActive ? "text-(--color-text-primary)" : "text-(--color-text-secondary) hover:text-(--color-text-primary)"}`}
+                >
+                  <span className="relative">{labels[item.key]}</span>
+                </a>
+              );
+            })}
           </nav>
 
-          <div className="flex items-center gap-2">
+          <div className="flex items-center gap-1.5">
             <LanguageToggle variant="nav" />
             <ThemeToggle label={theme === "dark" ? labels.themeLight : labels.themeDark} />
-            <Link to="/contact" className="btn btn-primary btn-sm hidden sm:inline-flex">{labels.contact}</Link>
-            <button
-              ref={menuButtonRef}
-              type="button"
-              onClick={() => setMobileOpen(true)}
-              aria-label={labels.open}
-              aria-expanded={mobileOpen}
-              aria-controls="mobile-navigation"
-              className="flex h-8 w-8 cursor-pointer items-center justify-center rounded-full text-(--color-text-primary) transition-colors duration-300 hover:bg-(--color-surface) lg:hidden"
-            >
-              <Menu size={18} strokeWidth={1.8} />
-            </button>
+            <Link to="/contact" className="btn btn-primary btn-sm hidden md:inline-flex">{labels.contact}</Link>
           </div>
         </div>
-        <div aria-hidden="true" className="absolute inset-x-0 bottom-0 h-px transition-opacity duration-300" style={{ background: "var(--color-border)", opacity: scrolled ? 1 : 0 }} />
-      </header>
+      </motion.header>
 
-      <div aria-hidden="true" className="h-12" />
+      <div aria-hidden="true" className="h-[4.5rem]" />
 
-      <AnimatePresence>
-        {mobileOpen && (
-          <motion.div
-            id="mobile-navigation"
-            role="dialog"
-            aria-modal="true"
-            aria-label={labels.navigation}
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            exit={{ opacity: 0 }}
-            transition={{ duration: 0.3, ease: smoothEase }}
-            className="mobile-menu-panel fixed inset-0 z-150 flex h-dvh flex-col lg:hidden"
-            style={{ background: "var(--color-bg)" }}
-          >
-            <div dir="ltr" className="flex h-12 shrink-0 items-center justify-between px-5 md:px-10">
-              <Logo theme={theme} onClick={handleLogoClick} />
-              <div className="flex items-center gap-2">
-                <LanguageToggle variant="nav" />
-                <ThemeToggle label={theme === "dark" ? labels.themeLight : labels.themeDark} />
-                <button
-                  ref={closeButtonRef}
-                  type="button"
-                  onClick={() => setMobileOpen(false)}
-                  aria-label={labels.close}
-                  className="flex h-8 w-8 cursor-pointer items-center justify-center rounded-full text-(--color-text-primary) transition-colors duration-300 hover:bg-(--color-surface)"
-                >
-                  <X size={18} strokeWidth={1.8} />
-                </button>
-              </div>
-            </div>
-
-            <nav dir={isRTL ? "rtl" : "ltr"} aria-label={labels.navigation} className="flex min-h-0 flex-1 flex-col overflow-y-auto overscroll-contain px-6 pb-[max(1.5rem,env(safe-area-inset-bottom))] pt-6 md:px-10">
-              <ul className="flex flex-col">
-                {navLinks.map((item, index) => (
-                  <motion.li key={item.key} initial={{ opacity: 0, y: 14 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.6, ease: smoothEase, delay: 0.08 + index * 0.05 }}>
-                    <a
-                      href={getAnchor(item.href)}
-                      onClick={(event) => goTo(event, item.href)}
-                      className="block border-b py-4 font-display text-[clamp(1.6rem,7vw,2rem)] font-semibold leading-tight text-(--color-text-primary) transition-colors duration-200 hover:text-(--color-text-secondary)"
-                      style={{ borderColor: "var(--color-border)" }}
-                    >
-                      {labels[item.key]}
-                    </a>
-                  </motion.li>
-                ))}
-              </ul>
-              <motion.div className="mt-auto pt-8" initial={{ opacity: 0, y: 14 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.6, ease: smoothEase, delay: 0.38 }}>
-                <Link to="/contact" onClick={() => setMobileOpen(false)} className="btn btn-primary w-full">{labels.contact}</Link>
-              </motion.div>
-            </nav>
-          </motion.div>
-        )}
-      </AnimatePresence>
     </>
   );
 }

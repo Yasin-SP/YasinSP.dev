@@ -22,7 +22,7 @@ export const projects = [
     category: "Restaurant Website",
     year: "2026",
     description:
-      "A Persian RTL restaurant website with a rich responsive interface, dynamic menu pricing, interactive food cards, and a polished mobile-first experience.",
+      "A Persian RTL restaurant site with a categorized menu, dynamic prices and interactive food cards.",
     fullDescription:
       "NOMA is a Persian RTL restaurant website built with React, TypeScript, and Vite. The project combines a visual food-focused landing page with a structured menu experience, animated item details, responsive layouts, discount sections, guest comments, FAQ content, and location information. Menu prices can adapt to the current USD/Toman rate using a live data source with rounding and fallback logic, while the map layer is prepared for Neshan with a Google Maps fallback.",
     stack: [
@@ -53,7 +53,7 @@ export const projects = [
       title: "نوما",
       category: "وب‌سایت رستوران",
       description:
-        "یک وب‌سایت فارسی و راست‌چین برای رستوران با رابطی ریسپانسیو، منوی پویا، کارت‌های تعاملی غذا و تجربه‌ای کامل در موبایل و دسکتاپ.",
+        "سایت رستوران فارسی و راست‌چین، با منوی دسته‌بندی‌شده، قیمت‌های پویا و کارت‌های تعاملی غذا.",
       fullDescription:
         "نوما یک وب‌سایت فارسی و راست‌چین برای رستوران است که با React، TypeScript و Vite ساخته شده. پروژه یک لندینگ بصری و غذا‌محور را با منوی دسته‌بندی‌شده، جزئیات متحرک آیتم‌ها، طراحی ریسپانسیو، بخش تخفیف‌ها، نظرات مهمان‌ها، سوالات متداول و اطلاعات موقعیت ترکیب می‌کند. قیمت آیتم‌های منو می‌تواند با نرخ روز دلار به تومان به‌صورت پویا تغییر کند و با منطق رند کردن و نرخ جایگزین، حتی در صورت قطع منبع قیمت نیز پایدار بماند. بخش نقشه نیز برای نشان آماده شده و در نبود کلید API به Google Maps برمی‌گردد.",
       features: [
@@ -77,7 +77,7 @@ export const projects = [
     category: "Crypto Dashboard",
     year: "2026",
     description:
-      "A Persian RTL cryptocurrency dashboard for exploring market prices, trends, and detailed coin data through a responsive interface.",
+      "A Persian crypto dashboard for browsing prices, charts and building your own watchlist.",
     fullDescription:
       "Nabz Crypto is a Persian RTL cryptocurrency dashboard built with React and Vite. The application uses CoinGecko data to provide real-time market information, searchable assets, filtering and sorting, personalized watchlists, interactive price charts, and detailed market statistics. The project also includes a server-side API proxy prepared for deployment on Vercel.",
     stack: [
@@ -110,7 +110,7 @@ export const projects = [
       title: "نبض کریپتو",
       category: "داشبورد ارز دیجیتال",
       description:
-        "یک داشبورد فارسی و راست‌چین برای بررسی قیمت، وضعیت بازار و اطلاعات دقیق ارزهای دیجیتال با رابطی ریسپانسیو و کاربردی.",
+        "داشبورد فارسی ارز دیجیتال برای دیدن قیمت‌ها، نمودارها و ساختن لیست پیگیری شخصی.",
       fullDescription:
         "نبض کریپتو یک داشبورد فارسی و راست‌چین برای بررسی بازار ارزهای دیجیتال است که با React و Vite ساخته شده است. این پروژه با استفاده از داده‌های CoinGecko امکان مشاهده قیمت‌ها، جستجو و فیلتر ارزها، ساخت واچ‌لیست شخصی، مشاهده نمودارهای تعاملی و بررسی اطلاعات مختلف بازار را فراهم می‌کند. پروژه همچنین دارای API Proxy سمت سرور است و برای استقرار روی Vercel آماده شده است.",
       features: [
@@ -135,7 +135,7 @@ export const projects = [
     category: "Mini Game",
     year: "2025",
     description:
-      "A fast-paced memory matching game focused on responsive interaction, score progression, and a playful game experience.",
+      "A memory card game with four difficulty levels, scores and combos. One of my first React projects.",
     fullDescription:
       "Memory Quest is a responsive memory card game built with React and Vite. Players can choose between four difficulty levels, match cards, build combo streaks, and compete against their best scores. The project focuses on creating a polished game experience with real-time statistics, lightweight sound effects, accessibility, and responsive layouts across desktop and mobile devices.",
     stack: ["React", "Vite", "JavaScript", "CSS", "Web Audio API"],
@@ -157,7 +157,7 @@ export const projects = [
       title: "بازی حافظه Memory Quest",
       category: "مینی گیم",
       description:
-        "یک بازی سریع و تعاملی برای تقویت حافظه با تمرکز بر تجربه کاربری، امتیازدهی و عملکرد روان در موبایل و دسکتاپ.",
+        "بازی حافظه با چهار سطح دشواری، امتیاز و کمبو. از اولین پروژه‌هام با React بود.",
       fullDescription:
         "Memory Quest یک بازی تطبیق کارت است که با React و Vite ساخته شده است. بازیکن می‌تواند از بین چهار سطح دشواری انتخاب کند، کارت‌ها را پیدا کند، با ایجاد زنجیره‌های متوالی امتیاز بیشتری بگیرد و رکورد خود را بهبود دهد. تمرکز اصلی پروژه روی ایجاد یک تجربه بازی روان و جذاب، همراه با آمار لحظه‌ای، صداهای سبک، دسترس‌پذیری و طراحی ریسپانسیو برای موبایل و دسکتاپ بوده است.",
       features: [
@@ -179,7 +179,7 @@ export const projects = [
     category: "Student Team Project",
     year: "2023",
     description:
-      "A student team project developed as an early real-world web development experience, focused on building a practical platform with a collaborative development workflow.",
+      "My first team project: a student team working on one shared codebase.",
     fullDescription:
       "Ostad Sanaj was my first team-based web development project, created as part of a student team. The project gave me practical experience working within a development team, contributing to a shared codebase, and turning a real project idea into a functional web platform. The project was developed collaboratively, and the entire implementation should not be attributed solely to me.",
     stack: ["JavaScript", "HTML", "CSS", "jQuery"],
@@ -200,7 +200,7 @@ export const projects = [
       title: "استادسنج",
       category: "پروژه دانشجویی تیمی",
       description:
-        "اولین تجربه من در توسعه یک پروژه وب تیمی که در قالب یک تیم دانشجویی و با هدف ساخت یک پلتفرم کاربردی انجام شد.",
+        "اولین پروژه تیمی‌ام؛ توی یه تیم دانشجویی روی یه کدبیس مشترک کار کردیم.",
       fullDescription:
         "استادسنج اولین تجربه من در توسعه یک پروژه وب به‌صورت تیمی بود که در قالب یک تیم دانشجویی روی آن کار کردیم. این پروژه فرصت خوبی برای تجربه کار روی یک کدبیس مشترک، هماهنگی با اعضای تیم و تبدیل یک ایده واقعی به یک پلتفرم قابل استفاده بود. توسعه این پروژه به‌صورت تیمی انجام شده و پیاده‌سازی کامل آن متعلق به من نیست.",
       features: [

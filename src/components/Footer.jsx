@@ -31,14 +31,14 @@ function Footer() {
   const getAnchor = (href) => (location.pathname === "/" ? href : `/${href}`);
 
   return (
-    <footer className="band-alt relative w-full pb-10 pt-16 md:pt-20">
-      <div dir={isRTL ? "rtl" : "ltr"} className="mx-auto w-full max-w-6xl px-6 text-start md:px-10">
+    <footer className="relative w-full px-3 pb-28 md:px-5 lg:pb-5">
+      <div dir={isRTL ? "rtl" : "ltr"} className="glass tone-blue mx-auto w-full max-w-6xl px-6 pb-8 pt-12 text-start md:px-12 md:pt-16" style={{ "--r": "2rem" }}>
         <div className="grid gap-12 md:grid-cols-[1.6fr_0.7fr_0.7fr]">
           <div className="max-w-md">
             <div dir="ltr" className="mb-6 h-8 w-24">
               <img src={logo} alt="" className="h-full w-full object-contain" style={{ transform: "scale(1.5)", filter: theme === "light" ? "invert(1)" : "none" }} />
             </div>
-            <p className="font-display text-2xl font-semibold leading-snug tracking-tight text-(--color-text-primary)">{copy.statement}</p>
+            <p className="font-display text-2xl font-bold leading-snug text-aurora">{copy.statement}</p>
             <p className="mt-4 font-sans text-sm leading-relaxed text-(--color-text-secondary)">{copy.body}</p>
           </div>
 

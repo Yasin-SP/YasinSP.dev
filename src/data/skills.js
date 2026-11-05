@@ -1,21 +1,21 @@
 export const skillCategories = [
   {
     name: "Frontend",
-    description: "The core tools behind my interfaces.",
+    description: "What I build most sites with.",
     skills: ["React", "JavaScript", "HTML", "CSS", "Tailwind CSS", "Framer Motion", "Bootstrap", "SASS"],
-    fa: { name: "فرانت‌اند", description: "ابزارهایی که بخش اصلی سایت‌های من رو می‌سازن.", skills: ["React", "JavaScript", "HTML", "CSS", "Tailwind CSS", "Framer Motion", "Bootstrap", "SASS"] },
+    fa: { name: "فرانت‌اند", description: "چیزایی که بیشتر وقت‌ها باهاشون سایت می‌سازم.", skills: ["React", "JavaScript", "HTML", "CSS", "Tailwind CSS", "Framer Motion", "Bootstrap", "SASS"] },
   },
   {
     name: "Interaction",
-    description: "The layer that makes a good interface feel considered.",
+    description: "What makes a page easier and nicer to use.",
     skills: ["Responsive Design", "Micro-interactions", "UI Development", "Visual Hierarchy"],
-    fa: { name: "تعامل و تجربه", description: "لایه‌ای که یک رابط خوب رو از یک رابط معمولی جدا می‌کنه.", skills: ["طراحی ریسپانسیو", "Micro-interactions", "طراحی UI", "سلسله‌مراتب بصری"] },
+    fa: { name: "تعامل و تجربه", description: "چیزایی که یه صفحه رو راحت‌تر و خوشایندتر می‌کنن.", skills: ["طراحی ریسپانسیو", "Micro-interactions", "طراحی UI", "سلسله‌مراتب بصری"] },
   },
   {
     name: "Workflow",
-    description: "Tools that keep the build clean and repeatable.",
+    description: "What keeps my work organized.",
     skills: ["Git", "GitHub", "Vite", "Component Architecture"],
-    fa: { name: "روند کاری", description: "ابزارهایی که کمک می‌کنن پروژه مرتب، قابل توسعه و قابل تکرار ساخته بشه.", skills: ["Git", "GitHub", "Vite", "معماری کامپوننت"] },
+    fa: { name: "روند کاری", description: "ابزارهایی که کارم رو مرتب و قابل پیگیری نگه می‌دارن.", skills: ["Git", "GitHub", "Vite", "معماری کامپوننت"] },
   },
 ];
 

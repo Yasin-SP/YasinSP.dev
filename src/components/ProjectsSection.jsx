@@ -6,6 +6,8 @@ import { smoothEase } from "../constants/theme.js";
 import { projects } from "../data/projects.js";
 import { getUI } from "../i18n.js";
 import { useLanguage } from "../context/LanguageContext.jsx";
+import { useMediaQuery } from "../hooks/useMediaQuery.js";
+import SnapRow from "./SnapRow.jsx";
 import ProjectCard from "./ProjectCard.jsx";
 import ProjectModal from "./ProjectModal.jsx";
 import Section from "./Section.jsx";
@@ -19,12 +21,13 @@ function ProjectsSection() {
   const [expanded, setExpanded] = useState(false);
   const selectedIndex = projects.findIndex((p) => p.id === selected?.id);
   const { language } = useLanguage();
+  const isPhone = useMediaQuery("(max-width: 639px)");
   const copy = getUI(language, "projects");
   const hasMore = projects.length > INITIAL_VISIBLE_COUNT;
   const visibleProjects = expanded ? projects : projects.slice(0, INITIAL_VISIBLE_COUNT);
 
   return (
-    <Section id="projects">
+    <Section id="projects" tone="pink">
       <div className="flex flex-col justify-between gap-8 md:flex-row md:items-end">
         <SectionIntro eyebrow={copy.eyebrow} title={copy.title} highlight={copy.highlight} description={copy.description} />
         <Link to="/contact" className="link-cta hidden shrink-0 md:inline-flex">
@@ -33,6 +36,20 @@ function ProjectsSection() {
         </Link>
       </div>
 
+      {isPhone ? (
+        <div className="mt-10">
+          <SnapRow label={copy.eyebrow} breakpoint="sm" gridClassName="sm:grid-cols-2" itemClassName="w-[86%]">
+            {projects.map((project, index) => (
+              <ProjectCard key={project.id} project={project} index={index} onOpen={setSelected} />
+            ))}
+          </SnapRow>
+          <Link to="/contact" className="link-cta mt-6 flex justify-center">
+            {copy.projectInMind}
+            <ChevronRight size={18} strokeWidth={2} className="rtl:rotate-180" aria-hidden="true" />
+          </Link>
+        </div>
+      ) : (
+      <>
       <motion.div layout transition={layoutSpring} className="mt-14 grid grid-cols-1 gap-5 sm:grid-cols-2 md:mt-16 lg:grid-cols-3">
         <AnimatePresence initial={false} mode="popLayout">
           {visibleProjects.map((project, index) => (
@@ -64,6 +81,7 @@ function ProjectsSection() {
             onClick={() => setExpanded((prev) => !prev)}
             aria-expanded={expanded}
             className="btn btn-secondary"
+            whileTap={{ scale: 0.96 }}
           >
             {expanded ? copy.showLess : copy.showMore}
             <motion.span animate={{ rotate: expanded ? 180 : 0 }} transition={{ duration: 0.35, ease: smoothEase }} className="flex">
@@ -71,6 +89,9 @@ function ProjectsSection() {
             </motion.span>
           </motion.button>
         </div>
+      )}
+
+      </>
       )}
 
       <AnimatePresence>{selected && <ProjectModal project={selected} index={selectedIndex} onClose={() => setSelected(null)} />}</AnimatePresence>

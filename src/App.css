@@ -1,45 +1,81 @@
 @import "tailwindcss";
 
 /* ==========================================================================
-   Design tokens
-   One neutral palette + a single blue accent. Surfaces are flat; depth comes
-   from tone, not from glows or gradients.
+   Design tokens — Apple system colours on a near-black / near-white canvas.
+   Colour rule (60 / 30 / 10):
+     60%  neutral canvas  (--color-bg)
+     30%  glass surfaces  (--glass-*)
+     10%  vivid colour    (--c-* and the aurora gradients)
    ========================================================================== */
 :root {
   --color-bg: #000000;
-  --color-bg-alt: #0d0d0f;
+  --color-bg-alt: #0b0b0f;
   --color-bg-elevated: #1c1c1e;
-  --color-tile: #1c1c1e;
-  --color-tile-on-alt: #1c1c1e;
+  --color-tile: rgba(255, 255, 255, 0.06);
   --color-surface: rgba(255, 255, 255, 0.08);
   --color-surface-hover: rgba(255, 255, 255, 0.14);
   --color-text-primary: #f5f5f7;
-  --color-text-secondary: #a1a1a6;
-  --color-text-muted: #86868b;
+  --color-text-secondary: #b4b4ba;
+  --color-text-muted: #8e8e93;
   --color-border: rgba(255, 255, 255, 0.12);
-  --color-border-strong: rgba(255, 255, 255, 0.22);
+  --color-border-strong: rgba(255, 255, 255, 0.24);
 
-  --accent-text: #2997ff;
-  --accent-fill: #0071e3;
-  --accent-fill-hover: #0077ed;
-  --accent-ring: rgba(0, 113, 227, 0.3);
-  --accent-surface: rgba(41, 151, 255, 0.12);
-  --accent-border: rgba(41, 151, 255, 0.32);
+  /* Apple system colours (dark appearance) */
+  --c-blue: #8b8cf8;
+  --c-indigo: #7c5cf0;
+  --c-purple: #a855f7;
+  --c-pink: #e879f9;
+  --c-orange: #c084fc;
+  --c-yellow: #d8b4fe;
+  --c-green: #30d158;
+  --c-teal: #5eead4;
 
-  --nav-bg: rgba(22, 22, 23, 0.72);
+  --grad-aurora: linear-gradient(100deg, var(--c-purple), var(--c-pink) 55%, var(--c-blue));
+  --grad-aurora-loop: linear-gradient(100deg, var(--c-purple), var(--c-pink), var(--c-blue), var(--c-purple));
+  --grad-cool: linear-gradient(135deg, var(--c-teal), var(--c-blue) 50%, var(--c-indigo));
+  --grad-warm: linear-gradient(135deg, var(--c-pink), var(--c-orange));
+
+  --accent-text: #c084fc;
+  --accent-fill: #a855f7;
+  --accent-fill-hover: #b974f9;
+  --accent-ring: rgba(168, 85, 247, 0.4);
+  --accent-surface: rgba(168, 85, 247, 0.16);
+  --accent-border: rgba(168, 85, 247, 0.42);
+
+  /* Liquid glass */
+  --glass-bg: rgba(255, 255, 255, 0.055);
+  --btn-fill: #9333ea;
+  --btn-fill-hover: #a24bf0;
+  --imsg-bg: #262629;
+  --glass-flat: rgba(255, 255, 255, 0.07);
+  --glass-solid: #121216;
+  --glass-rim-1: rgba(255, 255, 255, 0.55);
+  --glass-rim-2: rgba(255, 255, 255, 0.22);
+  --glass-shadow: 0 1px 0 rgba(255, 255, 255, 0.12) inset, 0 20px 50px -24px rgba(0, 0, 0, 0.7);
+  --glass-blur: 28px;
+  --glass-sheen: linear-gradient(155deg, rgba(255,255,255,0.10) 0%, rgba(255,255,255,0.02) 42%, rgba(255,255,255,0.05) 100%);
+  --glass-inner: inset 0 1px 0 rgba(255,255,255,0.30), inset 0 -1px 0 rgba(0,0,0,0.28), inset 0 18px 24px -18px rgba(255,255,255,0.20), inset 0 0 28px rgba(255,255,255,0.035);
+  --spec: rgba(255,255,255,0.20);
+  --dock-bg: rgba(22,22,28,0.74);
+  --ios-sheet-bg: rgba(30,30,36,0.80);
+  --ios-row-active: rgba(255,255,255,0.09);
+  --nav-bg: rgba(28, 28, 32, 0.55);
   --scrim: rgba(0, 0, 0, 0.55);
 
+  --grid-dot: rgba(255, 255, 255, 0.13);
+  --wash: rgba(168, 85, 247, 0.10);
+  --grain-opacity: 0.04;
+
   --tracking-display: -0.03em;
-  --leading-display: 1.06;
-  --weight-display: 600;
+  --leading-display: 1.05;
+  --weight-display: 700;
 }
 
 [data-theme="light"] {
-  --color-bg: #fbfbfd;
-  --color-bg-alt: #f5f5f7;
+  --color-bg: #f5f5f7;
+  --color-bg-alt: #ececf0;
   --color-bg-elevated: #ffffff;
-  --color-tile: #f5f5f7;
-  --color-tile-on-alt: #ffffff;
+  --color-tile: rgba(255, 255, 255, 0.6);
   --color-surface: rgba(0, 0, 0, 0.05);
   --color-surface-hover: rgba(0, 0, 0, 0.09);
   --color-text-primary: #1d1d1f;
@@ -48,21 +84,43 @@
   --color-border: rgba(0, 0, 0, 0.1);
   --color-border-strong: rgba(0, 0, 0, 0.2);
 
-  --accent-text: #0066cc;
-  --accent-fill: #0071e3;
-  --accent-fill-hover: #0077ed;
-  --accent-ring: rgba(0, 113, 227, 0.22);
-  --accent-surface: rgba(0, 113, 227, 0.08);
-  --accent-border: rgba(0, 102, 204, 0.28);
+  --c-blue: #6d6df0;
+  --c-indigo: #6d4de0;
+  --c-purple: #9333ea;
+  --c-pink: #c026d3;
+  --c-orange: #a855f7;
+  --c-yellow: #c084fc;
+  --c-green: #34c759;
+  --c-teal: #0d9488;
 
-  --nav-bg: rgba(251, 251, 253, 0.8);
-  --scrim: rgba(0, 0, 0, 0.32);
-}
+  --accent-text: #7e22ce;
+  --accent-fill: #9333ea;
+  --accent-fill-hover: #a24bf0;
+  --accent-ring: rgba(147, 51, 234, 0.28);
+  --accent-surface: rgba(147, 51, 234, 0.1);
+  --accent-border: rgba(126, 34, 206, 0.32);
 
-/* Alternate full-bleed band: tiles inside it switch to their "on alt" tone. */
-.band-alt {
-  background-color: var(--color-bg-alt);
-  --color-tile: var(--color-tile-on-alt);
+  --glass-bg: rgba(255, 255, 255, 0.72);
+  --btn-fill: #9333ea;
+  --btn-fill-hover: #7e22ce;
+  --imsg-bg: #e9e9eb;
+  --glass-flat: rgba(255, 255, 255, 0.62);
+  --glass-solid: #ffffff;
+  --glass-rim-1: rgba(255, 255, 255, 1);
+  --glass-rim-2: rgba(255, 255, 255, 0.7);
+  --glass-shadow: 0 1px 0 rgba(255, 255, 255, 0.9) inset, 0 0 0 1px rgba(0, 0, 0, 0.05), 0 18px 40px -22px rgba(40, 20, 80, 0.25);
+  --nav-bg: rgba(255, 255, 255, 0.6);
+  --glass-sheen: linear-gradient(155deg, rgba(255,255,255,0.85) 0%, rgba(255,255,255,0.35) 45%, rgba(255,255,255,0.6) 100%);
+  --glass-inner: inset 0 1px 0 rgba(255,255,255,1), inset 0 -1px 0 rgba(90,60,150,0.10), inset 0 16px 22px -16px rgba(255,255,255,0.9), inset 0 0 26px rgba(255,255,255,0.35);
+  --spec: rgba(255,255,255,0.9);
+  --dock-bg: rgba(255,255,255,0.78);
+  --ios-sheet-bg: rgba(255,255,255,0.86);
+  --ios-row-active: rgba(80,40,140,0.07);
+  --scrim: rgba(0, 0, 0, 0.3);
+
+  --grid-dot: rgba(60, 30, 110, 0.16);
+  --wash: rgba(147, 51, 234, 0.07);
+  --grain-opacity: 0.03;
 }
 
 @theme {
@@ -73,12 +131,17 @@
   --font-sans: -apple-system, BlinkMacSystemFont, "SF Pro Text", "Inter", "Helvetica Neue", Helvetica, Arial, sans-serif;
   --font-display: -apple-system, BlinkMacSystemFont, "SF Pro Display", "Inter", "Helvetica Neue", Helvetica, Arial, sans-serif;
   --font-persian: "Vazirmatn", "SF Arabic", -apple-system, BlinkMacSystemFont, "Segoe UI", Tahoma, sans-serif;
+  --font-persian-display: "Vazirmatn", "SF Arabic", Tahoma, sans-serif;
 }
 
 html {
-  scroll-behavior: smooth;
-  scroll-padding-top: 4rem;
+  scroll-padding-top: 5rem;
 }
+
+/* Lenis owns smooth scrolling; native smooth would fight it. */
+html.lenis, html.lenis body { height: auto; }
+.lenis.lenis-smooth { scroll-behavior: auto !important; }
+.lenis.lenis-stopped { overflow: hidden; }
 
 body {
   background-color: var(--color-bg);
@@ -98,32 +161,172 @@ li {
 }
 
 ::selection {
-  background: color-mix(in srgb, var(--accent-fill) 35%, transparent);
+  background: color-mix(in srgb, var(--c-blue) 40%, transparent);
 }
 
 /* ==========================================================================
-   Shared component classes (kept in the components layer so Tailwind utility
-   classes on the element can still override them)
+   Colour tones — a section or card picks one and everything inside follows
    ========================================================================== */
+.tone-blue   { --tone: var(--c-blue);   --tone-2: var(--c-blue); }
+.tone-purple { --tone: var(--c-purple); --tone-2: var(--c-purple); }
+.tone-pink   { --tone: var(--c-pink);   --tone-2: var(--c-pink); }
+.tone-orange { --tone: var(--c-orange); --tone-2: var(--c-orange); }
+.tone-teal   { --tone: var(--c-teal);   --tone-2: var(--c-teal); }
+.tone-indigo { --tone: var(--c-indigo); --tone-2: var(--c-indigo); }
+
 @layer components {
+  /* ------------------------------------------------------------------
+     Liquid glass.
+     - the body is a translucent gradient with heavy blur + saturation
+     - ::before is a specular rim light (bright top-left, dim bottom-right)
+     - ::after is a sheen that follows the pointer (set via --mx / --my)
+     Children need `position: relative` to sit above the sheen.
+     ------------------------------------------------------------------ */
+  .glass,
+  .tile {
+    position: relative;
+    isolation: isolate;
+    border-radius: var(--r, 1.75rem);
+    background: var(--glass-sheen), var(--glass-bg);
+    -webkit-backdrop-filter: blur(var(--glass-blur)) saturate(200%) brightness(1.06);
+    backdrop-filter: blur(var(--glass-blur)) saturate(200%) brightness(1.06);
+    box-shadow: var(--glass-inner), var(--glass-shadow);
+  }
+
+  /* Rim light: bright where the light hits (top-left), a faint counter-glint bottom-right */
+  .glass::before,
+  .tile::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    z-index: 2;
+    padding: 1px;
+    border-radius: inherit;
+    background:
+      radial-gradient(120% 90% at 0% 0%, var(--glass-rim-1), transparent 46%),
+      radial-gradient(120% 90% at 100% 100%, var(--glass-rim-2), transparent 42%),
+      linear-gradient(180deg, rgba(255,255,255,0.10), transparent 30%);
+    -webkit-mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
+    -webkit-mask-composite: xor;
+    mask: linear-gradient(#000 0 0) content-box exclude, linear-gradient(#000 0 0);
+    pointer-events: none;
+  }
+
+  /* Specular: a soft tinted pool plus a tight white glint that tracks the pointer.
+     At rest it sits top-left like a window reflection; on touch it never moves. */
+  .glass::after,
+  .tile::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    z-index: 1;
+    border-radius: inherit;
+    background:
+      radial-gradient(150px circle at var(--mx, 22%) var(--my, 0%), var(--spec), transparent 70%),
+      radial-gradient(420px circle at var(--mx, 22%) var(--my, 0%), color-mix(in srgb, var(--tone, #ffffff) 16%, transparent), transparent 64%);
+    opacity: 0.38;
+    transition: opacity 0.6s cubic-bezier(0.28, 0.11, 0.32, 1);
+    pointer-events: none;
+  }
+
+  .glass:hover::after,
+  .tile:hover::after {
+    opacity: 1;
+  }
+
+  /* Pressable glass: squish + brighten, like a tapped iOS control */
+  .glass-press {
+    transition: transform 0.45s cubic-bezier(0.34, 1.4, 0.5, 1), box-shadow 0.4s;
+    -webkit-tap-highlight-color: transparent;
+  }
+  .glass-press:active {
+    transform: scale(0.965);
+    transition-duration: 0.12s;
+  }
+
+  .glass > *,
+  .tile > * {
+    position: relative;
+    z-index: 3;
+  }
+
+  /* Colour tile for icons: gradient squircle with an inner highlight + coloured glow */
+  .tone-icon {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 3.25rem;
+    height: 3.25rem;
+    border-radius: 1rem;
+    color: var(--tone, var(--c-purple));
+    background: color-mix(in srgb, var(--tone, var(--c-purple)) 16%, transparent);
+    box-shadow: 0 0 0 1px color-mix(in srgb, var(--tone, var(--c-purple)) 32%, transparent) inset;
+  }
+
+  /* Pill used for eyebrows, tags and chips */
+  .pill {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    border-radius: 999px;
+    padding: 0.35rem 0.85rem;
+    font-size: 0.8125rem;
+    font-weight: 500;
+    background: var(--glass-flat);
+    -webkit-backdrop-filter: blur(16px) saturate(180%);
+    backdrop-filter: blur(16px) saturate(180%);
+    box-shadow: 0 0 0 1px var(--color-border) inset, 0 1px 0 rgba(255, 255, 255, 0.12) inset;
+  }
+
+  /* iMessage bubble (received). Tail sits on the reading-start side and mirrors in RTL. */
+  .imsg-bubble {
+    position: relative;
+    min-width: 0;
+    padding: 0.85rem 1.25rem;
+    border-radius: 1.6rem;
+    background: var(--imsg-bg);
+  }
+
+  /* Tail: one SVG-masked shape in the bubble colour, mirrored for RTL. No cover-up patch, so it works on any backdrop. */
+  .imsg-bubble::before {
+    content: "";
+    position: absolute;
+    bottom: 0;
+    inset-inline-start: -0.65rem;
+    width: 1.75rem;
+    height: 1.75rem;
+    background: var(--imsg-bg);
+    -webkit-mask: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 20 20'><path d='M20 0V20H0C6 19.5 12 15 13.5 8V0Z'/></svg>") center / 100% 100% no-repeat;
+    mask: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 20 20'><path d='M20 0V20H0C6 19.5 12 15 13.5 8V0Z'/></svg>") center / 100% 100% no-repeat;
+  }
+
+  [dir="rtl"] .imsg-bubble::before {
+    transform: scaleX(-1);
+  }
+
   .btn {
+    position: relative;
     display: inline-flex;
     align-items: center;
     justify-content: center;
     gap: 0.5rem;
     min-height: 3rem;
-    padding: 0 1.6rem;
+    padding: 0 1.7rem;
     border-radius: 999px;
     font-size: 1.0625rem;
     font-weight: 500;
     line-height: 1.2;
     white-space: nowrap;
     cursor: pointer;
-    transition: background-color 300ms cubic-bezier(0.28, 0.11, 0.32, 1), color 300ms cubic-bezier(0.28, 0.11, 0.32, 1), transform 300ms cubic-bezier(0.28, 0.11, 0.32, 1), opacity 300ms;
+    overflow: hidden;
+    isolation: isolate;
+    transition: background-color 300ms cubic-bezier(0.28, 0.11, 0.32, 1), color 300ms, transform 520ms cubic-bezier(0.34, 1.5, 0.5, 1), box-shadow 400ms, opacity 300ms;
+    -webkit-tap-highlight-color: transparent;
   }
 
   .btn:active {
-    transform: scale(0.97);
+    transform: scale(0.95);
+    transition-duration: 300ms, 300ms, 110ms, 400ms, 300ms;
   }
 
   .btn:disabled,
@@ -132,27 +335,46 @@ li {
     opacity: 0.6;
   }
 
+  /* Primary: blue→indigo→purple gradient with a moving highlight sweep */
   .btn-primary {
-    background-color: var(--accent-fill);
-    color: #ffffff;
+    color: #fff;
+    background: var(--btn-fill);
+    box-shadow: 0 1px 0 rgba(255, 255, 255, 0.22) inset;
+  }
+
+  .btn-primary::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    z-index: -1;
+    background: linear-gradient(105deg, transparent 35%, rgba(255, 255, 255, 0.45) 50%, transparent 65%);
+    transform: translateX(-120%);
   }
 
   .btn-primary:hover {
-    background-color: var(--accent-fill-hover);
+    background: var(--btn-fill-hover);
+  }
+
+  .btn-primary:hover::after {
+    transform: translateX(120%);
+    transition: transform 0.9s cubic-bezier(0.28, 0.11, 0.32, 1);
   }
 
   .btn-secondary {
-    background-color: var(--color-surface);
     color: var(--color-text-primary);
+    background: var(--glass-flat);
+    -webkit-backdrop-filter: blur(20px) saturate(180%);
+    backdrop-filter: blur(20px) saturate(180%);
+    box-shadow: 0 0 0 1px var(--color-border) inset, 0 1px 0 rgba(255, 255, 255, 0.18) inset;
   }
 
   .btn-secondary:hover {
-    background-color: var(--color-surface-hover);
+    background: var(--color-surface-hover);
   }
 
   .btn-sm {
-    min-height: 2rem;
-    padding: 0 0.95rem;
+    min-height: 2.25rem;
+    padding: 0 1.05rem;
     font-size: 0.8125rem;
   }
 
@@ -170,11 +392,6 @@ li {
     text-underline-offset: 3px;
   }
 
-  .tile {
-    background-color: var(--color-tile);
-    border-radius: 1.75rem;
-  }
-
   .hairline-t {
     border-top: 1px solid var(--color-border);
   }
@@ -185,14 +402,115 @@ li {
     letter-spacing: var(--tracking-display);
     line-height: var(--leading-display);
   }
+
+  /* Animated multi-hue gradient text */
+  .text-aurora {
+    color: var(--accent-text);
+  }
+
+  .text-tone {
+    color: var(--tone, var(--accent-text));
+  }
+
+  /* Rotating conic border for "hero" cards */
+  .ring-border {
+    position: relative;
+    isolation: isolate;
+    overflow: hidden;
+    border-radius: var(--r, 1.75rem);
+  }
+
+  .ring-border::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    z-index: -2;
+    background: color-mix(in srgb, var(--c-purple) 60%, transparent);
+  }
+
+  .ring-border::after {
+    content: "";
+    position: absolute;
+    inset: 1.5px;
+    z-index: -1;
+    border-radius: calc(var(--r, 1.75rem) - 1.5px);
+    background: var(--glass-solid);
+  }
+}
+
+/* ==========================================================================
+   Ambient + motion keyframes
+   ========================================================================== */
+@keyframes gradient-pan {
+  from { background-position: 0% 50%; }
+  to { background-position: 220% 50%; }
+}
+
+@keyframes spin {
+  to { transform: rotate(360deg); }
+}
+
+@keyframes float-y {
+  0%, 100% { transform: translate3d(0, 0, 0); }
+  50% { transform: translate3d(0, -12px, 0); }
+}
+
+@keyframes drift-a {
+  0%, 100% { transform: translate3d(0, 0, 0) scale(1); }
+  33% { transform: translate3d(8vw, 6vh, 0) scale(1.15); }
+  66% { transform: translate3d(-5vw, 10vh, 0) scale(0.92); }
+}
+
+@keyframes drift-b {
+  0%, 100% { transform: translate3d(0, 0, 0) scale(1); }
+  40% { transform: translate3d(-9vw, -7vh, 0) scale(1.1); }
+  75% { transform: translate3d(6vw, 4vh, 0) scale(1.2); }
+}
+
+@keyframes drift-c {
+  0%, 100% { transform: translate3d(0, 0, 0) scale(1.05); }
+  50% { transform: translate3d(7vw, -9vh, 0) scale(0.9); }
+}
+
+@keyframes ping-dot {
+  0% { transform: scale(1); opacity: 0.7; }
+  80%, 100% { transform: scale(2.6); opacity: 0; }
+}
+
+@keyframes scroll-nudge {
+  0%, 20% { transform: translateY(0); opacity: 1; }
+  70% { transform: translateY(10px); opacity: 0; }
+  71% { transform: translateY(-4px); opacity: 0; }
+  100% { transform: translateY(0); opacity: 1; }
+}
+
+.aurora-blob {
+  position: absolute;
+  border-radius: 9999px;
+  will-change: transform;
+}
+
+.marquee-track {
+  display: flex;
+  width: max-content;
+  will-change: transform; /* driven by GSAP, speed follows scroll velocity */
+}
+
+.marquee {
+  -webkit-mask-image: linear-gradient(90deg, transparent, #000 12%, #000 88%, transparent);
+  mask-image: linear-gradient(90deg, transparent, #000 12%, #000 88%, transparent);
+}
+
+.float-y {
+  animation: float-y var(--float-duration, 6s) ease-in-out var(--float-delay, 0s) infinite;
 }
 
 /* ==========================================================================
    Contact form helpers
    ========================================================================== */
 :root {
-  --contact-bg: var(--color-bg);
-  --contact-bg-elevated: var(--color-bg-elevated);
+  --contact-bg: transparent;
+  --contact-bg-elevated: var(--glass-flat);
   --contact-text: var(--color-text-primary);
   --contact-text-soft: var(--color-text-secondary);
   --contact-text-muted: var(--color-text-muted);
@@ -205,14 +523,14 @@ li {
 }
 
 [data-theme="light"] {
-  --contact-shadow: rgba(0, 0, 0, 0.08);
+  --contact-shadow: rgba(60, 60, 100, 0.18);
   --contact-logo-filter: invert(1);
   --contact-popup-bg: #ffffff;
   --contact-popup-text: #1d1d1f;
 }
 
 .contact-page {
-  background: var(--contact-bg);
+  background: transparent;
   color: var(--contact-text);
 }
 
@@ -261,10 +579,11 @@ select.contact-input option {
    Persian typography
    The page structure stays LTR; each section opts into RTL with an explicit
    `dir` attribute. Persian never gets negative tracking (it breaks joining).
+   Persian headings and body both use Vazirmatn (the original face).
    ========================================================================== */
 body[data-language="fa"] {
   --tracking-display: 0em;
-  --leading-display: 1.3;
+  --leading-display: 1.32;
   --weight-display: 700;
 }
 
@@ -276,10 +595,15 @@ body[data-language="fa"] select {
   font-family: var(--font-persian);
 }
 
-body[data-language="fa"] .font-sans,
-body[data-language="fa"] .font-display {
+body[data-language="fa"] .font-sans {
   font-family: var(--font-persian) !important;
   font-feature-settings: "ss01" 1;
+}
+
+body[data-language="fa"] .font-display,
+body[data-language="fa"] .display-type {
+  font-family: var(--font-persian-display) !important;
+  font-feature-settings: normal;
 }
 
 body[data-language="fa"] .tracking-\[0\.22em\],
@@ -359,7 +683,16 @@ body[data-language="fa"] [data-project-modal] > div:last-child :is(h2, h3, p, sp
 }
 
 /* ==========================================================================
-   Reduced motion
+   Smaller screens: lighter glass so scrolling stays smooth
+   ========================================================================== */
+@media (max-width: 767px) {
+  :root {
+    --glass-blur: 18px;
+  }
+}
+
+/* ==========================================================================
+   Reduced motion: no ambient loops, no smooth scroll, no parallax drift
    ========================================================================== */
 @media (prefers-reduced-motion: reduce) {
   html {
@@ -377,4 +710,19 @@ body[data-language="fa"] [data-project-modal] > div:last-child :is(h2, h3, p, sp
   .skeleton-block {
     animation: none;
   }
+
+  .marquee-track {
+    animation: none !important;
+    flex-wrap: wrap;
+    width: auto;
+    justify-content: center;
+  }
+
+  .marquee-track > [aria-hidden="true"] {
+    display: none;
+  }
 }
+
+/* Carousels: hide the scrollbar, keep native momentum + snap */
+.snap-row { scrollbar-width: none; -webkit-overflow-scrolling: touch; overscroll-behavior-x: contain; }
+.snap-row::-webkit-scrollbar { display: none; }

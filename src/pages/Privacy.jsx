@@ -20,7 +20,7 @@ function Privacy() {
     <main
       id="main-content"
       className="standalone-page min-h-svh px-6 py-8 sm:px-10 lg:px-16"
-      style={{ background: "var(--color-bg)", color: "var(--color-text-primary)" }}
+      style={{ color: "var(--color-text-primary)" }}
     >
       <div className="mx-auto max-w-3xl">
         <header className="flex items-center justify-end">

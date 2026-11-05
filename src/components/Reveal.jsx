@@ -1,23 +1,26 @@
-import { motion } from "motion/react";
-import { smoothEase } from "../constants/theme.js";
+import { useRef } from "react";
+import { MOTION, NO_PREFERENCE, gsap, useGSAP } from "../lib/gsap.js";
 
 /**
- * The one entrance animation used across the page: a short fade and a small
- * upward drift, once, when the element enters the viewport. Reduced-motion
- * users get the fade only (MotionConfig handles the transform).
+ * The shared entrance: fade + rise + a hint of scale, once, as the element
+ * crosses the reading line. Props are cleared afterwards so text stays
+ * pixel-sharp and layout animations further down are never disturbed.
  */
-export default function Reveal({ as = "div", delay = 0, y = 24, amount = 0.2, className = "", children, ...rest }) {
-  const Component = motion[as] ?? motion.div;
-  return (
-    <Component
-      initial={{ opacity: 0, y }}
-      whileInView={{ opacity: 1, y: 0 }}
-      viewport={{ once: true, amount }}
-      transition={{ duration: 0.9, ease: smoothEase, delay }}
-      className={className}
-      {...rest}
-    >
-      {children}
-    </Component>
-  );
+export default function Reveal({ as: Tag = "div", delay = 0, y = MOTION.y, className = "", children, ...rest }) {
+  const ref = useRef(null);
+  useGSAP(() => {
+    const el = ref.current;
+    if (!el) return undefined;
+    const mm = gsap.matchMedia();
+    mm.add(NO_PREFERENCE, () => {
+      gsap.fromTo(
+        el,
+        { autoAlpha: 0, y, scale: 0.985 },
+        { autoAlpha: 1, y: 0, scale: 1, duration: MOTION.duration, ease: MOTION.ease, delay, clearProps: "transform,opacity,visibility", scrollTrigger: { trigger: el, start: MOTION.start, once: true } },
+      );
+    });
+    return () => mm.revert();
+  }, { scope: ref });
+
+  return <Tag ref={ref} className={className} {...rest}>{children}</Tag>;
 }
