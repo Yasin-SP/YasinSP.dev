@@ -12,7 +12,7 @@ export default function Backdrop() {
 
   useGSAP(() => {
     const mm = gsap.matchMedia();
-    mm.add(NO_PREFERENCE, () => {
+    mm.add(`(min-width: 1024px) and ${NO_PREFERENCE}`, () => {
       gsap.to(".bd-grid", { backgroundPositionY: "-160px", ease: "none", scrollTrigger: { trigger: document.documentElement, start: 0, end: "max", scrub: 1 } });
     });
     return () => mm.revert();
@@ -31,7 +31,7 @@ export default function Backdrop() {
       />
       <div className="absolute inset-x-0 top-0 h-[60vh]" style={{ background: "radial-gradient(ellipse 60% 100% at 50% 0%, var(--wash), transparent 75%)" }} />
       <div
-        className="absolute inset-0"
+        className="bd-grain absolute inset-0"
         style={{
           opacity: "var(--grain-opacity)",
           mixBlendMode: "overlay",

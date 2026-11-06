@@ -128,10 +128,10 @@
   --color-foreground: var(--color-text-primary);
   --color-accent: var(--accent-text);
   --color-accent-fill: var(--accent-fill);
-  --font-sans: -apple-system, BlinkMacSystemFont, "SF Pro Text", "Inter", "Helvetica Neue", Helvetica, Arial, sans-serif;
-  --font-display: -apple-system, BlinkMacSystemFont, "SF Pro Display", "Inter", "Helvetica Neue", Helvetica, Arial, sans-serif;
-  --font-persian: "Vazirmatn", "SF Arabic", -apple-system, BlinkMacSystemFont, "Segoe UI", Tahoma, sans-serif;
-  --font-persian-display: "Vazirmatn", "SF Arabic", Tahoma, sans-serif;
+  --font-sans: -apple-system, BlinkMacSystemFont, "SF Pro Text", "Inter Variable", "Inter", "Helvetica Neue", Helvetica, Arial, sans-serif;
+  --font-display: -apple-system, BlinkMacSystemFont, "SF Pro Display", "Inter Variable", "Inter", "Helvetica Neue", Helvetica, Arial, sans-serif;
+  --font-persian: "Vazirmatn Variable", "Vazirmatn", "SF Arabic", -apple-system, BlinkMacSystemFont, "Segoe UI", Tahoma, sans-serif;
+  --font-persian-display: "Vazirmatn Variable", "Vazirmatn", "SF Arabic", Tahoma, sans-serif;
 }
 
 html {
@@ -726,3 +726,14 @@ body[data-language="fa"] [data-project-modal] > div:last-child :is(h2, h3, p, sp
 /* Carousels: hide the scrollbar, keep native momentum + snap */
 .snap-row { scrollbar-width: none; -webkit-overflow-scrolling: touch; overscroll-behavior-x: contain; }
 .snap-row::-webkit-scrollbar { display: none; }
+
+
+/* Phones & touch: keep the look, cut the expensive paint work (blur radius, full-screen grain, pointer glint) */
+@media (max-width: 1023px), (hover: none) {
+  .glass, .tile {
+    -webkit-backdrop-filter: blur(14px) saturate(160%);
+    backdrop-filter: blur(14px) saturate(160%);
+  }
+  .glass::after, .tile::after { display: none; }
+  .bd-grain { display: none; }
+}
