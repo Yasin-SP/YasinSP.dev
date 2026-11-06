@@ -3,6 +3,7 @@ import { ScrollTrigger } from "gsap/ScrollTrigger";
 import { useGSAP } from "@gsap/react";
 
 gsap.registerPlugin(ScrollTrigger, useGSAP);
+ScrollTrigger.config({ ignoreMobileResize: true });
 
 /**
  * One motion language for the whole site. Every entrance and scrubbed effect

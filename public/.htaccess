@@ -1,5 +1,4 @@
-# yasinsp.dev on Apache / LiteSpeed (cPanel). Replaces the Cloudflare Pages
-# _headers, _redirects and _middleware.js. Upload next to index.html in public_html.
+# yasinsp.dev on Apache / LiteSpeed (cPanel). Lives in public_html next to index.html.
 
 Options -Indexes
 DirectoryIndex index.html

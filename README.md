@@ -27,41 +27,19 @@ npm run preview
 
 The production build is the important final check. Do not deploy a project that has not passed `npm run build`.
 
-## Contact form — production setup
+## Hosting and contact form
 
-The contact form sends an asynchronous JSON request to the Cloudflare Pages Function at `POST /api/contact`. The Function validates and normalizes every field, applies anti-abuse controls, and delivers the categorized message directly through the Telegram Bot API. Bot credentials never enter the browser bundle.
-
-### 1. Configure Telegram and Cloudflare
-
-Create a bot with BotFather, start a private conversation with it, and obtain the destination chat ID. In **Workers & Pages → project → Settings → Variables and Secrets**, configure:
-
-- `TELEGRAM_BOT_TOKEN` as an encrypted secret.
-- `TELEGRAM_CHAT_ID` as an encrypted secret.
-- `CONTACT_ALLOWED_ORIGINS` as an exact comma-separated origin allowlist.
-- Do **not** configure `TURNSTILE_SECRET_KEY` yet: the current client does not mount a Turnstile widget or send a token. Server support is reserved for a future client integration.
-- A KV namespace bound as `CONTACT_RATE_LIMIT` for stronger best-effort rate limiting (optional but recommended).
-
-Never prefix Telegram secrets with `VITE_`; Vite variables are public client configuration. For local Pages Function development, copy `.dev.vars.example` to the Git-ignored `.dev.vars`.
-
-### 2. Public contact email
-
-The only optional client environment value is:
-
-```env
-VITE_CONTACT_EMAIL=hello@yourdomain.com
-```
-
-Copy `.env.example` to `.env.local` when this public email shortcut is needed. `.env.local` is ignored by Git.
-
-### 3. Deploy and verify
-
-Deploy the project as a Cloudflare Pages site so the `functions/` directory is mounted beside the Vite build. Run:
+The site is a static build served from a cPanel host in Iran. `public/.htaccess` handles HTTPS, the single-page fallback, caching and security headers; `public/api/contact.php` handles the contact form at `POST /api/contact`.
 
 ```bash
-npm run build
+npm run build   # output in dist/ — upload its contents (including hidden .htaccess) to public_html
 ```
 
-Then submit one real request from every production origin and verify success, validation errors, rate limiting, and Telegram delivery. Full environment, payload, future Turnstile integration, KV, and security instructions are in [`docs/contact-backend.md`](docs/contact-backend.md).
+### Contact form delivery
+
+Messages are delivered by a Bale messenger bot and/or email, and always appended to `contact-messages.log` in the hosting account's home directory (outside `public_html`). Settings live in `api/config.php` on the server (`bale_token`, `bale_chat_id`, `to_email`, `from_email`); when updating the site, keep that file. Telegram is not used because it is unreachable from servers in Iran.
+
+The only optional client environment value is the public email shortcut: copy `.env.example` to `.env.local` and set `VITE_CONTACT_EMAIL`.
 
 ## Content before launch
 
@@ -74,7 +52,7 @@ Before publishing, replace:
 - `src/data/journey.js` — your real timeline.
 - `src/data/services.js` — services you actually offer.
 - `src/data/skills.js` — your actual stack.
-- `.env.local` — the optional public contact email; keep Telegram credentials only in encrypted Cloudflare secrets.
+- `.env.local` — the optional public contact email.
 
 Do not publish placeholder URLs such as `yourusername`, `project-one-demo.com`, or `you@example.com`.
 

@@ -15,11 +15,13 @@ export default function WordReveal({ text, as: Tag = "span", className = "", del
     if (!targets?.length) return undefined;
     const mm = gsap.matchMedia();
     mm.add(NO_PREFERENCE, () => {
+      // Animating blur() on dozens of words is costly on phones: only wide screens get it.
+      const blur = window.matchMedia("(min-width: 1024px)").matches;
       gsap.fromTo(
         targets,
-        { autoAlpha: 0, y: "0.55em", filter: "blur(10px)" },
+        blur ? { autoAlpha: 0, y: "0.55em", filter: "blur(10px)" } : { autoAlpha: 0, y: "0.4em" },
         {
-          autoAlpha: 1, y: "0em", filter: "blur(0px)", duration: MOTION.duration, ease: MOTION.ease, stagger, delay,
+          autoAlpha: 1, y: "0em", ...(blur ? { filter: "blur(0px)" } : {}), duration: MOTION.duration, ease: MOTION.ease, stagger, delay,
           clearProps: "transform,filter,opacity,visibility",
           scrollTrigger: inView ? { trigger: ref.current, start: "top 88%", once: true } : undefined,
         },

@@ -1,10 +1,14 @@
 <?php
-// Contact form handler for shared hosting (replaces functions/api/contact.js).
-// Telegram is blocked from servers inside Iran, so messages go to email instead,
-// and every valid message is also appended to a log file outside public_html.
+// Contact form handler for the cPanel host.
+// Delivery: Bale messenger bot (works inside Iran) + email, and every valid message is
+// also appended to a log file outside public_html so nothing is ever lost.
+// Settings (bot token, chat id, emails) live in api/config.php, which updates never overwrite.
 
-const TO_EMAIL = 'yasinsp.dev@gmail.com';   // where messages are delivered
-const FROM_EMAIL = 'no-reply@yasinsp.dev';  // must be on your own domain
+$cfg = is_file(__DIR__ . '/config.php') ? (require __DIR__ . '/config.php') : [];
+define('TO_EMAIL', $cfg['to_email'] ?? 'yasinsp.dev@gmail.com');
+define('FROM_EMAIL', $cfg['from_email'] ?? 'no-reply@yasinsp.dev');
+define('BALE_TOKEN', $cfg['bale_token'] ?? '');
+define('BALE_CHAT_ID', $cfg['bale_chat_id'] ?? '');
 const MAX_BODY_BYTES = 16 * 1024;
 const RATE_LIMIT = 5;                        // messages per IP...
 const RATE_WINDOW = 600;                     // ...per 10 minutes
@@ -129,11 +133,28 @@ $headers = "From: yasinsp.dev <" . FROM_EMAIL . ">\r\nMIME-Version: 1.0\r\nConte
 if ($replyTo !== '') $headers .= "Reply-To: " . str_replace(["\r", "\n"], '', $replyTo) . "\r\n";
 $subject = '=?UTF-8?B?' . base64_encode("پیام جدید از سایت: {$labels[$category]} — $name") . '?=';
 
-$mailed = @mail(TO_EMAIL, $subject, $body, $headers, '-f' . FROM_EMAIL);
+$mailed = TO_EMAIL !== '' && @mail(TO_EMAIL, $subject, $body, $headers, '-f' . FROM_EMAIL);
+
+// Bale bot (same Bot API shape as Telegram, hosted inside Iran)
+$baled = false;
+if (BALE_TOKEN !== '' && BALE_CHAT_ID !== '' && function_exists('curl_init')) {
+    $ch = curl_init('https://tapi.bale.ai/bot' . BALE_TOKEN . '/sendMessage');
+    curl_setopt_array($ch, [
+        CURLOPT_POST => true,
+        CURLOPT_HTTPHEADER => ['Content-Type: application/json'],
+        CURLOPT_POSTFIELDS => json_encode(['chat_id' => BALE_CHAT_ID, 'text' => "📩 پیام جدید از yasinsp.dev\n\n" . $body], JSON_UNESCAPED_UNICODE),
+        CURLOPT_RETURNTRANSFER => true,
+        CURLOPT_CONNECTTIMEOUT => 4,
+        CURLOPT_TIMEOUT => 8,
+    ]);
+    $res = curl_exec($ch);
+    $baled = $res !== false && (json_decode($res, true)['ok'] ?? false) === true;
+    curl_close($ch);
+}
 
 // Backup copy outside public_html so nothing is lost if mail is filtered
 $logDir = dirname($_SERVER['DOCUMENT_ROOT'] ?? __DIR__);
 $logged = @file_put_contents($logDir . '/contact-messages.log', '[' . date('c') . "] $ip\n$body\n----------------------------------------\n", FILE_APPEND | LOCK_EX) !== false;
 
-if (!$mailed && !$logged) respond(502, ['ok' => false, 'error' => 'delivery_unavailable']);
+if (!$mailed && !$baled && !$logged) respond(502, ['ok' => false, 'error' => 'delivery_unavailable']);
 respond(200, ['ok' => true]);

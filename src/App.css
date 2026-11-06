@@ -743,3 +743,5 @@ body[data-language="fa"] [data-project-modal] > div:last-child :is(h2, h3, p, sp
    device) the hero must still show up. The animation fills forward and beats inline styles. */
 @keyframes reveal-failsafe { to { opacity: 1; visibility: visible; filter: none; } }
 [data-hero], [data-stage], [data-chip] { animation: reveal-failsafe 0s linear 5s forwards; }
+
+html.scroll-locked, html.scroll-locked body { overflow: hidden; }

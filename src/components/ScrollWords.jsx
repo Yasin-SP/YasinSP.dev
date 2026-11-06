@@ -13,7 +13,7 @@ export default function ScrollWords({ text, className = "" }) {
     const targets = ref.current?.querySelectorAll("[data-w]");
     if (!targets?.length) return undefined;
     const mm = gsap.matchMedia();
-    mm.add(NO_PREFERENCE, () => {
+    mm.add(`(min-width: 768px) and ${NO_PREFERENCE}`, () => {
       gsap
         .timeline({ scrollTrigger: { trigger: ref.current, start: "top 85%", end: "bottom 55%", scrub: MOTION.scrub } })
         .fromTo(targets, { opacity: 0.16 }, { opacity: 1, ease: "none", duration: 1, stagger: 0.5 });

@@ -1,0 +1,4 @@
+# config.php must never be fetched from the web
+<Files "config.php">
+  Require all denied
+</Files>

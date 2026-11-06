@@ -1,8 +1,0 @@
-# Copy to .dev.vars for local Cloudflare Pages development. Never commit real values.
-TELEGRAM_BOT_TOKEN="replace-with-bot-token"
-TELEGRAM_CHAT_ID="replace-with-private-chat-id"
-CONTACT_ALLOWED_ORIGINS="http://localhost:5173,https://example.com"
-
-
-# Optional Cloudflare KV binding name (configure in the dashboard/wrangler):
-# CONTACT_RATE_LIMIT

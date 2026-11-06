@@ -8,6 +8,9 @@ const HEADER_OFFSET = 0; // the 5rem html scroll-padding-top already clears the 
 /** Smooth, inertial scrolling driven by GSAP's ticker so ScrollTrigger and Lenis share one clock. */
 export function initSmoothScroll() {
   if (typeof window === "undefined" || window.matchMedia("(prefers-reduced-motion: reduce)").matches) return () => {};
+  // Phones and tablets already have native momentum scrolling; running Lenis on top of it
+  // only adds per-frame JavaScript. Keep it for mouse / trackpad devices.
+  if (window.matchMedia("(hover: none) and (pointer: coarse)").matches) return () => {};
 
   lenis = new Lenis({
     duration: 1.2,
@@ -39,5 +42,6 @@ export function scrollToTarget(selector) {
   else el.scrollIntoView({ behavior: "smooth", block: "start" });
 }
 
-export function stopScroll() { lenis?.stop(); }
-export function startScroll() { lenis?.start(); }
+// Without Lenis (touch devices) the page lock is plain CSS on <html>.
+export function stopScroll() { if (lenis) lenis.stop(); else document.documentElement.classList.add("scroll-locked"); }
+export function startScroll() { if (lenis) lenis.start(); else document.documentElement.classList.remove("scroll-locked"); }
