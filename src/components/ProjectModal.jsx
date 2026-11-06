@@ -99,7 +99,7 @@ function ProjectModal({ project, index, onClose }) {
         onDragEnd={(_, info) => { if (info.offset.y > 120 || info.velocity.y > 520) onClose(); }}
         data-project-modal
         data-lenis-prevent
-        className="modal-scroll glass tone-purple relative max-h-[92dvh] w-full overflow-hidden overflow-y-auto overscroll-contain sm:max-h-[88vh] sm:max-w-3xl"
+        className="modal-scroll glass glass-blur tone-purple relative max-h-[92dvh] w-full overflow-hidden overflow-y-auto overscroll-contain sm:max-h-[88vh] sm:max-w-3xl"
         style={{ "--r": isPhone ? "1.9rem 1.9rem 0 0" : "2rem", "--glass-blur": "48px", backgroundColor: "var(--glass-solid)", boxShadow: "0 40px 100px rgba(0,0,0,0.45)" }}
       >
         {isPhone && (

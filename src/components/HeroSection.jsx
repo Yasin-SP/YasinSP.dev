@@ -19,7 +19,7 @@ function FloatingChip({ icon: Icon, label, tone, depth, mx, my, floatDuration, f
   return (
     <motion.div style={{ x, y }} className={`absolute z-30 ${className}`}>
       <div data-chip>
-        <div className={`glass tone-${tone} float-y flex items-center gap-2.5 py-2 ps-2 pe-4`} style={{ "--r": "999px", "--float-duration": `${floatDuration}s`, "--float-delay": `${floatDelay}s` }}>
+        <div className={`glass glass-blur tone-${tone} float-y flex items-center gap-2.5 py-2 ps-2 pe-4`} style={{ "--r": "999px", "--float-duration": `${floatDuration}s`, "--float-delay": `${floatDelay}s` }}>
           <span className="tone-icon h-8 w-8 rounded-[0.65rem]"><Icon size={16} strokeWidth={2} /></span>
           <span className="font-sans text-[13px] font-semibold text-(--color-text-primary)">{label}</span>
         </div>

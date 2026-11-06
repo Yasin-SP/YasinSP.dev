@@ -188,9 +188,15 @@ li {
     isolation: isolate;
     border-radius: var(--r, 1.75rem);
     background: var(--glass-sheen), var(--glass-bg);
-    -webkit-backdrop-filter: blur(var(--glass-blur)) saturate(200%) brightness(1.06);
-    backdrop-filter: blur(var(--glass-blur)) saturate(200%) brightness(1.06);
     box-shadow: var(--glass-inner), var(--glass-shadow);
+  }
+
+  /* Real backdrop blur is the most expensive thing the browser paints, so only surfaces
+     that float over moving content get it (header, dock, sheets, popovers, hero badges).
+     Cards resting on the flat page background look the same without it. */
+  .glass-blur {
+    -webkit-backdrop-filter: blur(var(--glass-blur)) saturate(180%);
+    backdrop-filter: blur(var(--glass-blur)) saturate(180%);
   }
 
   /* Rim light: bright where the light hits (top-left), a faint counter-glint bottom-right */
@@ -273,8 +279,6 @@ li {
     font-size: 0.8125rem;
     font-weight: 500;
     background: var(--glass-flat);
-    -webkit-backdrop-filter: blur(16px) saturate(180%);
-    backdrop-filter: blur(16px) saturate(180%);
     box-shadow: 0 0 0 1px var(--color-border) inset, 0 1px 0 rgba(255, 255, 255, 0.12) inset;
   }
 
@@ -363,8 +367,6 @@ li {
   .btn-secondary {
     color: var(--color-text-primary);
     background: var(--glass-flat);
-    -webkit-backdrop-filter: blur(20px) saturate(180%);
-    backdrop-filter: blur(20px) saturate(180%);
     box-shadow: 0 0 0 1px var(--color-border) inset, 0 1px 0 rgba(255, 255, 255, 0.18) inset;
   }
 
@@ -728,12 +730,16 @@ body[data-language="fa"] [data-project-modal] > div:last-child :is(h2, h3, p, sp
 .snap-row::-webkit-scrollbar { display: none; }
 
 
-/* Phones & touch: keep the look, cut the expensive paint work (blur radius, full-screen grain, pointer glint) */
+/* Phones & touch: no pointer, so no pointer glint; overlays get a smaller blur radius */
 @media (max-width: 1023px), (hover: none) {
-  .glass, .tile {
+  .glass-blur {
     -webkit-backdrop-filter: blur(14px) saturate(160%);
     backdrop-filter: blur(14px) saturate(160%);
   }
   .glass::after, .tile::after { display: none; }
-  .bd-grain { display: none; }
 }
+
+/* Safety net: if the entrance animation never runs (script blocked, stalled, very slow
+   device) the hero must still show up. The animation fills forward and beats inline styles. */
+@keyframes reveal-failsafe { to { opacity: 1; visibility: visible; filter: none; } }
+[data-hero], [data-stage], [data-chip] { animation: reveal-failsafe 0s linear 5s forwards; }
