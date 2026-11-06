@@ -2,7 +2,28 @@
 <html lang="fa">
   <head>
     <meta charset="UTF-8" />
-    <script src="/preference-bootstrap.js"></script>
+    <script>(() => {
+  const root = document.documentElement;
+  const readPreference = (key) => {
+    try {
+      return window.localStorage.getItem(key);
+    } catch {
+      return null;
+    }
+  };
+
+  const savedLanguage = readPreference("language");
+  const language = savedLanguage === "en" || savedLanguage === "fa" ? savedLanguage : "fa";
+  root.lang = language;
+  root.dir = language === "fa" ? "rtl" : "ltr";
+  root.dataset.language = language;
+
+  const savedTheme = readPreference("theme");
+  const theme = savedTheme === "dark" || savedTheme === "light"
+    ? savedTheme
+    : window.matchMedia("(prefers-color-scheme: light)").matches ? "light" : "dark";
+  root.dataset.theme = theme;
+})();</script>
     <style>html{background:#000;color-scheme:dark}html[data-theme="light"]{background:#f5f5f7;color-scheme:light}</style>
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <meta name="description" content="یاسین سلیمان پناه (Yasin SoleymanPanah) — برنامه نویس فرانت اند و طراح سایت در قم، متخصص React و طراحی رابط‌های مدرن و ریسپانسیو." />
