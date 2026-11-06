@@ -61,7 +61,7 @@ export default function MobileDock() {
       <motion.div
         layout
         transition={spring}
-        className="glass flex items-center gap-0.5 p-1.5"
+        className="glass glass-blur flex items-center gap-0.5 p-1.5"
         style={{ "--r": "999px", "--glass-blur": "34px", background: "var(--glass-sheen), var(--dock-bg)", boxShadow: "var(--glass-inner), var(--glass-shadow), 0 18px 40px -12px rgba(0,0,0,0.5)" }}
       >
         {ITEMS.map((item) => {

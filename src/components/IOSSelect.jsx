@@ -169,7 +169,7 @@ export default function IOSSelect({ id, name, value, onChange, options, placehol
         dragConstraints={{ top: 0, bottom: 0 }}
         dragElastic={{ top: 0, bottom: 0.7 }}
         onDragEnd={(_, info) => { if (info.offset.y > 110 || info.velocity.y > 520) close(); }}
-        className="glass relative flex max-h-[78dvh] w-full flex-col overflow-hidden pb-[max(0.75rem,env(safe-area-inset-bottom))]"
+        className="glass glass-blur relative flex max-h-[78dvh] w-full flex-col overflow-hidden pb-[max(0.75rem,env(safe-area-inset-bottom))]"
         style={{ "--r": "1.9rem 1.9rem 0 0", "--glass-blur": "46px", background: "var(--ios-sheet-bg)", touchAction: "none" }}
       >
         <div className="flex shrink-0 flex-col items-center px-5 pt-2.5">
@@ -191,7 +191,7 @@ export default function IOSSelect({ id, name, value, onChange, options, placehol
       animate={{ opacity: 1, scale: 1, y: 0 }}
       exit={{ opacity: 0, scale: 0.96, y: pos.up ? 4 : -4, transition: { duration: 0.14 } }}
       transition={spring}
-      className="glass fixed z-300 overflow-y-auto overscroll-contain"
+      className="glass glass-blur fixed z-300 overflow-y-auto overscroll-contain"
       style={{ left: pos.left, width: pos.width, top: pos.top, bottom: pos.bottom, maxHeight: pos.maxH, transformOrigin: pos.up ? "50% 100%" : "50% 0%", "--r": "1.25rem", "--glass-blur": "40px", background: "var(--ios-sheet-bg)", boxShadow: "var(--glass-shadow), 0 30px 70px -20px rgba(0,0,0,0.55)" }}
     >
       <OptionList options={options} value={value} onPick={pick} activeIndex={activeIndex} setActiveIndex={setActiveIndex} listId={listId} listRef={listRef} label={label} compact />

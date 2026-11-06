@@ -105,7 +105,7 @@ function Header() {
       >
         <div
           dir="ltr"
-          className="glass flex h-14 w-full max-w-5xl items-center justify-between ps-5 pe-2 transition-[background-color,box-shadow] duration-500"
+          className="glass glass-blur flex h-14 w-full max-w-5xl items-center justify-between ps-5 pe-2 transition-[background-color,box-shadow] duration-500"
           style={{ "--r": "999px", "--glass-blur": "32px", backgroundColor: scrolled ? "var(--nav-bg)" : "transparent" }}
         >
           <Logo theme={theme} onClick={handleLogoClick} />
