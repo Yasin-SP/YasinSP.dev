@@ -5,7 +5,7 @@ import react from '@vitejs/plugin-react'
 import tailwindcss from '@tailwindcss/vite'
 
 /**
- * Inline the app's JS and CSS into index.html so the first page needs exactly one
+ * Opt-in (INLINE_ENTRY=1 npm run build). Inline the app's JS and CSS into index.html so the first page needs exactly one
  * request. On networks that reset parallel connections (seen in Iran) the separate
  * script/stylesheet requests were dropped and the page stayed blank; one request
  * can't be half-delivered. Images and fonts stay as normal files and load lazily.
@@ -33,6 +33,7 @@ function inlineEntry() {
         rmSync(file)
         return `<style>${css}</style>`
       })
+      html = html.replace(/<script src="\/preference-bootstrap\.js"><\/script>/, () => `<script>${readFileSync(join(outDir, 'preference-bootstrap.js'), 'utf8').trim()}</script>`)
       html = html.replace(/<link rel="modulepreload"[^>]*>\s*/g, '')
       writeFileSync(htmlPath, html)
     },
@@ -44,9 +45,7 @@ export default defineConfig({
   plugins: [
     react(),
     tailwindcss(),
-    inlineEntry(),
+    ...(process.env.INLINE_ENTRY ? [inlineEntry()] : []),
   ],
-  build: {
-    rollupOptions: { output: { inlineDynamicImports: true } },
-  },
+  build: process.env.INLINE_ENTRY ? { rollupOptions: { output: { inlineDynamicImports: true } } } : {},
 })

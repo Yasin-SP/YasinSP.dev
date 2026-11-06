@@ -1,0 +1,51 @@
+# yasinsp.dev on Apache / LiteSpeed (cPanel). Replaces the Cloudflare Pages
+# _headers, _redirects and _middleware.js. Upload next to index.html in public_html.
+
+Options -Indexes
+DirectoryIndex index.html
+
+<IfModule mod_rewrite.c>
+  RewriteEngine On
+
+  # One canonical host over HTTPS (the .dev TLD only works over HTTPS anyway)
+  RewriteCond %{HTTP_HOST} ^www\.yasinsp\.dev$ [NC]
+  RewriteRule ^ https://yasinsp.dev%{REQUEST_URI} [R=301,L]
+  RewriteCond %{HTTPS} !=on
+  RewriteCond %{HTTP:X-Forwarded-Proto} !https
+  RewriteRule ^ https://yasinsp.dev%{REQUEST_URI} [R=301,L]
+
+  # Contact form endpoint: /api/contact -> api/contact.php
+  RewriteRule ^api/contact/?$ api/contact.php [L]
+
+  # Single-page app: unknown paths get index.html (React Router shows the 404 page)
+  RewriteCond %{REQUEST_FILENAME} !-f
+  RewriteCond %{REQUEST_FILENAME} !-d
+  RewriteRule ^ index.html [L]
+</IfModule>
+
+<IfModule mod_headers.c>
+  Header always set Strict-Transport-Security "max-age=31536000"
+  Header always set X-Content-Type-Options "nosniff"
+  Header always set Referrer-Policy "strict-origin-when-cross-origin"
+  Header always set Permissions-Policy "camera=(), microphone=(), geolocation=(), payment=(), usb=()"
+  Header always set Cross-Origin-Opener-Policy "same-origin"
+  Header always set Content-Security-Policy "default-src 'self'; script-src 'self'; style-src 'self' 'unsafe-inline'; font-src 'self'; img-src 'self' data:; connect-src 'self'; object-src 'none'; base-uri 'self'; frame-ancestors 'none'; form-action 'self'"
+
+  # Hashed build files never change: cache for a year. HTML always revalidates.
+  <FilesMatch "\.(js|css|woff2|webp|svg|png|ico)$">
+    Header set Cache-Control "public, max-age=31536000, immutable"
+  </FilesMatch>
+  <FilesMatch "(^index\.html$|\.webmanifest$|^robots\.txt$|^sitemap\.xml$|^preference-bootstrap\.js$)">
+    Header set Cache-Control "no-cache"
+  </FilesMatch>
+</IfModule>
+
+<IfModule mod_deflate.c>
+  AddOutputFilterByType DEFLATE text/html text/css application/javascript text/javascript application/json image/svg+xml application/manifest+json
+</IfModule>
+
+<IfModule mod_mime.c>
+  AddType application/manifest+json .webmanifest
+  AddType font/woff2 .woff2
+  AddType image/webp .webp
+</IfModule>
